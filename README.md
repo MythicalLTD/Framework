@@ -1,2 +1,3 @@
 # Framework
-The framework we use for our projects
+
+The core framework for our projects ;)
