@@ -164,6 +164,10 @@ class Colors
         return "\033[4m";
     }
 
+    public static function NewLine() : string {
+        return "\n";
+    }
+
     /**
      * @param string $message
      * @return string
@@ -224,10 +228,10 @@ class Colors
                 return self::Strike();
             case 'n':
                 return self::Underline();
-            case 'o':
-                return self::Reset();
             case 'r':
                 return self::Reset();
+            case 'o':
+                return self::NewLine();
             default:
                 return '';
         }

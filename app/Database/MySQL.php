@@ -28,12 +28,21 @@ class MySQL {
 
     /**
      * Tries to establish a connection to the database server.
+    *
+     * @param string $host The host
+     * @param string|int $port The port
+     * @param string $username The username
+     * @param string $password The password
+     * @param string $database The database name
      * 
      * @return bool True if the connection is successful, false otherwise.
+     * @throws PDOException If the connection to the database fails.     * 
      */
-    public function tryConnection(): bool {
+    public function tryConnection(string $host, string|int $port, string $username, string $password, string $database): bool {
         try {
-            $this->connect();
+            $dsn = "mysql:host=".$host.";dbname=".$database.";port=".$port.";charset=utf8mb4";
+            $pdo = new PDO($dsn, $username, $password);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return true;
         } catch (PDOException $e) {
             return false;

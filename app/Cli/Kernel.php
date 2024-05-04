@@ -18,7 +18,7 @@ class Kernel
         $commandFile = self::findCommandFile($commandName);
         if ($commandFile !== null) {
             require_once $commandFile;
-            $commandClass = ucfirst($commandName) . 'Command';
+            $commandClass = ucfirst(strtolower($commandName)) . 'Command';
             if (class_exists($commandClass)) {
                 $command = new $commandClass();
                 $command->execute();

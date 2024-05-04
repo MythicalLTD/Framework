@@ -1,10 +1,11 @@
 {
     "app": {
         "name": "MythicalSystems",
-        "logo": "https://avatars.githubusercontent.com/u/117385445",
+        "logo": "https:\/\/avatars.githubusercontent.com\/u\/117385445",
         "timezone": "Europe\/Bucharest",
         "theme": "default",
-        "lang": "en_US"
+        "lang": "en_US",
+        "maintenance": "false"
     },
     "seo": {
         "title": "MythicalSystems",
@@ -12,14 +13,19 @@
         "keywords": "MythicalSystems, web applications, framework"
     },
     "framework": {
-        "version": "1.0.0"
+        "version": "1.0.1",
+        "branch": "develop",
+        "release": "2024-05-04",
+        "author": "MythicalSystems",
+        "license": "MIT",
+        "url": "https:\/\/github.com\/mythicalltd\/framework"
     },
     "database": {
-        "host": "localhost",
-        "port": 3306,
-        "username": "",
-        "password": "",
-        "name": "mythicalsystems"
+        "host": "127.0.0.1",
+        "port": "3306",
+        "username": "nayskutzu",
+        "password": "Pek!J8iH*qPCmGqovd_zRWpfqDT8vH*d",
+        "name": "test2"
     },
-    "__last_updated": "2024-05-03 13:10:05"
+    "__last_updated": "2024-05-04 14:45:10"
 }
