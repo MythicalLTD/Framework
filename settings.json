@@ -23,9 +23,12 @@
     "database": {
         "host": "127.0.0.1",
         "port": "3306",
-        "username": "nayskutzu",
-        "password": "Pek!J8iH*qPCmGqovd_zRWpfqDT8vH*d",
-        "name": "test2"
+        "username": "",
+        "password": "",
+        "name": ""
+    },
+    "encryption": {
+        "key": "",
     },
     "__last_updated": "2024-05-04 14:45:10"
 }
