@@ -1,0 +1,53 @@
+{
+    "name": "mythicalsystems/framework",
+    "description": "The framework we use for our projects!",
+    "type": "project",
+    "homepage": "https://github.com/mythicalltd/mythicalcore",
+    "require": {
+        "mythicalsystems/core": "^1.0",
+        "smarty/smarty": "^5.0",
+        "php": ">=8.1.0",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "keywords": [
+        "mythicalsystems",
+        "mythicalcore",
+        "mythicalltd",
+        "nayskutzu",
+        "php-router",
+        "router",
+        "phprouter",
+        "mythicaldash",
+        "mythicalclient",
+        "kosmapanel"
+    ],
+    "authors": [
+        {
+            "name": "NaysKutzu",
+            "email": "nayskutzu@mythicalsystems.me",
+            "role": "Owner",
+            "homepage": "https://mythicalsystems.me"
+        }
+    ],
+    "support": {
+        "wiki": "https://docs.mythicalsystems.me",
+        "chat": "https://discord.gg/Tswkrhreu3",
+        "issues": "https://github.com/mythicalltd/mythicalcore/issues",
+        "docs": "https://docs.mythicalsystems.me",
+        "forum": "https://discord.gg/Tswkrhreu3"
+    },
+    "funding": [
+        {
+            "type": "GitHub",
+            "url": "https://github.com/sponsors/nayskutzu"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MythicalSystemsFramework\\": "app/"
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+	"S_LOG": {
+		"prefix": "S_LOG",
+		"scope": "php",
+		"body": [
+			"/**",
+			"* Logger",
+			"* ",
+			"* Logs something: LEVEL, TYPE, MESSAGE",
+			"* ",
+			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
+			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
+			"*/",
+			"Logger::log(LoggerManager::$1,LoggerManager::$2,\"$3\");"
+		],
+		"description": "Some error logging!"
+	},
+	"Get translation": {
+		"prefix": "S_GetLang",
+		"scope": "php",
+		"body": [
+			"\\$lang['$1']"
+		],
+		"description": "Get a specific value from the language file!"
+	},
+}

@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+        "streetsidesoftware.code-spell-checker",
+        "devsense.composer-php-vscode",
+        "rifi2k.format-html-in-php",
+        "mohd-akram.vscode-html-format",
+        "devsense.intelli-php-vscode",
+        "devsense.phptools-vscode",
+        "devsense.profiler-php-vscode",
+        "lkrms.pretty-php",
+        "rangav.vscode-thunder-client",
+        "adpyke.codesnap",
+        "genuitecllc.codetogether",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github",
+        "equinusocio.vsc-material-theme-icons",
+        "sophisticode.php-formatter"
+    ]
+}

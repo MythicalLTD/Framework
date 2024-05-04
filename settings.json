@@ -1,0 +1,25 @@
+{
+    "app": {
+        "name": "MythicalSystems",
+        "logo": "https://avatars.githubusercontent.com/u/117385445",
+        "timezone": "Europe\/Bucharest",
+        "theme": "default",
+        "lang": "en_US"
+    },
+    "seo": {
+        "title": "MythicalSystems",
+        "description": "MythicalSystems is a framework for building web applications.",
+        "keywords": "MythicalSystems, web applications, framework"
+    },
+    "framework": {
+        "version": "1.0.0"
+    },
+    "database": {
+        "host": "localhost",
+        "port": 3306,
+        "username": "",
+        "password": "",
+        "name": "mythicalsystems"
+    },
+    "__last_updated": "2024-05-03 13:10:05"
+}
