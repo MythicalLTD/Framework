@@ -28,7 +28,8 @@
         "name": ""
     },
     "encryption": {
-        "key": "",
+        "method": "MythicalCore",
+        "key": ""
     },
-    "__last_updated": "2024-05-04 14:45:10"
+    "__last_updated": "2024-05-04 22:06:15"
 }

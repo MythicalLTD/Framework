@@ -43,7 +43,6 @@ class dbconfigureCommand
         $password = readline();
         echo color::translateColorsCode("&fEnter the database name: ");
         $database = readline();
-
         // Perform validation
         if (empty($username) || empty($password) || empty($database)) {
             echo color::translateColorsCode("&cPlease provide all the required information.&o");

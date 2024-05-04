@@ -17,6 +17,11 @@ use MythicalSystems\Api\Api as api;
 
 $router = new \Router\Router();
 $renderer = new Smarty();
+
+if (cfg::get("encryption","key") == "") {
+    die("We are sorry but you are missing the encryption key!");
+}
+
 if (!is_writable(__DIR__)) {
     die("We have no access to the framework directory!");
 }
