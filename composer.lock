@@ -49,8 +49,8 @@
             "authors": [
                 {
                     "name": "NaysKutzu",
-                    "email": "nayskutzu@mythicalsystems.me",
-                    "homepage": "https://mythicalsystems.me",
+                    "email": "nayskutzu@mythicalsystems.xyz",
+                    "homepage": "https://mythicalsystems.xyz",
                     "role": "Owner"
                 }
             ],
@@ -70,11 +70,11 @@
             ],
             "support": {
                 "chat": "https://discord.gg/Tswkrhreu3",
-                "docs": "https://docs.mythicalsystems.me",
+                "docs": "https://docs.mythicalsystems.xyz",
                 "forum": "https://discord.gg/Tswkrhreu3",
                 "issues": "https://github.com/mythicalltd/mythicalcore/issues",
                 "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.4",
-                "wiki": "https://docs.mythicalsystems.me"
+                "wiki": "https://docs.mythicalsystems.xyz"
             },
             "funding": [
                 {

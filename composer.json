@@ -27,16 +27,16 @@
     "authors": [
         {
             "name": "NaysKutzu",
-            "email": "nayskutzu@mythicalsystems.me",
+            "email": "nayskutzu@mythicalsystems.xyz",
             "role": "Owner",
-            "homepage": "https://mythicalsystems.me"
+            "homepage": "https://mythicalsystems.xyz"
         }
     ],
     "support": {
-        "wiki": "https://docs.mythicalsystems.me",
+        "wiki": "https://docs.mythicalsystems.xyz",
         "chat": "https://discord.gg/Tswkrhreu3",
         "issues": "https://github.com/mythicalltd/mythicalcore/issues",
-        "docs": "https://docs.mythicalsystems.me",
+        "docs": "https://docs.mythicalsystems.xyz",
         "forum": "https://discord.gg/Tswkrhreu3"
     },
     "funding": [
