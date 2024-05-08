@@ -10,7 +10,6 @@ try {
 }
 use MythicalSystemsFramework\Cli\Kernel as k;
 use MythicalSystemsFramework\Cli\Colors;
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
 try {
     k::executeCommand(isset($argv[1]) ? $argv[1] : '');

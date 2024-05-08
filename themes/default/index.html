@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en_US">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MythicalSystems - Framework</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.css">
+    <link rel="stylesheet" href="./core_assets/prism_light_atom.min.css">
+    <link rel="stylesheet" href="./core_assets/semantic.min.css">
+    <link rel="stylesheet" href="./core_assets/error.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@5.3.4/dist/simplebar.min.css">
+</head>
+
+<body class="loading">
+    <div class="preloader">
+        <div class="loader"></div>
+        <div class="loading-text">Kindly hold for a moment as we gather the error report.</div>
+    </div>
+    <div id="particles-js"></div>
+    <div class="ui container one column grid">
+        <div class="row ">
+            <div class="ui message"
+                style="padding-bottom: 20px; margin-top: 30px; width: 100%; overflow-wrap: break-word;">
+                <div class="ui large header">%PHP_ERROR_NAME%</div>
+                <p></p>
+                <div class="ui large header"><kbd>%PHP_ERROR%</kbd></div>
+                <p></p>
+                <div class="ui medium header">
+                    %ERROR_FILE_NAME%
+                </div>
+                <p></p>
+                <a
+                    href="index.php">index.php</a>
+                <button style="margin-top: -7px;" class="ui primary right floated button" id="show_debug_modal"
+                    onclick="showDebugModal()">
+                    Debug Link
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="ui two item menu" style="cursor: pointer;">
+                <div class="item" data-tab="stack">Stack trace</div>
+                <div class="item" data-tab="sql">SQL trace</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="ui bottom attached tab segment active" id="stack" data-tab="stack" style="border-radius: 3px;">
+                <div id="codeeditor">Editor 1</div>
+
+            </div>
+
+            <div class="ui bottom attached tab segment active" id="sql" data-tab="sql"
+                style="border: 1px solid #d4d4d5; border-radius: 3px;">
+                <div id="queryeditor">Editor 2</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./core_assets/jquery.min.js"></script>
+    <script src="./core_assets/semantic.min.js"></script>
+    <script src="./core_assets/prism.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.js" type="text/javascript" charset="utf-8"></script>
+
+    <script>
+        var editor = ace.edit("codeeditor");
+        editor.setTheme("ace/theme/twilight");
+        editor.session.setMode("ace/mode/php");
+        editor.session.setUseSoftTabs(true);
+        editor.setReadOnly(true);
+
+        var queryeditor = ace.edit("queryeditor");
+        queryeditor.setTheme("ace/theme/twilight");
+        queryeditor.session.setMode("ace/mode/php");
+        queryeditor.session.setUseSoftTabs(true);
+        queryeditor.setReadOnly(true);
+
+        $(document).ready(function () {
+            $('.menu .item').tab();
+            document.getElementById('sql').classList.remove('active');
+            checkWidth();
+            window.addEventListener('resize', checkWidth);
+        });
+
+        function checkWidth() {
+            if (window.matchMedia("(max-width: 1198px)").matches) {
+                document.getElementById('tablinks-container').classList.add('fluid');
+                document.getElementById('sql-tablinks-container').classList.add('fluid');
+            } else {
+                document.getElementById('tablinks-container').classList.remove('fluid');
+                document.getElementById('sql-tablinks-container').classList.remove('fluid');
+            }
+        }
+
+        function openFrame(id) {
+            hideAllFrames();
+            removeAllActive();
+
+            $('#frame-' + id).css('display', 'block');
+            $('#button-frame' + id).addClass('active');
+        }
+
+        function openSqlFrame(id) {
+            hideAllSqlFrames();
+            removeAllActiveSqlFrames();
+
+            $('#sql-frame-' + id).css('display', 'block');
+            $('#sql-button-stack' + id).addClass('active');
+        }
+
+        // Get current year
+        var currentYear = new Date().getFullYear();
+        document.getElementById("current-year").textContent = currentYear;
+    </script>
+    <script>document.addEventListener("DOMContentLoaded", function () { setTimeout(function () { !function e() { let n = document.querySelector(".preloader"); n.style.opacity = "0", setTimeout(() => { n.style.display = "none", document.body.classList.remove("loading") }, 3500) }() }, 3500), particlesJS("particles-js", { particles: { number: { value: 160, density: { enable: !0, value_area: 800 } }, color: { value: "#ffffff" }, shape: { type: "circle", stroke: { width: 0, color: "#000000" }, polygon: { nb_sides: 5 }, image: { src: "img/github.svg", width: 100, height: 100 } }, opacity: { value: 1, random: !0, anim: { enable: !0, speed: 1, opacity_min: 0, sync: !1 } }, size: { value: 3, random: !0, anim: { enable: !1, speed: 4, size_min: .3, sync: !1 } }, line_linked: { enable: !1, distance: 150, color: "#ffffff", opacity: .4, width: 1 }, move: { enable: !0, speed: 1, direction: "none", random: !0, straight: !1, out_mode: "out", bounce: !1, attract: { enable: !1, rotateX: 600, rotateY: 600 } } }, interactivity: { detect_on: "canvas", events: { onhover: { enable: !0, mode: "bubble" }, onclick: { enable: !0, mode: "push" }, resize: !0 }, modes: { grab: { distance: 0, line_linked: { opacity: 1 } }, bubble: { distance: 250, size: 0, duration: 2, opacity: 0, speed: 3 }, repulse: { distance: 400, duration: .4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } } }, retina_detect: !0 }) });</script>
+    <script src="https://unpkg.com/simplebar@5.3.4/dist/simplebar.min.js"></script>
+    <script>
+        new SimpleBar(document.querySelector('[data-simplebar]'));
+    </script>
+</body>
+
+</html>
