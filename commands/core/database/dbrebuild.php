@@ -33,7 +33,7 @@ class dbrebuildCommand
     public function wipe() {
         try {
             $mysql = new MySQL();
-            $db = $mysql->connect();
+            $db = $mysql->connectPDO();
 
             $db->exec("SET FOREIGN_KEY_CHECKS = 0");
             $tables = $db->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);

@@ -15,6 +15,13 @@ class configmigrateCommand
             $migratedFiles = file($migratedFilePath, FILE_IGNORE_NEW_LINES);
         }
 
+        // Sort the migrate files from oldest to newest
+        usort($mifiles, function($a, $b) {
+            $aTimestamp = strtotime(str_replace(':', '.', $a));
+            $bTimestamp = strtotime(str_replace(':', '.', $b));
+            return $aTimestamp - $bTimestamp;
+        });
+
         foreach ($mifiles as $mfiletom) {
             if ($mfiletom !== '.' && $mfiletom !== '..' && !in_array($mfiletom, $migratedFiles)) {
                 $filePath = $mdirectory . $mfiletom;

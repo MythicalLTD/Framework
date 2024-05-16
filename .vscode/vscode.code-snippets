@@ -11,7 +11,7 @@
 			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
 			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
 			"*/",
-			"Logger::log(LoggerManager::$1,LoggerManager::$2,\"$3\");"
+			"Logger::log(Logger::$1,Logger::$2,\"$3\");"
 		],
 		"description": "Some error logging!"
 	},

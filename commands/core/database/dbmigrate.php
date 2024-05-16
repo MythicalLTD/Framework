@@ -1,4 +1,4 @@
-<?php 
+<?php
 use MythicalSystemsFramework\Cli\Colors as color;
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
@@ -28,36 +28,40 @@ class dbmigrateCommand
     {
         try {
             $mysql = new MySQL();
-            $db = $mysql->connect();
-            
-            $db->exec("
-                CREATE TABLE IF NOT EXISTS migrations (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    script VARCHAR(255) NOT NULL,
-                    executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ");
+            $db = $mysql->connectPDO();
 
-            $sqlFiles = glob(__DIR__.'/../../../migrate/database/*.sql');
+            $db->exec("
+            CREATE TABLE IF NOT EXISTS migrations (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                script VARCHAR(255) NOT NULL,
+                executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ");
+
+            $sqlFiles = glob(__DIR__ . '/../../../migrate/database/*.sql');
 
             if (count($sqlFiles) > 0) {
+                sort($sqlFiles); // Sort the SQL files in ascending order
+
                 foreach ($sqlFiles as $sqlFile) {
                     $script = file_get_contents($sqlFile);
 
+                    $fileName = basename($sqlFile); // Get only the file name
+
                     $stmt = $db->prepare("SELECT COUNT(*) FROM migrations WHERE script = ?");
-                    $stmt->execute([$sqlFile]);
+                    $stmt->execute([$fileName]);
                     $count = $stmt->fetchColumn();
 
                     if ($count == 0) {
                         $db->exec($script);
 
                         $stmt = $db->prepare("INSERT INTO migrations (script) VALUES (?)");
-                        $stmt->execute([$sqlFile]);
+                        $stmt->execute([$fileName]);
 
-                        echo color::translateColorsCode("&fExecuted migration: &e" . basename($sqlFile) . "&o");
+                        echo color::translateColorsCode("&fExecuted migration: &e" . $fileName . "&o");
                         echo color::NewLine();
                     } else {
-                        echo color::translateColorsCode("&fSkipping migration: &e" . basename($sqlFile) . " &f(&ealready executed&f)&o");
+                        echo color::translateColorsCode("&fSkipping migration: &e" . $fileName . " &f(&ealready executed&f)&o");
                         echo color::NewLine();
                     }
                 }
