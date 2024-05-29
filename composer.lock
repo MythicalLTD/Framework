@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "mythicalsystems/core",
-            "version": "1.0.0.6",
+            "version": "1.0.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MythicalLTD/MythicalCore.git",
-                "reference": "e04b759156a7ac0ee7ebeee0f40836a372e8f731"
+                "reference": "ecc506216d235ecc98c588adc84605c933cc6f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MythicalLTD/MythicalCore/zipball/e04b759156a7ac0ee7ebeee0f40836a372e8f731",
-                "reference": "e04b759156a7ac0ee7ebeee0f40836a372e8f731",
+                "url": "https://api.github.com/repos/MythicalLTD/MythicalCore/zipball/ecc506216d235ecc98c588adc84605c933cc6f1b",
+                "reference": "ecc506216d235ecc98c588adc84605c933cc6f1b",
                 "shasum": ""
             },
             "require": {
@@ -73,7 +73,7 @@
                 "docs": "https://docs.mythicalsystems.me",
                 "forum": "https://discord.gg/Tswkrhreu3",
                 "issues": "https://github.com/mythicalltd/mythicalcore/issues",
-                "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.6",
+                "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.7",
                 "wiki": "https://docs.mythicalsystems.me"
             },
             "funding": [
@@ -82,7 +82,7 @@
                     "type": "GitHub"
                 }
             ],
-            "time": "2024-05-16T10:44:54+00:00"
+            "time": "2024-05-23T14:37:06+00:00"
         },
         {
             "name": "smarty/smarty",
