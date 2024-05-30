@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 try {
     if (file_exists('../vendor/autoload.php')) {
         require ('../vendor/autoload.php');
@@ -13,9 +16,29 @@ use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use Smarty\Smarty;
 use MythicalSystems\Api\ResponseHandler as rsp;
 use MythicalSystems\Api\Api as api;
-
-
 $router = new \Router\Router();
+
+if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
+    $router->add('/', function () {
+        include(__DIR__.'/../core/install/index.php');
+    });
+
+
+    $router->add('/mysql', function () {
+        include(__DIR__.'/../core/install/mysql.php');
+    });
+
+    $router->add('/install', function () {
+        include(__DIR__.'/../core/install/install.php');
+    });
+
+    $router->add('/(.*)', function () {
+        header('location: /');
+    });
+    $router->route();
+    die();
+}
+
 $renderer = new Smarty();
 
 if (cfg::get("encryption","key") == "") {
@@ -36,6 +59,9 @@ $renderer->setCacheDir(DIR_CACHE);
 $renderer->setCompileDir(DIR_COMPILE);
 $renderer->setConfigDir(DIR_CONFIG);
 $renderer->setEscapeHtml(true);
+$renderer->setCompileCheck(true);
+$renderer->setCacheLifetime(3600);
+include(__DIR__.'/../core/template_init.php');
 
 $routesAPIDirectory = __DIR__ . '/../routes/api/';
 $iterator2 = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($routesAPIDirectory));
@@ -46,13 +72,13 @@ foreach ($phpApiFiles as $phpApiFile) {
         include $phpApiFile->getPathname();
     } catch (Exception $ex) {
         api::init();
-        rsp::InternalServerError($e->getMessage());
+        rsp::InternalServerError($e->getMessage(), null);
     }
 }
 
 $router->add('/api/(.*)', function () {
     api::init();
-    rsp::NotFound("The api route does not exist!");
+    rsp::NotFound("The api route does not exist!", null);
 });
 
 $routesViewDirectory = __DIR__ . '/../routes/views/';

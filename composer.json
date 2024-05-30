@@ -49,5 +49,16 @@
         "psr-4": {
             "MythicalSystemsFramework\\": "app/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.1"
+    },
+    "scripts": {
+        "tests": [
+            "vendor/bin/phpunit tests/*"
+        ],
+        "build": [
+            "echo Please use the IDE to build not the composer commands!"
+        ]
     }
 }

@@ -10,7 +10,7 @@ class configmigrateCommand
         $mdirectory = __DIR__.'/../../../migrate/config/';
         $mifiles = scandir($mdirectory);
 
-        $migratedFilePath = __DIR__.'/../../../caches/migrated_files.txt';
+        $migratedFilePath = __DIR__.'/../../../migrated_files.txt';
         if (file_exists($migratedFilePath)) {
             $migratedFiles = file($migratedFilePath, FILE_IGNORE_NEW_LINES);
         }

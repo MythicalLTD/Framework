@@ -18,6 +18,9 @@ class ConfigManager
     public static function get(string $category, string $key): string|null
     {
         try {
+            if (!file_exists(self::$configpath)) {
+                die("Config file not found!");
+            }
             if (!is_writable(self::$configpath)) {
                 die("We have no access to the config file!");
             } else {
@@ -40,6 +43,9 @@ class ConfigManager
     public static function set(string $category, string $key, string $value): bool
     {
         try {
+            if (!file_exists(self::$configpath)) {
+                die("Config file not found!");
+            }
             if (!is_writable(self::$configpath)) {
                 die("We have no access to the config file!");
             } else {
@@ -63,6 +69,9 @@ class ConfigManager
     public static function add(string $category, string $key, string $value): bool
     {
         try {
+            if (!file_exists(self::$configpath)) {
+                die("Config file not found!");
+            }
             if (!is_writable(self::$configpath)) {
                 die("We have no access to the config file!");
             } else {
@@ -85,6 +94,9 @@ class ConfigManager
     public static function remove(string $category, string $key): bool
     {
         try {
+            if (!file_exists(self::$configpath)) {
+                die("Config file not found!");
+            }
             if (!is_writable(self::$configpath)) {
                 die("We have no access to the config file!");
             } else {

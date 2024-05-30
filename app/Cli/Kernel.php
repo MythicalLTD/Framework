@@ -21,7 +21,7 @@ class Kernel
             $commandClass = ucfirst(strtolower($commandName)) . 'Command';
             if (class_exists($commandClass)) {
                 $command = new $commandClass();
-                $command->execute();
+                $command->execute(true);
             } else {
                 throw new Exception("Command class not found: $commandClass");
             }

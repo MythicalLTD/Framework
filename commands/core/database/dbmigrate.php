@@ -31,7 +31,7 @@ class dbmigrateCommand
             $db = $mysql->connectPDO();
 
             $db->exec("
-            CREATE TABLE IF NOT EXISTS migrations (
+            CREATE TABLE IF NOT EXISTS framework_migrations (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 script VARCHAR(255) NOT NULL,
                 executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -48,14 +48,14 @@ class dbmigrateCommand
 
                     $fileName = basename($sqlFile); // Get only the file name
 
-                    $stmt = $db->prepare("SELECT COUNT(*) FROM migrations WHERE script = ?");
+                    $stmt = $db->prepare("SELECT COUNT(*) FROM framework_migrations WHERE script = ?");
                     $stmt->execute([$fileName]);
                     $count = $stmt->fetchColumn();
 
                     if ($count == 0) {
                         $db->exec($script);
 
-                        $stmt = $db->prepare("INSERT INTO migrations (script) VALUES (?)");
+                        $stmt = $db->prepare("INSERT INTO framework_migrations (script) VALUES (?)");
                         $stmt->execute([$fileName]);
 
                         echo color::translateColorsCode("&fExecuted migration: &e" . $fileName . "&o");
