@@ -1,5 +1,4 @@
 #!/bin/bash
-cd ..
 composer update
 composer run tests
 

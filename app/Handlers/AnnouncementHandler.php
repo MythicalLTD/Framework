@@ -1,57 +1,29 @@
 <?php
+
 namespace MythicalSystemsFramework\Handlers;
 
-class AnnouncementHandler {
-    /**
-     * Get the current announcements from the JSON file.
-     *
-     * @return array
-     */
-    private static function getAnnouncements(): array
-    {
-        $file = '../caches/announcements.json';
-        if (file_exists($file)) {
-            $data = file_get_contents($file);
-            return json_decode($data, true);
-        } else {
-            return [];
-        }
-    }
+use MythicalSystemsFramework\Database\MySQL;
 
-    /**
-     * Save the announcements to the JSON file.
-     *
-     * @param array $announcements
-     *
-     * @return void
-     */
-    private static function saveAnnouncements(array $announcements): void
-    {
-        $file = '../caches/announcements.json';
-        file_put_contents($file, json_encode($announcements, JSON_PRETTY_PRINT));
-    }
-
+class AnnouncementHandler
+{
     /**
      * Create a new announcement.
      *
      * @param string $title
      * @param string $text
      *
-     * @return int
+     * @return int The ID of the created announcement.
      */
     public static function create(string $title, string $text): int
     {
-        $announcements = self::getAnnouncements();
-        $announcementID = count($announcements) + 1;
-        $announcement = [
-            'id' => $announcementID,
-            'title' => $title,
-            'text' => $text,
-            'date' => date('Y-m-d H:i'),
-        ];
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
 
-        $announcements[] = $announcement;
-        self::saveAnnouncements($announcements);
+        $stmt = $conn->prepare("INSERT INTO framework_announcements (title, text, date) VALUES (?, ?, NOW())");
+        $stmt->bind_param("ss", $title, $text);
+        $stmt->execute();
+        $announcementID = $stmt->insert_id;
+        $stmt->close();
         return $announcementID;
     }
 
@@ -66,106 +38,107 @@ class AnnouncementHandler {
      */
     public static function edit(int $id, string $title, string $text): void
     {
-        $announcements = self::getAnnouncements();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
 
-        foreach ($announcements as &$announcement) {
-            if ($announcement['id'] === $id) {
-                $announcement['title'] = $title;
-                $announcement['text'] = $text;
-                break;
-            }
-        }
-
-        self::saveAnnouncements($announcements);
+        $stmt = $conn->prepare("UPDATE framework_announcements SET title = ?, text = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $title, $text, $id);
+        $stmt->execute();
+        $stmt->close();
     }
 
     /**
      * Delete an announcement by ID.
      *
      * @param int $id
-     * 
      * @return void
      */
     public static function delete(int $id): void
     {
-        $announcements = self::getAnnouncements();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
 
-        $announcements = array_filter($announcements, function ($announcement) use ($id) {
-            return $announcement['id'] !== $id;
-        });
-
-        self::saveAnnouncements(array_values($announcements));
+        $stmt = $conn->prepare("DELETE FROM framework_announcements WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
     }
 
     /**
-     * Delete all announcements.
+     * Delete all framework_announcements.
      *
      * @return void
      */
     public static function deleteAll(): void
     {
-        self::saveAnnouncements([]);
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+
+        $conn->query("TRUNCATE TABLE framework_announcements");
     }
 
     /**
      * Get a single announcement by ID.
      *
      * @param int $id
-     * 
      * @return array|null
      */
     public static function getOne(int $id): ?array
     {
-        $announcements = self::getAnnouncements();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
 
-        foreach ($announcements as $announcement) {
-            if ($announcement['id'] === $id) {
-                return $announcement;
-            }
-        }
-
-        return null;
+        $stmt = $conn->prepare("SELECT * FROM framework_announcements WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $announcement = $result->fetch_assoc();
+        $stmt->close();
+        return $announcement ? $announcement : null;
     }
 
     /**
-     * Get all announcements.
+     * Get all framework_announcements.
      *
      * @return array
      */
     public static function getAll(): array
     {
-        return self::getAnnouncements();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+
+        $result = $conn->query("SELECT * FROM framework_announcements");
+        $framework_announcements = $result->fetch_all(MYSQLI_ASSOC);
+        return $framework_announcements;
     }
 
     /**
-     * Get all announcements sorted by ID in descending order.
+     * Get all framework_announcements sorted by ID in descending order.
      *
      * @return array
      */
     public static function getAllSortedById(): array
     {
-        $announcements = self::getAnnouncements();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
 
-        usort($announcements, function ($a, $b) {
-            return $b['id'] - $a['id'];
-        });
-
-        return $announcements;
+        $result = $conn->query("SELECT * FROM framework_announcements ORDER BY id DESC");
+        $framework_announcements = $result->fetch_all(MYSQLI_ASSOC);
+        return $framework_announcements;
     }
 
     /**
-     * Get all announcements sorted by date in descending order.
+     * Get all framework_announcements sorted by date in descending order.
      *
      * @return array
      */
     public static function getAllSortedByDate(): array
     {
-        $announcements = self::getAnnouncements();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
 
-        usort($announcements, function ($a, $b) {
-            return strtotime($b['date']) - strtotime($a['date']);
-        });
-
-        return $announcements;
+        $result = $conn->query("SELECT * FROM framework_announcements ORDER BY date DESC");
+        $framework_announcements = $result->fetch_all(MYSQLI_ASSOC);
+        return $framework_announcements;
     }
 }

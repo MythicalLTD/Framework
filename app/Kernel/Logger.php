@@ -1,10 +1,13 @@
 <?php
+
 namespace MythicalSystemsFramework\Kernel;
 
 use Exception;
+use MythicalSystemsFramework\Database\MySQL;
 
 class Logger
 {
+    // Log level 
     const INFO = 'INFO';
     const WARNING = 'WARNING';
     const ERROR = 'ERROR';
@@ -19,104 +22,59 @@ class Logger
     const OTHER = 'OTHER';
 
     /**
-     * Log something inside the kernel logs
+     * Log something inside the kernel framework_logs
      * 
-     * @param string $level (INFO,WARNING,ERROR,CRITICAL,OTHER)
-     * @param string $type (CORE,DATABASE,PLUGIN,LOG,OTHER)
+     * @param string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
+     * @param string $type (CORE, DATABASE, PLUGIN, LOG, OTHER)
      * @param string $message The message you want to log
      * 
      * @return int The log id!
      */
     public static function log(string $level, string $type, string $message): int
     {
-        if (empty($level)) {
-            throw new Exception("At least one log level must be provided");
-        }
-        if (empty($type)) {
-            throw new Exception("At least one log type must be provided");
-        }
-
-        if (!$level == self::INFO || !$level == self::WARNING || !$level == self::ERROR || !$level == self::CRITICAL || !$level == self::OTHER) {
-            throw new Exception("It looks like you did not provide a valid log level!");
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        if (empty($level) || empty($type)) {
+            throw new Exception("Both log level and type must be provided");
         }
 
-        if (!$type == self::CORE || !$type == self::DATABASE || !$type == self::PLUGIN || !$type == self::LOG || !$type == self::OTHER || !$type == self::LANGUAGE) {
-            throw new Exception("It looks like you did not provide a valid type!");
-        }
         $output = "[" . date("Y-m-d H:i:s") . "] (" . $type . '/' . $level . ") " . $message . "";
 
-        $logs = self::getLogs();
-        $logId = count($logs) + 1;
-
-        $log = [
-            'id' => $logId,
-            'type' => $type,
-            'level' => $level,
-            'date' => date('Y-m-d H:i'),
-            'message' => $message,
-            'formatted' => $output,
-        ];
-        $logs[] = $log;
-
-        self::saveLogs($logs);
+        $stmt = $conn->prepare("INSERT INTO framework_logs (type, levels, message, formatted, date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->bind_param("ssss", $type, $level, $message, $output);
+        $stmt->execute();
+        $logId = $stmt->insert_id;
+        $stmt->close();
 
         return $logId;
     }
 
-     /**
-     * Get the current logs from the JSON file.
-     *
-     * @return array
-     */
-    private static function getLogs(): array
-    {
-        $file = '../caches/logs.json';
-        if (file_exists($file)) {
-            $data = file_get_contents($file);
-            return json_decode($data, true);
-        } else {
-            return [];
-        }
-    }
-
     /**
-     * Save the logs to the JSON file.
-     *
-     * @param array $logs
-     *
-     * @return void
-     */
-    private static function saveLogs(array $logs): void
-    {
-        $file = '../caches/logs.json';
-        file_put_contents($file, json_encode($logs, JSON_PRETTY_PRINT));
-    }
-
-    /**
-     * Delete an log by ID.
+     * Delete a log by ID.
      *
      * @param int $id
      * @return void
      */
     public static function delete(int $id): void
     {
-        $logs = self::getLogs();
-
-        $logs = array_filter($logs, function ($log) use ($id) {
-            return $log['id'] !== $id;
-        });
-
-        self::saveLogs(array_values($logs));
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        $stmt = $conn->prepare("DELETE FROM framework_logs WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
     }
 
     /**
-     * Delete all logs.
+     * Delete all framework_logs.
      *
      * @return void
      */
     public static function deleteAll(): void
     {
-        self::saveLogs([]);
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        $conn->query("TRUNCATE TABLE framework_logs");
     }
 
     /**
@@ -127,56 +85,56 @@ class Logger
      */
     public static function getOne(int $id): ?array
     {
-        $logs = self::getLogs();
-
-        foreach ($logs as $log) {
-            if ($log['id'] === $id) {
-                return $log;
-            }
-        }
-
-        return null;
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        $stmt = $conn->prepare("SELECT * FROM framework_logs WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $log = $result->fetch_assoc();
+        $stmt->close();
+        return $log ? $log : null;
     }
 
     /**
-     * Get all logs.
+     * Get all framework_logs.
      *
      * @return array
      */
     public static function getAll(): array
     {
-        return self::getLogs();
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        $result = $conn->query("SELECT * FROM framework_logs");
+        $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
+        return $framework_logs;
     }
 
     /**
-     * Get all logs sorted by ID in descending order.
+     * Get all framework_logs sorted by ID in descending order.
      *
      * @return array
      */
     public static function getAllSortedById(): array
     {
-        $logs = self::getLogs();
-
-        usort($logs, function ($a, $b) {
-            return $b['id'] - $a['id'];
-        });
-
-        return $logs;
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        $result = $conn->query("SELECT * FROM framework_logs ORDER BY id DESC");
+        $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
+        return $framework_logs;
     }
 
     /**
-     * Get all logs sorted by date in descending order.
+     * Get all framework_logs sorted by date in descending order.
      *
      * @return array
      */
     public static function getAllSortedByDate(): array
     {
-        $logs = self::getLogs();
-
-        usort($logs, function ($a, $b) {
-            return strtotime($b['date']) - strtotime($a['date']);
-        });
-
-        return $logs;
+        $mysqli = new MySQL();
+        $conn = $mysqli->connectMYSQLI();
+        $result = $conn->query("SELECT * FROM framework_logs ORDER BY date DESC");
+        $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
+        return $framework_logs;
     }
 }

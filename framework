@@ -1,18 +1,19 @@
 <?php
 try {
     if (file_exists('vendor/autoload.php')) {
-        require ('vendor/autoload.php');
+        require('vendor/autoload.php');
     } else {
         die('Hello, it looks like you did not run: "composer install --no-dev --optimize-autoloader". Please run that and refresh the page');
     }
 } catch (Exception $e) {
     die('Hello, it looks like you did not run: composer install --no-dev --optimize-autoloader Please run that and refresh');
 }
+
 use MythicalSystemsFramework\Cli\Kernel as k;
 use MythicalSystemsFramework\Cli\Colors;
 
 try {
     k::executeCommand(isset($argv[1]) ? $argv[1] : '');
 } catch (Exception $e) {
-    die(Colors::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&l". $e->getMessage() . ""));
+    die(Colors::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&l" . $e->getMessage() . ""));
 }

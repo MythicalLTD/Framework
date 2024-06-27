@@ -1,4 +1,5 @@
 <?php
+
 namespace MythicalSystemsFramework\Managers;
 
 use Exception;

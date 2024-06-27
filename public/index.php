@@ -1,10 +1,11 @@
 <?php
+use MythicalSystemsFramework\Managers\SettingsManager;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 try {
     if (file_exists('../vendor/autoload.php')) {
-        require ('../vendor/autoload.php');
+        require('../vendor/autoload.php');
     } else {
         die('Hello, it looks like you did not run: "<code>composer install --no-dev --optimize-autoloader</code>". Please run that and refresh the page');
     }
@@ -20,16 +21,16 @@ $router = new \Router\Router();
 
 if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
     $router->add('/', function () {
-        include(__DIR__.'/../core/install/index.php');
+        include(__DIR__ . '/../core/install/index.php');
     });
 
 
     $router->add('/mysql', function () {
-        include(__DIR__.'/../core/install/mysql.php');
+        include(__DIR__ . '/../core/install/mysql.php');
     });
 
     $router->add('/install', function () {
-        include(__DIR__.'/../core/install/install.php');
+        include(__DIR__ . '/../core/install/install.php');
     });
 
     $router->add('/(.*)', function () {
@@ -38,10 +39,10 @@ if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
     $router->route();
     die();
 }
-
+die(SettingsManager::set('app', 'name'));
 $renderer = new Smarty();
 
-if (cfg::get("encryption","key") == "") {
+if (cfg::get("encryption", "key") == "") {
     die("We are sorry but you are missing the encryption key!");
 }
 
@@ -61,7 +62,25 @@ $renderer->setConfigDir(DIR_CONFIG);
 $renderer->setEscapeHtml(true);
 $renderer->setCompileCheck(true);
 $renderer->setCacheLifetime(3600);
-include(__DIR__.'/../core/template_init.php');
+$renderer->assign(
+    [
+        "cfg_app_name" => cfg::get("app", "name"),
+        "cfg_app_logo" => cfg::get("app", "logo"),
+        "cfg_app_maintenance" => cfg::get("app", "maintenance"),
+        "cfg_app_theme" => cfg::get("app", "version"),
+        "cfg_app_lang" => cfg::get("app", "lang"),
+        "cfg_app_timezone" => cfg::get("app", "timezone"),
+
+        "cfg_seo_title" => cfg::get("seo", "title"),
+        "cfg_seo_description" => cfg::get("seo", "description"),
+        "cfg_seo_keywords" => cfg::get("seo", "keywords"),
+
+        "cfg_framework_version" => cfg::get("framework", "version"),
+        "cfg_framework_branch" => cfg::get("framework", "branch"),
+        "cfg_framework_name" => cfg::get("framework", "name"),
+        "cfg_framework_debug" => cfg::get("framework", "debug"),
+    ]
+);
 
 $routesAPIDirectory = __DIR__ . '/../routes/api/';
 $iterator2 = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($routesAPIDirectory));
@@ -96,7 +115,7 @@ foreach ($phpViewFiles as $phpViewFile) {
 }
 
 $router->add('/(.*)', function () {
-    die ("Route not found!");
+    die("Route not found!");
 });
 
 try {

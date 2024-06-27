@@ -9,3 +9,4 @@ composer.phar
 /production_*
 /package-lock.json
 /node_modules
+/test.json

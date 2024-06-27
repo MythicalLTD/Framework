@@ -8,7 +8,8 @@
         "smarty/smarty": "^5.0",
         "php": ">=8.1.0",
         "ext-json": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "gravatarphp/gravatar": "^1.0"
     },
     "license": "MIT",
     "minimum-stability": "stable",
@@ -57,8 +58,9 @@
         "tests": [
             "vendor/bin/phpunit tests/*"
         ],
-        "build": [
-            "echo Please use the IDE to build not the composer commands!"
+        "push": [
+            "bash devtools/push.bash",
+            "git push origin develop"
         ]
     }
 }

@@ -1,0 +1,15 @@
+{
+    "name": "Example",
+    "description": "An example addon",
+    "version": "1.0.0",
+    "main": "main.php",
+    "authors": [
+        {
+            "name": "Your Name"
+        }
+    ],
+
+    "dependencies": {
+        "php": ">=7.0.0"
+    }
+}

@@ -12,7 +12,8 @@ class CacheHandler
      * 
      * @return void
      */
-    public static function createFile() : void  {
+    public static function createFile(): void
+    {
         if (!file_exists(self::$cache_file)) {
             file_put_contents(self::$cache_file, "{}");
         }
