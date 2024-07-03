@@ -20,7 +20,7 @@ class SettingsManager
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare("SELECT `svalue` FROM framework_settings WHERE `skey` = ? AND `scategory` = ?");
-            $stmt->bind_param("ss", $category, $key);
+            $stmt->bind_param("ss", $key, $category);
             $stmt->execute();
             $stmt->bind_result($value);
             $stmt->fetch();

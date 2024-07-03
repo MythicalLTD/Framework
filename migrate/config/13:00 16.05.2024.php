@@ -1,4 +1,4 @@
 <?php
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use MythicalSystemsFramework\Managers\SettingsManager as settings;
 
-cfg::add("caches", "max_query_last_time", "600");
+settings::set("caches", "max_query_last_time", "600");

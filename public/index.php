@@ -1,5 +1,4 @@
 <?php
-use MythicalSystemsFramework\Managers\SettingsManager;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -13,10 +12,16 @@ try {
     die('Hello, it looks like you did not run: <code>composer install --no-dev --optimize-autoloader</code> Please run that and refresh');
 }
 
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+
 use Smarty\Smarty;
 use MythicalSystems\Api\ResponseHandler as rsp;
 use MythicalSystems\Api\Api as api;
+use MythicalSystemsFramework\Managers\SettingsManager as setting;
+use MythicalSystemsFramework\Kernel\Debugger as debug;
+use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+
+//die(User::login("admin", "admin","127.0.0.1"));
+
 $router = new \Router\Router();
 
 if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
@@ -39,7 +44,7 @@ if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
     $router->route();
     die();
 }
-die(SettingsManager::set('app', 'name'));
+
 $renderer = new Smarty();
 
 if (cfg::get("encryption", "key") == "") {
@@ -49,8 +54,8 @@ if (cfg::get("encryption", "key") == "") {
 if (!is_writable(__DIR__)) {
     die("We have no access to the framework directory!");
 }
-date_default_timezone_set(cfg::get('app', 'timezone'));
-define('DIR_TEMPLATE', __DIR__ . '/../themes/' . cfg::get('app', 'theme'));
+date_default_timezone_set(setting::get('app', 'timezone'));
+define('DIR_TEMPLATE', __DIR__ . '/../themes/' . setting::get('app', 'theme'));
 define('DIR_CACHE', __DIR__ . '/../caches/template');
 define('DIR_COMPILE', __DIR__ . '/../caches/compile');
 define('DIR_CONFIG', __DIR__ . '/../caches/config');
@@ -64,16 +69,16 @@ $renderer->setCompileCheck(true);
 $renderer->setCacheLifetime(3600);
 $renderer->assign(
     [
-        "cfg_app_name" => cfg::get("app", "name"),
-        "cfg_app_logo" => cfg::get("app", "logo"),
-        "cfg_app_maintenance" => cfg::get("app", "maintenance"),
-        "cfg_app_theme" => cfg::get("app", "version"),
-        "cfg_app_lang" => cfg::get("app", "lang"),
-        "cfg_app_timezone" => cfg::get("app", "timezone"),
+        "cfg_app_name" => setting::get("app", "name"),
+        "cfg_app_logo" => setting::get("app", "logo"),
+        "cfg_app_maintenance" => setting::get("app", "maintenance"),
+        "cfg_app_theme" => setting::get("app", "version"),
+        "cfg_app_lang" => setting::get("app", "lang"),
+        "cfg_app_timezone" => setting::get("app", "timezone"),
 
-        "cfg_seo_title" => cfg::get("seo", "title"),
-        "cfg_seo_description" => cfg::get("seo", "description"),
-        "cfg_seo_keywords" => cfg::get("seo", "keywords"),
+        "cfg_seo_title" => setting::get("seo", "title"),
+        "cfg_seo_description" => setting::get("seo", "description"),
+        "cfg_seo_keywords" => setting::get("seo", "keywords"),
 
         "cfg_framework_version" => cfg::get("framework", "version"),
         "cfg_framework_branch" => cfg::get("framework", "branch"),
@@ -117,7 +122,6 @@ foreach ($phpViewFiles as $phpViewFile) {
 $router->add('/(.*)', function () {
     die("Route not found!");
 });
-
 try {
     $router->route();
 } catch (Exception $e) {

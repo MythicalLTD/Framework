@@ -1,1 +1,20 @@
-{}
+{
+    "__last_updated": "-",
+    "framework": {
+        "version": "1.0.1",
+        "branch": "develop",
+        "debug": "false",
+        "name": "MythicalFramework"
+    },
+    "database": {
+        "host": "127.0.0.1",
+        "port": "3306",
+        "username": "",
+        "password": "",
+        "name": "framework"
+    },
+    "encryption": {
+        "method": "MythicalCore",
+        "key": ""
+    }
+    }

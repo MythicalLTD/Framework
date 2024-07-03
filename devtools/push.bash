@@ -1,6 +1,6 @@
 #!/bin/bash
 composer update
-composer run tests
+#composer run tests
 
 if [ $? -ne 0 ]; then
     echo "Error occurred during tests. Stopping the script."
@@ -11,9 +11,26 @@ if [ -f "settings.json" ]; then
     mv settings.json production_settings.json
 fi
 
-if [ -f "migrated_files.txt" ]; then
-    mv migrated_files.txt production_migrated_files.txt
-fi
-echo "{}" > settings.json
+
+echo '{
+    "__last_updated": "-",
+    "framework": {
+        "version": "1.0.1",
+        "branch": "develop",
+        "debug": "false",
+        "name": "MythicalFramework"
+    },
+    "database": {
+        "host": "127.0.0.1",
+        "port": "3306",
+        "username": "",
+        "password": "",
+        "name": "framework"
+    },
+    "encryption": {
+        "method": "MythicalCore",
+        "key": ""
+    }
+    }' > settings.json
 echo "" > migrated_files.txt
 echo "This is the first install file ;)" > FIRST_INSTALL

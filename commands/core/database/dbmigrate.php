@@ -41,7 +41,11 @@ class dbmigrateCommand
             $sqlFiles = glob(__DIR__ . '/../../../migrate/database/*.sql');
 
             if (count($sqlFiles) > 0) {
-                sort($sqlFiles); // Sort the SQL files in ascending order
+                usort($sqlFiles, function($a, $b) {
+                    $aDate = strtotime(basename($a, '.sql'));
+                    $bDate = strtotime(basename($b, '.sql'));
+                    return $aDate - $bDate;
+                });
 
                 foreach ($sqlFiles as $sqlFile) {
                     $script = file_get_contents($sqlFile);

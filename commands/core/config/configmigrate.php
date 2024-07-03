@@ -1,39 +1,46 @@
-<?php 
+<?php
+
 use MythicalSystemsFramework\Cli\Colors as color;
+use MythicalSystemsFramework\Database\MySQL;
+
 class configmigrateCommand
 {
     public function execute()
     {
-        $migratedCount = 0;
-        $migratedFiles = [];
+        try {
+            $mysql = new MySQL();
+            $db = $mysql->connectPDO();
+            $db->exec("CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;");
+            $phpFiles = glob(__DIR__ . '/../../migrate/config/*.php');
 
-        $mdirectory = __DIR__.'/../../../migrate/config/';
-        $mifiles = scandir($mdirectory);
+            if (count($phpFiles) > 0) {
+                sort($phpFiles);
 
-        $migratedFilePath = __DIR__.'/../../../migrated_files.txt';
-        if (file_exists($migratedFilePath)) {
-            $migratedFiles = file($migratedFilePath, FILE_IGNORE_NEW_LINES);
-        }
+                $migratedCount = 0; // Initialize migrated count
 
-        // Sort the migrate files from oldest to newest
-        usort($mifiles, function($a, $b) {
-            $aTimestamp = strtotime(str_replace(':', '.', $a));
-            $bTimestamp = strtotime(str_replace(':', '.', $b));
-            return $aTimestamp - $bTimestamp;
-        });
+                foreach ($phpFiles as $phpFile) {
+                    $fileName = basename($phpFile);
 
-        foreach ($mifiles as $mfiletom) {
-            if ($mfiletom !== '.' && $mfiletom !== '..' && !in_array($mfiletom, $migratedFiles)) {
-                $filePath = $mdirectory . $mfiletom;
-                if (pathinfo($filePath, PATHINFO_EXTENSION) === 'php') {
-                    include $filePath;
-                    $migratedCount++;
-                    $migratedFiles[] = $mfiletom;
+                    $stmt = $db->prepare("SELECT COUNT(*) FROM framework_settings_migrations WHERE script = ?");
+                    $stmt->execute([$fileName]);
+                    $count = $stmt->fetchColumn();
+
+                    if ($count == 0) {
+                        include $phpFile;
+
+                        $stmt = $db->prepare("INSERT INTO framework_settings_migrations (script) VALUES (?)");
+                        $stmt->execute([$fileName]);
+
+                        $migratedCount++; // Increment migrated count
+                    }
                 }
-            }
-        }
-        file_put_contents($migratedFilePath, implode(PHP_EOL, $migratedFiles));
 
-        echo color::translateColorsCode("&fMigration completed. Migrated &e$migratedCount &ffiles.");
+                echo color::translateColorsCode("&fMigration completed. Migrated &e$migratedCount &ffiles.");
+            } else {
+                echo color::translateColorsCode("&fMigration completed. Migrated &e0 &ffiles.");
+            }
+        } catch (PDOException $e) {
+            echo color::translateColorsCode("Failed to migrate the database: " . $e->getMessage() . "");
+        }
     }
 }

@@ -1,25 +1,12 @@
 <?php
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use MythicalSystemsFramework\Managers\SettingsManager as settings;
 
-cfg::add("app", "name", "MythicalSystems");
-cfg::add("app", "logo", "https://avatars.githubusercontent.com/u/117385445");
-cfg::add("app", "timezone", "Europe/Bucharest");
-cfg::add("app", "theme", "default");
-cfg::add("app", "lang", "en_US");
-cfg::add("app", "maintenance", "false");
-
-cfg::add("seo", "title", "MythicalSystems");
-cfg::add("seo", "description", "MythicalSystems is a framework for building web applications.");
-cfg::add("seo", "keywords", "MythicalSystems, web applications, framework");
-
-cfg::add("framework", "version", "1.0.1");
-cfg::add("framework", "branch", "develop");
-
-cfg::add("database", "host", "127.0.0.1");
-cfg::add("database", "port", "3306");
-cfg::add("database", "username", "");
-cfg::add("database", "password", "");
-cfg::add("database", "name", "");
-
-cfg::add("encryption", "method", "MythicalCore");
-cfg::add("encryption", "key", "");
+settings::set("app", "name", "MythicalSystems");
+settings::set("app", "logo", "https://avatars.githubusercontent.com/u/117385445");
+settings::set("app", "timezone", "Europe/Bucharest");
+settings::set("app", "theme", "default");
+settings::set("app", "lang", "en_US");
+settings::set("app", "maintenance", "false");
+settings::set("seo", "title", "MythicalSystems");
+settings::set("seo", "description", "MythicalSystems is a framework for building web applications.");
+settings::set("seo", "keywords", "MythicalSystems, web applications, framework");

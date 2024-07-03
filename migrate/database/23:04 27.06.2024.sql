@@ -1,1 +1,1 @@
-CREATE TABLE `framework`.`framework_settings` (`id` INT NOT NULL AUTO_INCREMENT , `skey` TEXT NOT NULL , `svalue` TEXT NOT NULL , `last_modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `framework_settings` (`id` INT NOT NULL AUTO_INCREMENT , `skey` TEXT NOT NULL , `svalue` TEXT NOT NULL , `last_modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;

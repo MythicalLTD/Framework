@@ -1,6 +1,9 @@
 <?php
+
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\ConfigManager;
+use MythicalSystemsFramework\Managers\SettingsManager as settings;
+
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(null);
@@ -49,30 +52,29 @@ if (!in_array($app_timezone, timezone_identifiers_list())) {
 
 
 try {
-    migrateCfg();
     ConfigManager::set('database', 'host', $mysql_host);
     ConfigManager::set('database', 'port', $mysql_port);
     ConfigManager::set('database', 'username', $mysql_username);
     ConfigManager::set('database', 'password', $mysql_password);
     ConfigManager::set('database', 'name', $mysql_name);
     ConfigManager::set('encryption', 'key', generateKey());
-    ConfigManager::set('app', 'name', $app_name);
-    ConfigManager::set('app', 'timezone', $app_timezone);
-    ConfigManager::set('seo', 'title', $settings_app_seo_title);
-    ConfigManager::set('seo', 'description', $settings_app_seo_description);
-    ConfigManager::set('seo', 'keywords', $settings_app_seo_keywords);
-    ConfigManager::set('app', 'logo', $settings_app_logo);
     try {
         migrateDB();
+        migrateCfg();
+        settings::update('app', 'name', $app_name);
+        settings::update('app', 'timezone', $app_timezone);
+        settings::update('seo', 'title', $settings_app_seo_title);
+        settings::update('seo', 'description', $settings_app_seo_description);
+        settings::update('seo', 'keywords', $settings_app_seo_keywords);
+        settings::update('app', 'logo', $settings_app_logo);
         try {
             unlink(__DIR__ . '/../../FIRST_INSTALL');
             die("OK_DEL_FIRST_INSTALL");
-        } catch (Exception $e){
+        } catch (Exception $e) {
             die("OK_DEL_FIRST_INSTALL");
         }
     } catch (Exception $e) {
         die("Failed to migrate the database: " . $e->getMessage());
-
     }
 } catch (Exception $e) {
     die("Failed to configure the database: " . $e->getMessage());
@@ -96,13 +98,17 @@ function migrateDB()
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 script VARCHAR(255) NOT NULL,
                 executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
+            );
         ");
 
         $sqlFiles = glob(__DIR__ . '/../../migrate/database/*.sql');
 
         if (count($sqlFiles) > 0) {
-            sort($sqlFiles);
+            usort($sqlFiles, function($a, $b) {
+                $aDate = strtotime(basename($a, '.sql'));
+                $bDate = strtotime(basename($b, '.sql'));
+                return $aDate - $bDate;
+            });
 
             foreach ($sqlFiles as $sqlFile) {
                 $script = file_get_contents($sqlFile);
@@ -118,57 +124,50 @@ function migrateDB()
 
                     $stmt = $db->prepare("INSERT INTO framework_migrations (script) VALUES (?)");
                     $stmt->execute([$fileName]);
-
-
                 } else {
                     return;
                 }
             }
         } else {
             die("No migrations found!");
-
         }
     } catch (PDOException $e) {
         die("Failed to migrate the database: " . $e->getMessage() . "");
-
     }
 }
 function migrateCfg()
 {
-    $migratedCount = 0;
-    $migratedFiles = [];
+    try {
+        $mysql = new MySQL();
+        $db = $mysql->connectPDO();
+        $db->exec("CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;");
+        $phpFiles = glob(__DIR__ . '/../../migrate/config/*.php');
 
-    $mdirectory = __DIR__ . '/../../migrate/config/';
-    $mifiles = scandir($mdirectory);
+        if (count($phpFiles) > 0) {
+            sort($phpFiles);
 
-    $migratedFilePath = __DIR__ . '/../../migrated_files.txt';
-    if (file_exists($migratedFilePath)) {
-        $migratedFiles = file($migratedFilePath, FILE_IGNORE_NEW_LINES);
-    }
+            foreach ($phpFiles as $phpFile) {
+                $fileName = basename($phpFile);
 
-    // Sort the migrate files from oldest to newest
-    usort($mifiles, function ($a, $b) {
-        $aTimestamp = strtotime(str_replace(':', '.', $a));
-        $bTimestamp = strtotime(str_replace(':', '.', $b));
-        return $aTimestamp - $bTimestamp;
-    });
+                $stmt = $db->prepare("SELECT COUNT(*) FROM framework_settings_migrations WHERE script = ?");
+                $stmt->execute([$fileName]);
+                $count = $stmt->fetchColumn();
 
-    foreach ($mifiles as $mfiletom) {
-        if ($mfiletom !== '.' && $mfiletom !== '..' && !in_array($mfiletom, $migratedFiles)) {
-            $filePath = $mdirectory . $mfiletom;
-            if (pathinfo($filePath, PATHINFO_EXTENSION) === 'php') {
-                try {
-                    include $filePath;
-                    $migratedCount++;
-                    $migratedFiles[] = $mfiletom;
-                } catch (Exception $e) {
-                    die("Failed to include migration file: " . $mfiletom . " - " . $e->getMessage());
+                if ($count == 0) {
+                    include $phpFile;
+
+                    $stmt = $db->prepare("INSERT INTO framework_settings_migrations (script) VALUES (?)");
+                    $stmt->execute([$fileName]);
                 }
             }
+        } else {
+            die("No migrations found!");
         }
+    } catch (PDOException $e) {
+        die("Failed to migrate the database: " . $e->getMessage() . "");
     }
-    file_put_contents($migratedFilePath, implode(PHP_EOL, $migratedFiles));
 }
+
 
 
 function generateKey(): string
@@ -176,4 +175,3 @@ function generateKey(): string
     $key = "mythicalcore_" . bin2hex(random_bytes(64 * 32));
     return $key;
 }
-?>

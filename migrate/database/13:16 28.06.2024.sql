@@ -1,0 +1,1 @@
+ALTER TABLE `framework_settings` ADD `scategory` TEXT NOT NULL AFTER `id`;
