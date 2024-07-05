@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -12,17 +13,21 @@ try {
     die('Hello, it looks like you did not run: <code>composer install --no-dev --optimize-autoloader</code> Please run that and refresh');
 }
 
-
-use Smarty\Smarty;
 use MythicalSystems\Api\ResponseHandler as rsp;
 use MythicalSystems\Api\Api as api;
 use MythicalSystemsFramework\Managers\SettingsManager as setting;
 use MythicalSystemsFramework\Kernel\Debugger as debug;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
-
+use MythicalSystemsFramework\Managers\LanguageManager;
+use MythicalSystemsFramework\Kernel\Logger;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 $router = new \Router\Router();
 
+/**
+ * Check if the app is installed
+ */
 if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
     $router->add('/', function () {
         include(__DIR__ . '/../core/install/index.php');
@@ -44,7 +49,6 @@ if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
     die();
 }
 
-$renderer = new Smarty();
 
 if (cfg::get("encryption", "key") == "") {
     die("We are sorry but you are missing the encryption key!");
@@ -53,39 +57,65 @@ if (cfg::get("encryption", "key") == "") {
 if (!is_writable(__DIR__)) {
     die("We have no access to the framework directory!");
 }
+
+if (!is_writable(__DIR__ . '/../caches')) {
+    die("We have no access to the cache directory!");
+}
+
 date_default_timezone_set(setting::get('app', 'timezone'));
 define('DIR_TEMPLATE', __DIR__ . '/../themes/' . setting::get('app', 'theme'));
-define('DIR_CACHE', __DIR__ . '/../caches/template');
-define('DIR_COMPILE', __DIR__ . '/../caches/compile');
-define('DIR_CONFIG', __DIR__ . '/../caches/config');
+define('DIR_CACHE', __DIR__ . '/../caches');
+define('TIMEZONE', setting::get('app', 'timezone'));
 
-$renderer->setTemplateDir(DIR_TEMPLATE);
-$renderer->setCacheDir(DIR_CACHE);
-$renderer->setCompileDir(DIR_COMPILE);
-$renderer->setConfigDir(DIR_CONFIG);
-$renderer->setEscapeHtml(true);
-$renderer->setCompileCheck(true);
-$renderer->setCacheLifetime(3600);
-$renderer->assign(
-    [
-        "cfg_app_name" => setting::get("app", "name"),
-        "cfg_app_logo" => setting::get("app", "logo"),
-        "cfg_app_maintenance" => setting::get("app", "maintenance"),
-        "cfg_app_theme" => setting::get("app", "version"),
-        "cfg_app_lang" => setting::get("app", "lang"),
-        "cfg_app_timezone" => setting::get("app", "timezone"),
+/**
+ * Load the template engine
+ */
 
-        "cfg_seo_title" => setting::get("seo", "title"),
-        "cfg_seo_description" => setting::get("seo", "description"),
-        "cfg_seo_keywords" => setting::get("seo", "keywords"),
+if (!is_dir(DIR_TEMPLATE)) {
+    die("The theme directory does not exist!");
+}
+if (!is_dir(DIR_CACHE)) {
+    mkdir(DIR_CACHE, 0777, true);
+}
+$loader = new FilesystemLoader(DIR_TEMPLATE);
+$renderer = new Environment($loader, [
+    'cache' => DIR_CACHE,
+    'auto_reload' => true,
+    'debug' => true
+]);
 
-        "cfg_framework_version" => cfg::get("framework", "version"),
-        "cfg_framework_branch" => cfg::get("framework", "branch"),
-        "cfg_framework_name" => cfg::get("framework", "name"),
-        "cfg_framework_debug" => cfg::get("framework", "debug"),
-    ]
-);
+/**
+ * Add global functions to the renderer
+ * 
+ * This will allow the renderer to get the settings and cfg values
+ *
+ */
+/**
+ * Add the settings function to the renderer
+ */
+$renderer->addFunction(new \Twig\TwigFunction('setting', function ($section, $key) {
+    return setting::get($section, $key);
+}));
+/**
+ * Add the cfg function to the renderer
+ */
+$renderer->addFunction(new \Twig\TwigFunction('cfg', function ($section, $key) {
+    return cfg::get($section, $key);
+}));
+/**
+ * Add the language function to the renderer
+ */
+$renderer->addFunction(new \Twig\TwigFunction('lang', function ($key) {
+    $translations = LanguageManager::getLang();
+    return isset($translations[$key]) ? $translations[$key] : LanguageManager::logKeyTranslationNotFound($key);
+}));
 
+$renderer->addGlobal('php_version', phpversion());
+$renderer->addGlobal('page_name', "Home");
+
+/**
+ * Load the routes
+ */
 $routesAPIDirectory = __DIR__ . '/../routes/api/';
 $iterator2 = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($routesAPIDirectory));
 $phpApiFiles = new RegexIterator($iterator2, '/\.php$/');
@@ -119,7 +149,9 @@ foreach ($phpViewFiles as $phpViewFile) {
 }
 
 $router->add('/(.*)', function () {
-    die("Route not found!");
+    global $renderer;
+    http_response_code(404);
+    die($renderer->render('/errors/404.twig'));
 });
 try {
     $router->route();

@@ -5,11 +5,11 @@
     "homepage": "https://github.com/mythicalltd/mythicalcore",
     "require": {
         "mythicalsystems/core": "^1.0",
-        "smarty/smarty": "^5.0",
         "php": ">=8.1.0",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "gravatarphp/gravatar": "^1.0"
+        "gravatarphp/gravatar": "^1.0",
+        "twig/twig": "^3.10"
     },
     "license": "MIT",
     "minimum-stability": "stable",
@@ -61,6 +61,13 @@
         "push": [
             "bash devtools/push.bash",
             "git push origin develop"
+        ],
+        "pull": [
+            "git pull origin develop",
+            "bash devtools/restore.bash"
+        ],
+        "frontend:build": [
+            "npx tailwindcss -i styles.css -o ./public/style.css --minify --jit"
         ],
         "frontend:watch": [
             "npx tailwindcss -i styles.css -o ./public/style.css --watch"

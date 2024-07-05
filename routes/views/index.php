@@ -5,7 +5,10 @@ use MythicalSystemsFramework\Handlers\CacheHandler as cache;
 use MythicalSystemsFramework\Kernel\ErrorHandler as err; 
 
 $router->add('/', function() {
-    global $renderer;
+    /**
+     * The requirement for each template 
+     */
+    global $renderer;    
 
-    $renderer->display("index.html");
+    die($renderer->render('index.twig'));
 });

@@ -3,32 +3,41 @@
 namespace MythicalSystemsFramework\Managers;
 
 use Exception;
+use MythicalSystemsFramework\Kernel\Logger as logger;
 
 class LanguageManager
 {
 
     /**
-     * Get the langauge from the file
+     * Get the language from the file
      * 
      * @return mixed
-     * @throws Exception
      */
-    public function getLang(): mixed
+    public static function getLang(): mixed
     {
         try {
-            $langConfig = ConfigManager::get('app', 'lang');
-            if ($langConfig == null) {
-                $langFilePath = __DIR__ . '/../lang/' . $langConfig . '.php';
-                if (file_exists($langFilePath)) {
-                    return include($langFilePath);
+            $fallback_lang = __DIR__ . '/../../lang/en_US.php';
+            if (file_exists($fallback_lang)) {
+                $langConfig = SettingsManager::get('app', 'lang');
+                if (!$langConfig == "") {
+                    $langFilePath = __DIR__ . '/../../lang/' . $langConfig . '.php';
+                    if (file_exists($langFilePath)) {
+                        return include($langFilePath);
+                    } else {
+                        Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Language file is invalid!!");
+                        return include($fallback_lang);
+                    }
                 } else {
-                    die('Please use a valid language file.');
+                    Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Default language file has not been found in the config!!");
+                    return include($fallback_lang);
                 }
             } else {
-                die("Language not found in config!");
+                logger::log(logger::CRITICAL, logger::LANGUAGE, "Fallback language file has not been found!!");
+                die("Fallback language file has not been found!! You are missing important files!");
             }
         } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
+            Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Error while loading language file: " . $e->getMessage());
+            return include($fallback_lang);
         }
     }
 
@@ -37,10 +46,24 @@ class LanguageManager
      * 
      * @return array
      */
-    public function getAllAvailableLanguages(): array
+    public static function getAllAvailableLanguages(): array
     {
-        $langFiles = scandir(__DIR__ . '/../lang/');
+        $langFiles = scandir(__DIR__ . '/../../lang/');
         $langFiles = array_diff($langFiles, array('..', '.'));
         return $langFiles;
+    }
+
+    /**
+     * Log translation key not found
+     * 
+     * @param string $key Translation key
+     * @param string $message The alternative message
+     * 
+     * @return string The translation key not found message
+     */
+    public static function logKeyTranslationNotFound($key, $message = "TRANSLATION_KEY_NOT_FOUND"): string
+    {
+        Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Translation key not found: " . $key);
+        return $message;
     }
 }

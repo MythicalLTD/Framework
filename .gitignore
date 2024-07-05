@@ -10,3 +10,4 @@ composer.phar
 /package-lock.json
 /node_modules
 /test.json
+/caches/*

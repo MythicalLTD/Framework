@@ -25,7 +25,7 @@ class Logger
      * Log something inside the kernel framework_logs
      * 
      * @param string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
-     * @param string $type (CORE, DATABASE, PLUGIN, LOG, OTHER)
+     * @param string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
      * @param string $message The message you want to log
      * 
      * @return int The log id!
@@ -40,7 +40,7 @@ class Logger
 
         $output = "[" . date("Y-m-d H:i:s") . "] (" . $type . '/' . $level . ") " . $message . "";
 
-        $stmt = $conn->prepare("INSERT INTO framework_logs (type, levels, message, formatted, date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt = $conn->prepare("INSERT INTO framework_logs (l_type, levels, message, formatted) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $type, $level, $message, $output);
         $stmt->execute();
         $logId = $stmt->insert_id;
