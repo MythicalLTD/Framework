@@ -1,0 +1,1 @@
+ALTER TABLE `framework_users` CHANGE `role` `role` INT NOT NULL DEFAULT '1';

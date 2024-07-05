@@ -1,0 +1,1 @@
+CREATE TABLE `framework_roles_permissions` (`id` INT NOT NULL AUTO_INCREMENT , `role_id` INT NOT NULL DEFAULT '1' , `permission` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;

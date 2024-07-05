@@ -6,8 +6,11 @@
 
 namespace MythicalSystemsFramework\User;
 
+use Exception;
 use MythicalSystems\User\Cookies;
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Roles\RolesDataHandler;
+use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserHelper extends UserDataHandler
 {
@@ -207,6 +210,162 @@ class UserHelper extends UserDataHandler
             }
         } catch (\Exception $e) {
             Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to check if user is deleted: " . $e->getMessage());
+            return "ERROR_DATABASE_SELECT_FAILED";
+        }
+    }
+
+    /**
+     * This function will check if the user is verified
+     * 
+     * @param string $account_token The account token of the user you want to check.
+     * 
+     * @return string The response of the check.
+     */
+    public static function isUserVerified(string $account_token): string {
+        try {
+            if (self::isSessionValid($account_token)) {
+                $verified_state = self::getSpecificUserData($account_token, "verified", false);
+                if ($verified_state == "false") {
+                    return "USER_NOT_VERIFIED";
+                } else {
+                    return "USER_VERIFIED";
+                }
+            } else {
+                return "ERROR_ACCOUNT_NOT_VALID";
+            }
+        } catch (\Exception $e) {
+            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to check if user is verified: " . $e->getMessage());
+            return "ERROR_DATABASE_SELECT_FAILED";
+        }
+    }
+
+    /**
+     * This function will verify a user
+     * 
+     * @param string $account_token The account token of the user you want to verify.
+     * 
+     * @return string The response of the verification.
+     */
+    public static function verifyUser(string $account_token): string {
+        try {
+            if (self::isSessionValid($account_token)) {
+                $update_user = self::updateSpecificUserData($account_token, "verified", "true", false);
+                if ($update_user == "SUCCESS") {
+                    return "USER_VERIFIED";
+                } else {
+                    return "ERROR_DATABASE_UPDATE_FAILED";
+                }
+            } else {
+                return "ERROR_ACCOUNT_NOT_VALID";
+            }
+        } catch (\Exception $e) {
+            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to verify user: " . $e->getMessage());
+            return "ERROR_DATABASE_UPDATE_FAILED";
+        }
+    }
+
+    /**
+     * This function will unverify a user
+     * 
+     * @param string $account_token The account token of the user you want to unverify.
+     * 
+     * @return string The response of the unverification.
+     */
+    public static function unverifyUser(string $account_token): string {
+        try {
+            if (self::isSessionValid($account_token)) {
+                $update_user = self::updateSpecificUserData($account_token, "verified", "false", false);
+                if ($update_user == "SUCCESS") {
+                    return "USER_UNVERIFIED";
+                } else {
+                    return "ERROR_DATABASE_UPDATE_FAILED";
+                }
+            } else {
+                return "ERROR_ACCOUNT_NOT_VALID";
+            }
+        } catch (\Exception $e) {
+            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to unverify user: " . $e->getMessage());
+            return "ERROR_DATABASE_UPDATE_FAILED";
+        }
+    }
+
+    /**
+     * This function will update the last seen and the last ip of the user
+     * 
+     * @param string $account_token The account token of the user you want to update.
+     * @param string $ip The ip of the user.
+     * 
+     * @return string
+     */
+    public static function updateLastSeen(string $account_token, string $ip): string {
+        try {
+            if (self::isSessionValid($account_token)) {
+                $update_user = self::updateSpecificUserData($account_token, "last_seen", date("Y-m-d H:i:s"), false);
+                if ($update_user == "SUCCESS") {
+                    $update_user = self::updateSpecificUserData($account_token, "last_ip", $ip, false);
+                    if ($update_user == "SUCCESS") {
+                        return "SUCCESS";
+                    } else {
+                        return "ERROR_DATABASE_UPDATE_FAILED";
+                    }
+                } else {
+                    return "ERROR_DATABASE_UPDATE_FAILED";
+                }
+            } else {
+                return "ERROR_ACCOUNT_NOT_VALID";
+            }
+        } catch (\Exception $e) {
+            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to update last seen: " . $e->getMessage());
+            return "ERROR_DATABASE_UPDATE_FAILED";
+        }
+    }
+
+    /**
+     * This function will return your the role id of a user
+     * 
+     * @param string $account_token The account token of the user you want to get the role id from.
+     * 
+     * @return string|null The role id of the user or an error.
+     */
+    public static function getUserRoleId($account_token) : string|null {
+        try {
+            if (self::isSessionValid($account_token)) {
+                $role_id = self::getSpecificUserData($account_token, "role", false);
+                return $role_id;
+            } else {
+                return "ERROR_ACCOUNT_NOT_VALID";
+            }
+        } catch (\Exception $e) {
+            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to get user role id: " . $e->getMessage());
+            return "ERROR_DATABASE_SELECT_FAILED";
+        }
+    }
+
+        /**
+     * Does this user have permission?
+     * 
+     * @param string $account_token The account token.
+     * @param string $permission The permission name.
+     * 
+     * @return string|null
+     */
+    public static function doesUserHavePermission(string $account_token, string $permission): string|null
+    {
+        try {
+            $role_id = UserHelper::getSpecificUserData($account_token, "role", false);
+            $role_check = RolesDataHandler::roleExists($role_id);
+            if ($role_check == "ROLE_EXISTS") {
+                $permission_check = RolesPermissionDataHandler::doesRoleHavePermission($role_id, $permission);
+                if ($permission_check == "ROLE_HAS_PERMISSION") {
+                    return "USER_HAS_PERMISSION";
+                } else {
+                    return $permission_check;
+                }
+            } else {
+                return $role_check;
+            }
+        } catch (Exception $e) {
+            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to get role info: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }

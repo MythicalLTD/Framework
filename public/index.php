@@ -20,7 +20,6 @@ use MythicalSystemsFramework\Managers\SettingsManager as setting;
 use MythicalSystemsFramework\Kernel\Debugger as debug;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
-//die(User::login("admin", "admin","127.0.0.1"));
 
 $router = new \Router\Router();
 

@@ -10,12 +10,15 @@
 namespace MythicalSystemsFramework\User;
 
 use DateTime;
+use Exception;
 use MythicalSystemsFramework\Kernel\Encryption as enc;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use MythicalSystemsFramework\Managers\SnowFlakeManager;
 use MythicalSystemsFramework\Kernel\Logger as logger;
 use Gravatar\Gravatar;
 use MythicalSystems\User\Cookies;
+use MythicalSystemsFramework\Roles\RolesDataHandler;
+use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserDataHandler
 {
@@ -61,12 +64,19 @@ class UserDataHandler
                     if (UserHelper::isUserBanned($token) == "USER_BANNED") {
                         return "ERROR_USER_BANNED";
                     }
+                    if (UserHelper::isUserDeleted($token) == "USER_DELETED") {
+                        return "ERROR_USER_DELETED";
+                    }
+                    if (UserHelper::isUserVerified($token) == "USER_NOT_VERIFIED") {
+                        return "ERROR_USER_NOT_VERIFIED";
+                    }
                     //Update the last ip
                     $stmt = $mysqli->prepare("UPDATE framework_users SET last_ip = ? WHERE email = ?");
                     $stmt->bind_param("ss", $ip, $email);
                     $stmt->execute();
                     $stmt->close();
-
+                    // Update last seen!
+                    UserHelper::updateLastSeen($token, $ip);
                     return $token;
                 } else {
                     return "ERROR_PASSWORD_INCORRECT";
@@ -224,5 +234,4 @@ class UserDataHandler
         }
     }
 
-    
 }

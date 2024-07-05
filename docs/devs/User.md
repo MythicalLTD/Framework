@@ -55,6 +55,8 @@ Here are a list of errors that you may get!
 - `ERROR_PASSWORD_INCORRECT` This just means that the password is wrong but the user was found in the database!
 - `ERROR_DATABASE_SELECT_FAILED` This is a database select error please check the logs!!!!
 - `ERROR_USER_BANNED` The user is banned!
+- `USER_NOT_VERIFIED`: Indicates that the user is not verified.
+- `ERROR_USER_DELETED` Indicates that the user is deleted.
 
 ## Check a user's session
 
@@ -190,3 +192,55 @@ To use this function, pass the `account_token` of the user you want to check. It
 - `ERROR_DATABASE_SELECT_FAILED`: Indicates that there was an error executing the SQL script in the database.
 
 Remember to handle the return value appropriately in your code.
+
+## Checking if a user is verified
+
+To check if a user is verified, you can use the `isUserVerified` function. This function takes the `account_token` of the user as a parameter and returns a string indicating whether the user is verified or not.
+
+To use this function, pass the `account_token` of the user you want to check. It will return one of the following strings:
+
+- `USER_NOT_VERIFIED`: Indicates that the user is not verified.
+- `USER_VERIFIED`: Indicates that the user is verified.
+- `ERROR_ACCOUNT_NOT_VALID`: Indicates that the provided `account_token` is not valid.
+- `ERROR_DATABASE_SELECT_FAILED`: Indicates that there was an error executing the SQL script in the database.
+
+Remember to handle the return value appropriately in your code.
+
+## Verifying a user
+
+To verify a user, you can use the `verifyUser` function. This function takes the `account_token` of the user as a parameter and returns a string indicating the response of the verification.
+
+To use this function, pass the `account_token` of the user you want to verify. It will return one of the following strings:
+
+- `USER_VERIFIED`: Indicates that the user has been successfully verified.
+- `ERROR_DATABASE_UPDATE_FAILED`: Indicates that there was an error updating the database.
+- `ERROR_ACCOUNT_NOT_VALID`: Indicates that the provided `account_token` is not valid.
+
+Make sure to handle the return value appropriately in your code.
+
+## Unverifying a user
+
+To unverify a user, you can use the `unverifyUser` function. This function takes the `account_token` of the user as a parameter and returns a string indicating the response of the unverification.
+
+To use this function, pass the `account_token` of the user you want to unverify. It will return one of the following strings:
+
+- `USER_UNVERIFIED`: Indicates that the user has been successfully unverified.
+- `ERROR_DATABASE_UPDATE_FAILED`: Indicates that there was an error updating the database.
+- `ERROR_ACCOUNT_NOT_VALID`: Indicates that the provided `account_token` is not valid.
+
+Make sure to handle the return value appropriately in your code.
+
+## Updating the last seen and last IP of a user
+
+To update the last seen and last IP of a user, you can use the `updateLastSeen` function. This function takes two parameters:
+
+- `account_token`: The account token of the user you want to update.
+- `ip`: The IP address of the user.
+
+The function will return a string indicating the response of the update. Here are the possible return values:
+
+- `SUCCESS`: Indicates that the last seen and last IP of the user have been successfully updated.
+- `ERROR_DATABASE_UPDATE_FAILED`: Indicates that there was an error updating the database.
+- `ERROR_ACCOUNT_NOT_VALID`: Indicates that the provided `account_token` is not valid.
+
+Make sure to handle the return value appropriately in your code.

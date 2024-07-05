@@ -1,0 +1,31 @@
+{
+  "scripts": {
+    "watch": "npx tailwindcss -i ./style.css -o ./public/theme.css --watch",
+    "build": "npx tailwindcss -i ./style.css -o ./public/theme.css",
+    "clean": "rm -rf ./public/theme.css",
+    "tests": "composer run tests"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "firefox esr",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "name": "mythicalframework",
+  "version": "1.0.0",
+  "description": "A simple framework for building websites",
+  "author": {
+    "name": "NaysKutzu",
+    "email": "nayskutzu@proton.me",
+    "url": "https://nayskutzu.xyz",
+    "github": "https://github.com/nayskutzu"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mythicalltd/mythicalframework"
+  }
+}
