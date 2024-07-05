@@ -1,7 +1,12 @@
 {
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.4"
+  },
   "scripts": {
-    "watch": "npx tailwindcss -i ./style.css -o ./public/theme.css --watch",
-    "build": "npx tailwindcss -i ./style.css -o ./public/theme.css",
+    "watch": "npx tailwindcss -i styles.css -o ./public/style.css  --watch",
+    "build": "npx tailwindcss -i styles.css -o ./public/style.css --minify --jit",
     "clean": "rm -rf ./public/theme.css",
     "tests": "composer run tests"
   },

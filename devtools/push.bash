@@ -32,5 +32,4 @@ echo '{
         "key": ""
     }
     }' > settings.json
-echo "" > migrated_files.txt
 echo "This is the first install file ;)" > FIRST_INSTALL
