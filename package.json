@@ -8,7 +8,8 @@
     "watch": "npx tailwindcss -i styles.css -o ./public/style.css  --watch",
     "build": "npx tailwindcss -i styles.css -o ./public/style.css --minify --jit",
     "clean": "rm -rf ./public/theme.css",
-    "tests": "composer run tests"
+    "tests": "composer run tests",
+    "install:dependency": "npm i && composer install"
   },
   "browserslist": [
     "> 0.5%",

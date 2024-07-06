@@ -1,4 +1,5 @@
 <?php
+use MythicalSystemsFramework\Kernel\Debugger;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -16,10 +17,8 @@ try {
 use MythicalSystems\Api\ResponseHandler as rsp;
 use MythicalSystems\Api\Api as api;
 use MythicalSystemsFramework\Managers\SettingsManager as setting;
-use MythicalSystemsFramework\Kernel\Debugger as debug;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use MythicalSystemsFramework\Managers\LanguageManager;
-use MythicalSystemsFramework\Kernel\Logger;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -30,16 +29,16 @@ $router = new \Router\Router();
  */
 if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
     $router->add('/', function () {
-        include(__DIR__ . '/../core/install/index.php');
+        include(__DIR__ . '/../install/index.php');
     });
 
 
     $router->add('/mysql', function () {
-        include(__DIR__ . '/../core/install/mysql.php');
+        include(__DIR__ . '/../install/mysql.php');
     });
 
     $router->add('/install', function () {
-        include(__DIR__ . '/../core/install/install.php');
+        include(__DIR__ . '/../install/install.php');
     });
 
     $router->add('/(.*)', function () {
@@ -74,6 +73,7 @@ define('TIMEZONE', setting::get('app', 'timezone'));
 if (!is_dir(DIR_TEMPLATE)) {
     die("The theme directory does not exist!");
 }
+
 if (!is_dir(DIR_CACHE)) {
     mkdir(DIR_CACHE, 0777, true);
 }
@@ -90,6 +90,7 @@ $renderer = new Environment($loader, [
  * This will allow the renderer to get the settings and cfg values
  *
  */
+
 /**
  * Add the settings function to the renderer
  */
@@ -112,6 +113,7 @@ $renderer->addFunction(new \Twig\TwigFunction('lang', function ($key) {
 
 $renderer->addGlobal('php_version', phpversion());
 $renderer->addGlobal('page_name', "Home");
+define('VIEW_ENGINE', $renderer);
 
 /**
  * Load the routes
@@ -147,6 +149,8 @@ foreach ($phpViewFiles as $phpViewFile) {
         die('Failed to start app: ' . $ex->getMessage());
     }
 }
+$e = new Exception("das");
+Debugger::throw_error(VIEW_ENGINE, "Critical Error while starting up multithread action!", $e->__toString(), 24, "/public/index.php");
 
 $router->add('/(.*)', function () {
     global $renderer;

@@ -4,33 +4,21 @@ namespace MythicalSystemsFramework\Kernel;
 
 use Exception;
 use MythicalSystemsFramework\Database\MySQL;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
 
 class Logger
 {
-    // Log level 
-    const INFO = 'INFO';
-    const WARNING = 'WARNING';
-    const ERROR = 'ERROR';
-    const CRITICAL = 'CRITICAL';
-    // Log types
-    const CORE = 'CORE';
-    const DATABASE = 'DATABASE';
-    const PLUGIN = 'PLUGIN';
-    const LOG = 'LOG';
-    const LANGUAGE = "LANGUAGE";
-    // Other
-    const OTHER = 'OTHER';
-
     /**
      * Log something inside the kernel framework_logs
      * 
-     * @param string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
-     * @param string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
+     * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
+     * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
      * @param string $message The message you want to log
      * 
      * @return int The log id!
      */
-    public static function log(string $level, string $type, string $message): int
+    public static function log(LoggerTypes|string $level, LoggerLevels|string $type, string $message): int
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
@@ -127,14 +115,23 @@ class Logger
     /**
      * Get all framework_logs sorted by date in descending order.
      *
-     * @return array
+     * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
+     * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
+     * @param int $limit The amount of logs you want to get (15 by default)
+     * 
+     * @return array|null Returns the logs in an array
      */
-    public static function getAllSortedByDate(): array
+    public static function getAllSortedByDate(LoggerTypes|string $level, LoggerLevels|string $type, int $limit = 15): array|null
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $result = $conn->query("SELECT * FROM framework_logs ORDER BY date DESC");
+        $query = "SELECT * FROM framework_logs WHERE levels = ? AND l_type = ? ORDER BY date DESC LIMIT ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ssi", $level, $type, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
         return $framework_logs;
     }
 }

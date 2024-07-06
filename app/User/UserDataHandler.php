@@ -12,6 +12,8 @@ namespace MythicalSystemsFramework\User;
 use DateTime;
 use Exception;
 use MythicalSystemsFramework\Kernel\Encryption as enc;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use MythicalSystemsFramework\Managers\SnowFlakeManager;
 use MythicalSystemsFramework\Kernel\Logger as logger;
@@ -83,7 +85,7 @@ class UserDataHandler
                 }
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL,Logger::DATABASE,"(App/User/UserDataHandler.php) Failed to login user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to login user: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -153,7 +155,7 @@ class UserDataHandler
                 }
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL,Logger::DATABASE,"(App/User/UserDataHandler.php) Failed to create user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to create user: " . $e->getMessage());
             return "ERROR_DATABASE_INSERT_FAILED";
         }
     }
@@ -194,7 +196,7 @@ class UserDataHandler
                 return "ERROR_FIELD_NOT_FOUND";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL,Logger::DATABASE,"(App/User/UserDataHandler.php) Failed to get user data: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to get user data: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -229,7 +231,7 @@ class UserDataHandler
             $stmt->close();
             return "SUCCESS";
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL,Logger::DATABASE,"(App/User/UserDataHandler.php) Failed to update user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to update user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }

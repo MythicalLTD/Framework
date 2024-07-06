@@ -56,21 +56,42 @@
     },
     "scripts": {
         "tests": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
             "vendor/bin/phpunit tests/*"
         ],
         "push": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
             "bash devtools/push.bash",
             "git push origin develop"
         ],
         "pull": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
             "git pull origin develop",
             "bash devtools/restore.bash"
         ],
         "frontend:build": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
             "npx tailwindcss -i styles.css -o ./public/style.css --minify --jit"
         ],
         "frontend:watch": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
             "npx tailwindcss -i styles.css -o ./public/style.css --watch"
+        ],
+        "frontend:clear": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
+            "rm -rf ./public/style.css"
+        ],
+        "frontend:install:dependency": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
+            "composer install && npm i"
+        ],
+        "framework": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
+            "php framework"
+        ],
+        "cli": [
+            "export COMPOSER_ALLOW_SUPERUSER=1",
+            "php framework"
         ]
     }
 }

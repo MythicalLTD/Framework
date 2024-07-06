@@ -35,4 +35,3 @@ $router->add('/errors/401', function () {
     http_response_code(401);
     die($renderer->render('/errors/401.twig'));
 });
-

@@ -9,6 +9,8 @@ namespace MythicalSystemsFramework\User;
 use Exception;
 use MythicalSystems\User\Cookies;
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Roles\RolesDataHandler;
 use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
@@ -36,7 +38,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to ban user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to ban user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -62,7 +64,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to unban user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to unban user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -88,7 +90,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to check if user is banned: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to check if user is banned: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -121,7 +123,7 @@ class UserHelper extends UserDataHandler
                 return true;
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL,Logger::DATABASE,"(App/User/UserDataHandler.php) Failed to validate user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to validate user: " . $e->getMessage());
             return false;
         }
     }
@@ -159,7 +161,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to delete user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to delete user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -184,7 +186,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to restore user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to restore user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -209,7 +211,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to check if user is deleted: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to check if user is deleted: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -234,7 +236,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to check if user is verified: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to check if user is verified: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -259,7 +261,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to verify user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to verify user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -284,7 +286,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to unverify user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to unverify user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -315,7 +317,7 @@ class UserHelper extends UserDataHandler
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
         } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to update last seen: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to update last seen: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -335,8 +337,8 @@ class UserHelper extends UserDataHandler
             } else {
                 return "ERROR_ACCOUNT_NOT_VALID";
             }
-        } catch (\Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to get user role id: " . $e->getMessage());
+        } catch (Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to get user role id: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -365,7 +367,7 @@ class UserHelper extends UserDataHandler
                 return $role_check;
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/User/UserHelper.php) Failed to get role info: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserHelper.php) Failed to get role info: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }

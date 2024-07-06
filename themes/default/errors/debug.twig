@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+    TODO:   
+    - Add error id's
+    - Add error handler
+-->
+<html>
+	{% include 'includes/page_head.twig' with {
+            page_name: 'Debug',
+        } 
+    %}
+	<body class="bg-gray-900 text-white">
+		<br>
+		<div class="bg-gray-800 text-white p-4 rounded-lg shadow-md max-w-4xl mx-auto">
+			<div class="bg-red-500 text-white p-4 rounded-t-lg">
+				<h2 class="text-xl font-semibold">Uncaught Error</h2>
+				<p class="mt-2">{{ error_message }}</p>
+				<a href="{{ error_path }}" class="text-blue-400 hover:underline mt-4 block">
+					{{ error_path }}
+				</a>
+			</div>
+			<div class="flex mt-4">
+				<button onclick="debugLink()" class="bg-blue-500 text-white hover:bg-blue-400 px-4 py-2 rounded-lg">Debug Link</button>
+				&nbsp;
+				<button onclick="showFull()" class="bg-gray-600 text-white px-4 py-2 rounded-lg">Show full</button>
+				&nbsp;
+				<button onclick="0()" class="bg-gray-600 text-white px-4 py-2 rounded-lg">Show latest logs</button>
+				&nbsp;
+			</div>
+		</div>
+	</body>
+	{% include 'includes/page_footer.twig' with {} %}
+
+	 <script>
+	    function debugLink() {
+	        Swal.fire({
+	            title: 'Debug Link',
+	            text: 'Copy the link below and send it to the developer',
+	            input: 'text',
+	            inputValue: window.location.href+"?id={{ error_id }}",
+	            showCancelButton: true,
+	            confirmButtonText: 'Copy',
+	            cancelButtonText: 'Close',
+	        }).then((result) => {
+	            if (result.isConfirmed) {
+	                navigator.clipboard.writeText(result.value);
+	                Swal.fire('Copied!', '', 'success');
+	            }
+	        });
+	    }
+	    function showFull() {
+	        Swal.fire({
+	            title: 'Full Error',
+				text: `{{ error_full_message|replace({'\n': '\\n'}) }}`,
+	            showCancelButton: true,
+	            confirmButtonText: 'Close',
+	        });
+	    }
+	    </script>
+</html>

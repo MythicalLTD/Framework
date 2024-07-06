@@ -4,6 +4,8 @@ namespace MythicalSystemsFramework\Roles;
 
 use Exception;
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 
 class RolesDataHandler
 {
@@ -45,7 +47,7 @@ class RolesDataHandler
                 return $mysqli->insert_id;
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to create role: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to create role: " . $e->getMessage());
             return "ERROR_DATABASE_INSERT_FAILED";
         }
     }
@@ -79,7 +81,7 @@ class RolesDataHandler
                 return "ROLE_DELETE_FAILED";
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to delete role: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to delete role: " . $e->getMessage());
             return "ERROR_DATABASE_DELETE_FAILED";
         }
     }
@@ -116,7 +118,7 @@ class RolesDataHandler
             }
 
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to update role: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to update role: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -150,7 +152,7 @@ class RolesDataHandler
 
             return $result;
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to get role info: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to get role info: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -185,7 +187,7 @@ class RolesDataHandler
 
             return $roles;
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to get all roles: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to get all roles: " . $e->getMessage());
             return null;
         }
     }
@@ -217,7 +219,7 @@ class RolesDataHandler
                 return "ROLE_MISSING";
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to check if role exists: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesDataHandler.php) Failed to check if role exists: " . $e->getMessage());
             return "ERROR_DATABASE_INSERT_FAILED";
         }
     }

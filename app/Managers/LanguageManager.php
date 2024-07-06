@@ -4,6 +4,8 @@ namespace MythicalSystemsFramework\Managers;
 
 use Exception;
 use MythicalSystemsFramework\Kernel\Logger as logger;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 
 class LanguageManager
 {
@@ -63,7 +65,7 @@ class LanguageManager
      */
     public static function logKeyTranslationNotFound($key, $message = "TRANSLATION_KEY_NOT_FOUND"): string
     {
-        Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Translation key not found: " . $key);
+        Logger::log(LoggerLevels::CRITICAL, LoggerTypes::LANGUAGE, "Translation key not found: " . $key);
         return $message;
     }
 }

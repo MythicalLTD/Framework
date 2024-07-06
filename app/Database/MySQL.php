@@ -4,6 +4,8 @@ namespace MythicalSystemsFramework\Database;
 
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 use PDO;
 use PDOException;
 use mysqli;
@@ -27,7 +29,7 @@ class MySQL
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch (PDOException $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "Failed to connect to the database!");
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to connect to the database!");
             throw new PDOException("Failed to connect to the database: " . $e->getMessage());
         }
     }
@@ -49,7 +51,7 @@ class MySQL
             );
 
             if (self::$connection->connect_error) {
-                Logger::log(Logger::CRITICAL, Logger::DATABASE, "Failed to connect to the database!");
+                Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to connect to the database!");
             }
         }
 
@@ -89,7 +91,7 @@ class MySQL
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return true;
         } catch (PDOException $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "Failed to execute PDO query: " . $e);
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to execute PDO query: " . $e);
             return false;
         }
     }

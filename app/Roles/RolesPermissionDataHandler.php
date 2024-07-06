@@ -4,6 +4,8 @@ namespace MythicalSystemsFramework\Roles;
 
 use Exception;
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 
 
 class RolesPermissionDataHandler
@@ -31,7 +33,7 @@ class RolesPermissionDataHandler
 
             return $mysqli->insert_id;
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to create role permission: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to create role permission: " . $e->getMessage());
             return "ERROR_DATABASE_INSERT_FAILED";
         }
     }
@@ -65,7 +67,7 @@ class RolesPermissionDataHandler
                 return "ROLE_PERMISSION_DELETE_FAILED";
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to delete role permission: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to delete role permission: " . $e->getMessage());
             return "ERROR_DATABASE_DELETE_FAILED";
         }
     }
@@ -101,7 +103,7 @@ class RolesPermissionDataHandler
                 return "ROLE_PERMISSION_UPDATE_FAILED";
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to update role permission: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to update role permission: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }
@@ -140,7 +142,7 @@ class RolesPermissionDataHandler
 
             return $permissions;
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to get permissions for role: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to get permissions for role: " . $e->getMessage());
             return null;
         }
     }
@@ -173,7 +175,7 @@ class RolesPermissionDataHandler
 
             return $result;
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to get role permission info: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to get role permission info: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
@@ -206,7 +208,7 @@ class RolesPermissionDataHandler
                 return "ROLE_PERMISSION_MISSING";
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to check if role permission exists: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to check if role permission exists: " . $e->getMessage());
             return "ERROR_DATABASE_INSERT_FAILED";
         }
     }
@@ -240,7 +242,7 @@ class RolesPermissionDataHandler
                 return "ROLE_DOES_NOT_HAVE_PERMISSION";
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to check role permission: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/Roles/RolesPermissionDataHandler.php) Failed to check role permission: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
