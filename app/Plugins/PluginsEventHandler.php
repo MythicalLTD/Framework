@@ -2,14 +2,13 @@
 
 namespace MythicalSystemsFramework\Plugins;
 
+use MythicalSystemsFramework\Plugins\Events\SnowFlakeEvent;
+use MythicalSystemsFramework\Plugins\Events\UnitTestEvent;
+use MythicalSystemsFramework\Plugins\Events\CronEvent;
+use MythicalSystemsFramework\Plugins\Events\PageEvent;
+
 class PluginsEventHandler {
-    /**
-     * This function is called when the user logs in
-     * 
-     * @return void
-     */
-    public static function onUserLogin() : void {
-        //This is where you can add your code to run when a user logs in
-        
+    public static function registerEvents() : void {
+
     }
 }

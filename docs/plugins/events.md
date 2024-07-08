@@ -56,10 +56,12 @@ Here is a list of events that you can use:
 - `OnPageLoad` When a page loads
 - `OnCronTabRun` When a crontab gets executed!
 - `OnDatabaseMigration` When the database gets migrated!
-- `OnConfigMigration` When the config gets migrated!
+- `OnSettingMigration` When the config gets migrated!
 - `OnUnitTest` When a unit test gets tested!
 - `OnRouterLoad` When the router loads!
 - `OnApplicationDown` When the application goes down
 - `OnApplicationUp` When teh application goes up
 - `OnApplicationStartup` When the app starts!
 - `OnRendererLoad` When the renderer starts!
+- `OnLog` When something gets logged!
+- `onLogsPurge` When the logs get purged!
