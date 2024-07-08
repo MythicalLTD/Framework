@@ -7,6 +7,9 @@ use MythicalSystemsFramework\Database\MySQL;
 
 class NotificationHandler
 {
+    //TODO:
+    // Add a function to read notifications
+    
     /**
      * Create a new notification.
      *                      

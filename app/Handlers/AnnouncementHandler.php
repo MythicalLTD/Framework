@@ -6,6 +6,13 @@ use MythicalSystemsFramework\Database\MySQL;
 
 class AnnouncementHandler
 {
+    //TODO:
+    // Add a function to get announcements read
+    // Add a function to mark announcements as read
+    // Add a function to like announcements
+    // Add a function to dislike announcements
+    // Add a function to get likes from announcements
+    
     /**
      * Create a new announcement.
      *

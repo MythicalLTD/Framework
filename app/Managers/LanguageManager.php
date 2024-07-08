@@ -26,19 +26,19 @@ class LanguageManager
                     if (file_exists($langFilePath)) {
                         return include($langFilePath);
                     } else {
-                        Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Language file is invalid!!");
+                        Logger::log(LoggerLevels::CRITICAL, LoggerTypes::LANGUAGE, "Language file is invalid!!");
                         return include($fallback_lang);
                     }
                 } else {
-                    Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Default language file has not been found in the config!!");
+                    Logger::log(LoggerLevels::CRITICAL, LoggerTypes::LANGUAGE, "Default language file has not been found in the config!!");
                     return include($fallback_lang);
                 }
             } else {
-                logger::log(logger::CRITICAL, logger::LANGUAGE, "Fallback language file has not been found!!");
+                logger::log(LoggerLevels::CRITICAL, LoggerTypes::LANGUAGE, "Fallback language file has not been found!!");
                 die("Fallback language file has not been found!! You are missing important files!");
             }
         } catch (Exception $e) {
-            Logger::log(Logger::CRITICAL, Logger::LANGUAGE, "Error while loading language file: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::LANGUAGE, "Error while loading language file: " . $e->getMessage());
             return include($fallback_lang);
         }
     }
