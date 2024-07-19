@@ -66,16 +66,16 @@
         },
         {
             "name": "mythicalsystems/core",
-            "version": "1.0.0.7",
+            "version": "1.0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MythicalLTD/MythicalCore.git",
-                "reference": "ecc506216d235ecc98c588adc84605c933cc6f1b"
+                "reference": "bb0a392af9fa9f5af90a69293672b3139af41246"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MythicalLTD/MythicalCore/zipball/ecc506216d235ecc98c588adc84605c933cc6f1b",
-                "reference": "ecc506216d235ecc98c588adc84605c933cc6f1b",
+                "url": "https://api.github.com/repos/MythicalLTD/MythicalCore/zipball/bb0a392af9fa9f5af90a69293672b3139af41246",
+                "reference": "bb0a392af9fa9f5af90a69293672b3139af41246",
                 "shasum": ""
             },
             "require": {
@@ -131,7 +131,7 @@
                 "docs": "https://docs.mythicalsystems.me",
                 "forum": "https://discord.gg/Tswkrhreu3",
                 "issues": "https://github.com/mythicalltd/mythicalcore/issues",
-                "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.7",
+                "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.8",
                 "wiki": "https://docs.mythicalsystems.me"
             },
             "funding": [
@@ -140,7 +140,7 @@
                     "type": "GitHub"
                 }
             ],
-            "time": "2024-05-23T14:37:06+00:00"
+            "time": "2024-07-09T09:43:28+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
