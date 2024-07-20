@@ -1,1 +1,0 @@
-ALTER TABLE `framework_users` ADD `verified` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

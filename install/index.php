@@ -60,8 +60,7 @@
         <div class="mb-4">
           <label for="password" class="block text-white dark:text-zinc-200">Password:</label>
           <input type="password" id="password" name="password"
-            class="w-full bg-zinc-700 dark:bg-zinc-700 text-black dark:text-white p-2 rounded-lg focus:outline-none focus:ring focus:ring-purple-600"
-            required>
+            class="w-full bg-zinc-700 dark:bg-zinc-700 text-black dark:text-white p-2 rounded-lg focus:outline-none focus:ring focus:ring-purple-600">
         </div>
         <div class="mb-4">
           <label for="database" class="block text-white dark:text-zinc-200">Database Name:</label>

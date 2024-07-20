@@ -1,1 +1,0 @@
-ALTER TABLE `framework_users` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `banned`;

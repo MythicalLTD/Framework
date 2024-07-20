@@ -42,8 +42,8 @@ class dbmigrateCommand
 
             if (count($sqlFiles) > 0) {
                 usort($sqlFiles, function($a, $b) {
-                    $aDate = strtotime(basename($a, '.sql'));
-                    $bDate = strtotime(basename($b, '.sql'));
+                    $aDate = intval(basename($a, '.sql'));
+                    $bDate = intval(basename($b, '.sql'));
                     return $aDate - $bDate;
                 });
 

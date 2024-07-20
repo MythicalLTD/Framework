@@ -68,7 +68,7 @@ try {
         settings::update('seo', 'keywords', $settings_app_seo_keywords);
         settings::update('app', 'logo', $settings_app_logo);
         try {
-            unlink(__DIR__ . '/../../FIRST_INSTALL');
+            unlink(__DIR__ . '/../FIRST_INSTALL');
             die("OK_DEL_FIRST_INSTALL");
         } catch (Exception $e) {
             die("OK_DEL_FIRST_INSTALL");
@@ -101,12 +101,12 @@ function migrateDB()
             );
         ");
 
-        $sqlFiles = glob(__DIR__ . '/../../migrate/database/*.sql');
+        $sqlFiles = glob(__DIR__ . '/..//migrate/database/*.sql');
 
         if (count($sqlFiles) > 0) {
             usort($sqlFiles, function($a, $b) {
-                $aDate = strtotime(basename($a, '.sql'));
-                $bDate = strtotime(basename($b, '.sql'));
+                $aDate = intval(basename($a, '.sql'));
+                $bDate = intval(basename($b, '.sql'));
                 return $aDate - $bDate;
             });
 
@@ -129,7 +129,7 @@ function migrateDB()
                 }
             }
         } else {
-            die("No migrations found!");
+            die("(DB) No migrations found!");
         }
     } catch (PDOException $e) {
         die("Failed to migrate the database: " . $e->getMessage() . "");
@@ -141,7 +141,7 @@ function migrateCfg()
         $mysql = new MySQL();
         $db = $mysql->connectPDO();
         $db->exec("CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;");
-        $phpFiles = glob(__DIR__ . '/../../migrate/config/*.php');
+        $phpFiles = glob(__DIR__ . '/../migrate/config/*.php');
 
         if (count($phpFiles) > 0) {
             sort($phpFiles);
@@ -161,7 +161,7 @@ function migrateCfg()
                 }
             }
         } else {
-            die("No migrations found!");
+            die("(CFG) No migrations found!");
         }
     } catch (PDOException $e) {
         die("Failed to migrate the database: " . $e->getMessage() . "");

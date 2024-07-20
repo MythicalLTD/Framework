@@ -9,7 +9,6 @@ if (
     !$_GET['port'] == null &&
     isset($_GET['username']) &&
     !$_GET['username'] == null &&
-    isset($_GET['password']) &&
     isset($_GET['name']) &&
     !$_GET['name'] == null
 ) {
