@@ -11,9 +11,89 @@
 			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
 			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
 			"*/",
-			"Logger::log(Logger::$1,Logger::$2,\"$3\");"
+			"Logger::log(LoggerLevels::$1,LoggerTypes::$2,\"$3\");"
 		],
 		"description": "Some error logging!"
+	},
+	"S_LOG_INFO": {
+		"prefix": "S_LOG_INFO",
+		"scope": "php",
+		"body": [
+			"/**",
+			"* Logger",
+			"* ",
+			"* Logs something: LEVEL, TYPE, MESSAGE",
+			"* ",
+			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
+			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
+			"*/",
+			"Logger::log(LoggerLevels::INFO,LoggerTypes::OTHER,\"$1\");"
+		],
+		"description": "Some info logging!"
+	},
+	"S_LOG_WARNING": {
+		"prefix": "S_LOG_WARNING",
+		"scope": "php",
+		"body": [
+			"/**",
+			"* Logger",
+			"* ",
+			"* Logs something: LEVEL, TYPE, MESSAGE",
+			"* ",
+			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
+			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
+			"*/",
+			"Logger::log(LoggerLevels::WARNING,LoggerTypes::OTHER,\"$1\");"
+		],
+		"description": "Some warning logging!"
+	},
+	"S_LOG_ERROR": {
+		"prefix": "S_LOG_ERROR",
+		"scope": "php",
+		"body": [
+			"/**",
+			"* Logger",
+			"* ",
+			"* Logs something: LEVEL, TYPE, MESSAGE",
+			"* ",
+			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
+			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
+			"*/",
+			"Logger::log(LoggerLevels::ERROR,LoggerTypes::OTHER,\"$1\");"
+		],
+		"description": "Some error logging!"
+	},
+	"S_LOG_CRITICAL": {
+		"prefix": "S_LOG_CRITICAL",
+		"scope": "php",
+		"body": [
+			"/**",
+			"* Logger",
+			"* ",
+			"* Logs something: LEVEL, TYPE, MESSAGE",
+			"* ",
+			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
+			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
+			"*/",
+			"Logger::log(LoggerLevels::CRITICAL,LoggerTypes::OTHER,\"$1\");"
+		],
+		"description": "Some critical logging!"
+	},
+	"S_LOG_OTHER": {
+		"prefix": "S_LOG_OTHER",
+		"scope": "php",
+		"body": [
+			"/**",
+			"* Logger",
+			"* ",
+			"* Logs something: LEVEL, TYPE, MESSAGE",
+			"* ",
+			"* LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER",
+			"* TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER",
+			"*/",
+			"Logger::log(LoggerLevels::OTHER,LoggerTypes::OTHER,\"$1\");"
+		],
+		"description": "Some other logging!"
 	},
 	"Get translation": {
 		"prefix": "S_GetLang",
