@@ -92,6 +92,10 @@
         "cli": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
             "php framework"
+        ],
+        "convert:code":[
+            "export COMPOSER_ALLOW_SUPERUSER=1",
+            "php framework convert:code"
         ]
     }
 }
