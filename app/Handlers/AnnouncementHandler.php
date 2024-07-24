@@ -14,9 +14,9 @@ class AnnouncementHandler implements AnnouncementSocial
 {
     /**
      * Does an announcement exist?
-     * 
+     *
      * @param int $id
-     * 
+     *
      * @return bool
      */
     public static function exists(int $id): bool
@@ -35,9 +35,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -69,9 +69,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -95,9 +95,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -114,9 +114,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -137,9 +137,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -156,9 +156,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -182,9 +182,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -205,9 +205,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -227,9 +227,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -256,9 +256,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -284,9 +284,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -312,9 +312,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -324,11 +324,11 @@ class AnnouncementHandler implements AnnouncementSocial
     }
     /**
      * Summary of addSocialInteraction
-     * 
+     *
      * @param string $announcement_id
      * @param string $user_uuid
      * @param \MythicalSystemsFramework\Handlers\interfaces\AnnouncementSocial $type
-     * 
+     *
      * @throws \Exception
      * @return void
      */
@@ -338,9 +338,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($announcement_id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -356,9 +356,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -368,11 +368,11 @@ class AnnouncementHandler implements AnnouncementSocial
     }
     /**
      * Summary of removeSocialInteraction
-     * 
+     *
      * @param string $announcement_id
      * @param string $user_uuid
      * @param \MythicalSystemsFramework\Handlers\interfaces\AnnouncementSocial $type
-     * 
+     *
      * @throws \Exception
      * @return void
      */
@@ -383,9 +383,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($announcement_id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -401,9 +401,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -413,11 +413,11 @@ class AnnouncementHandler implements AnnouncementSocial
     }
     /**
      * Summary of getSocialInteraction
-     * 
+     *
      * @param string $announcement_id
      * @param string $user_uuid
      * @param string $type
-     * 
+     *
      * @return bool
      */
     public static function getSocialInteraction(string $announcement_id, string $user_uuid, string $type): bool
@@ -426,9 +426,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($announcement_id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -452,9 +452,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */
@@ -464,10 +464,10 @@ class AnnouncementHandler implements AnnouncementSocial
     }
     /**
      * Summary of getTotalSocialInteractions
-     * 
+     *
      * @param string $announcement_id
      * @param string $type
-     * 
+     *
      * @return int
      */
     public static function getTotalSocialInteractions(string $announcement_id, string $type): int
@@ -476,9 +476,9 @@ class AnnouncementHandler implements AnnouncementSocial
             if (!self::exists($announcement_id)) {
                 /**
                  * Logger
-                 * 
+                 *
                  * Logs something: LEVEL, TYPE, MESSAGE
-                 * 
+                 *
                  * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
@@ -500,9 +500,9 @@ class AnnouncementHandler implements AnnouncementSocial
         } catch (Exception $e) {
             /**
              * Logger
-             * 
+             *
              * Logs something: LEVEL, TYPE, MESSAGE
-             * 
+             *
              * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
              * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
              */

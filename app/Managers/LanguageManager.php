@@ -9,10 +9,9 @@ use MythicalSystemsFramework\Kernel\LoggerTypes;
 
 class LanguageManager
 {
-
     /**
      * Get the language from the file
-     * 
+     *
      * @return mixed
      */
     public static function getLang(): mixed
@@ -45,7 +44,7 @@ class LanguageManager
 
     /**
      * Get all available languages
-     * 
+     *
      * @return array
      */
     public static function getAllAvailableLanguages(): array
@@ -57,10 +56,10 @@ class LanguageManager
 
     /**
      * Log translation key not found
-     * 
+     *
      * @param string $key Translation key
      * @param string $message The alternative message
-     * 
+     *
      * @return string The translation key not found message
      */
     public static function logKeyTranslationNotFound($key, $message = "TRANSLATION_KEY_NOT_FOUND"): string

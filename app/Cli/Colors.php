@@ -164,7 +164,8 @@ class Colors
         return "\033[4m";
     }
 
-    public static function NewLine() : string {
+    public static function NewLine(): string
+    {
         return "\n";
     }
 

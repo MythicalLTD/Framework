@@ -7,8 +7,10 @@ use MythicalSystemsFramework\Plugins\Events\UnitTestEvent;
 use MythicalSystemsFramework\Plugins\Events\CronEvent;
 use MythicalSystemsFramework\Plugins\Events\PageEvent;
 
-class PluginsEventHandler {
-    public static function registerEvents() : void {
+class PluginsEventHandler
+{
+    public static function registerEvents(): void
+    {
 
     }
 }

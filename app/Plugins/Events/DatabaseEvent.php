@@ -2,7 +2,8 @@
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class DatabaseEvent {
+class DatabaseEvent
+{
     public static function OnDatabaseConnect(): void
     {
     }

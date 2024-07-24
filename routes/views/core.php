@@ -2,7 +2,7 @@
 
 $router->add('/errors/404', function () {
     /**
-     * The requirement for each template 
+     * The requirement for each template
      */
     global $renderer;
     http_response_code(404);
@@ -11,7 +11,7 @@ $router->add('/errors/404', function () {
 
 $router->add('/errors/500', function () {
     /**
-     * The requirement for each template 
+     * The requirement for each template
      */
     global $renderer;
     http_response_code(500);
@@ -20,7 +20,7 @@ $router->add('/errors/500', function () {
 
 $router->add('/errors/403', function () {
     /**
-     * The requirement for each template 
+     * The requirement for each template
      */
     global $renderer;
     http_response_code(403);
@@ -29,7 +29,7 @@ $router->add('/errors/403', function () {
 
 $router->add('/errors/401', function () {
     /**
-     * The requirement for each template 
+     * The requirement for each template
      */
     global $renderer;
     http_response_code(401);

@@ -8,10 +8,10 @@ class Debugger
 {
     /**
      * Display the information
-     * 
+     *
      * @param mixed $input The input to display the info about!
      * @param bool $collapse This is always false by default
-     * 
+     *
      * @return void
      */
     public static function display_info($input, $collapse = false): void
@@ -144,13 +144,13 @@ class Debugger
 
     /**
      * Throw an error
-     * 
+     *
      * @param mixed $renderer The twig renderer
      * @param string $error_text The error text
      * @param string $error_full_message The full error message
      * @param int $error_database_id The error database id
      * @param string $error_file_path The error file path
-     * 
+     *
      * @return void IT will die
      */
     public static function throw_error($renderer, $error_text, $error_full_message, $error_database_id, $error_file_path)

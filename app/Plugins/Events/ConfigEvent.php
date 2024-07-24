@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class ConfigEvent {
+class ConfigEvent
+{
     public static function OnConfigSet(): void
     {
     }
@@ -14,5 +15,5 @@ class ConfigEvent {
     public static function OnConfigUpdate(): void
     {
     }
-    
+
 }

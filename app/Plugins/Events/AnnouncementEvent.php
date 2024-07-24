@@ -1,7 +1,9 @@
-<?php 
+<?php
+
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class AnnouncementEvent {
+class AnnouncementEvent
+{
     public static function OnNewAnnouncement(): void
     {
     }
@@ -13,7 +15,7 @@ class AnnouncementEvent {
     public static function OnAnnouncementDelete(): void
     {
     }
-    
+
     public static function OnAnnouncementDeleteAll(): void
     {
     }

@@ -180,4 +180,5 @@
     ALTER TABLE `framework_users_userids`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
     SET FOREIGN_KEY_CHECKS=1;
+    CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
     COMMIT;

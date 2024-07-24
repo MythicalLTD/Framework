@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 use MythicalSystemsFramework\Handlers\CacheHandler as cache;
 use MythicalSystemsFramework\Cli\Colors as color;
 

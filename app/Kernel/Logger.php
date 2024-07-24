@@ -11,11 +11,11 @@ class Logger
 {
     /**
      * Log something inside the kernel framework_logs
-     * 
+     *
      * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
      * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
      * @param string $message The message you want to log
-     * 
+     *
      * @return int The log id!
      */
     public static function log(LoggerTypes|string $level, LoggerLevels|string $type, string $message): int
@@ -118,7 +118,7 @@ class Logger
      * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
      * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
      * @param int $limit The amount of logs you want to get (15 by default)
-     * 
+     *
      * @return array|null Returns the logs in an array
      */
     public static function getAllSortedByDate(LoggerTypes|string $level, LoggerLevels|string $type, int $limit = 15): array|null

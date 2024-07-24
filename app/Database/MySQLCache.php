@@ -26,7 +26,7 @@ class MySQLCache extends MySQL
 
             /**
              * Specific table dump settings!
-             * 
+             *
              * @requires framework_settings
              */
             if ($table_name == "framework_settings") {
@@ -74,7 +74,7 @@ class MySQLCache extends MySQL
                 "date_created" => date("Y-m-d H:i:s"),
                 "date_expire" => date("Y-m-d H:i:s", strtotime("+".$data["caches"]["settings_cache_life"]." seconds")),
             ];
-            $data = array_merge($cache_info,$data);
+            $data = array_merge($cache_info, $data);
             $json = json_encode($data, JSON_PRETTY_PRINT);
             Settings::up();
             file_put_contents(Settings::$cache_path . '/' . $table_name . '.json', $json);

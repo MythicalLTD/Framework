@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(null);
@@ -60,4 +61,3 @@ function isValidIP($ip)
 
     return preg_match($ipv4_pattern, $ip) || preg_match($ipv6_pattern, $ip);
 }
-?>

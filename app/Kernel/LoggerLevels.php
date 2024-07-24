@@ -4,7 +4,7 @@ namespace MythicalSystemsFramework\Kernel;
 
 interface LoggerLevels
 {
-    // Log level 
+    // Log level
     public const INFO = 'INFO';
     public const WARNING = 'WARNING';
     public const ERROR = 'ERROR';

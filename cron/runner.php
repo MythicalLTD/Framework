@@ -1,7 +1,8 @@
-<?php 
+<?php
+
 try {
     if (file_exists(__DIR__.'/../vendor/autoload.php')) {
-        require (__DIR__.'/../vendor/autoload.php');
+        require(__DIR__.'/../vendor/autoload.php');
     } else {
         die('Hello, it looks like you did not run: "composer install --no-dev --optimize-autoloader". Please run that and refresh the page');
     }
@@ -10,13 +11,14 @@ try {
 }
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Cli\Colors as color;
+
 echo color::translateColorsCode("A new cron runner has &astarted&r.&o");
 
 /**
  * MythicalSystems Framework Cron File
- * 
+ *
  * This is the main file that adds crons to our framework
- * 
+ *
  * Please do not edit anything from here and only add files inside: jobs
  */
 

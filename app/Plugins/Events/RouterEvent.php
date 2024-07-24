@@ -1,9 +1,11 @@
 <?php
+
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class RouterEvent {
+class RouterEvent
+{
     public static function OnRouterLoad(): void
     {
     }
-    
+
 }

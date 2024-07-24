@@ -1,10 +1,11 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class SnowFlakeEvent {
+class SnowFlakeEvent
+{
     public static function OnNewUserID(): void
     {
     }
-    
+
 }

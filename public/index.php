@@ -1,4 +1,5 @@
 <?php
+
 use MythicalSystemsFramework\Kernel\Debugger;
 
 ini_set('display_errors', 1);
@@ -87,7 +88,7 @@ $renderer = new Environment($loader, [
 
 /**
  * Add global functions to the renderer
- * 
+ *
  * This will allow the renderer to get the settings and cfg values
  *
  */

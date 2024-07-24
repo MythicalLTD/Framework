@@ -11,10 +11,10 @@ class RolesDataHandler
 {
     /**
      * Create a user
-     * 
+     *
      * @param string $name The name of the role
      * @param int $weight The default is set to 1
-     * 
+     *
      * MAKE SURE YOU CHECK THE DOCS FOR THIS FUNCTION
      * @return string|null The role id in a string
      */
@@ -54,9 +54,9 @@ class RolesDataHandler
 
     /**
      * Delete a role
-     * 
+     *
      * @param int $id The role id
-     * 
+     *
      * MAKE SURE YOU CHECK THE DOCS FOR THIS FUNCTION
      * @return string|null
      */
@@ -88,11 +88,11 @@ class RolesDataHandler
 
     /**
      * Update a role
-     * 
+     *
      * @param int $id The role id
      * @param string $name The name of the role
      * @param int $weight The default is set to 1
-     * 
+     *
      * MAKE SURE YOU CHECK THE DOCS FOR THIS FUNCTION
      * @return string|null
      */
@@ -105,7 +105,7 @@ class RolesDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
-            
+
             // Update the role
             $stmtRole = $mysqli->prepare("UPDATE framework_roles SET name = ?, weight = ? WHERE id = ?");
             $stmtRole->bind_param("sii", $name, $weight, $id);
@@ -125,10 +125,10 @@ class RolesDataHandler
 
     /**
      * Get a role
-     * 
+     *
      * @param int $id The role id
      * @param string $data The data you are looking for
-     * 
+     *
      * MAKE SURE YOU CHECK THE DOCS FOR THIS FUNCTION
      * @return string|null
      */
@@ -159,7 +159,7 @@ class RolesDataHandler
 
     /**
      * Get all roles with name, weight, and id
-     * 
+     *
      * @return array|null An array of roles with name, weight, and id
      */
     public static function getAllRoles(): array|null
@@ -193,9 +193,9 @@ class RolesDataHandler
     }
     /**
      * This function just looks if the role exists
-     * 
+     *
      * @param int $id The name of the role
-     * 
+     *
      * @return string|null
      */
     public static function roleExists(int $id): string|null

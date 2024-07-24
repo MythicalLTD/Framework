@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 use MythicalSystemsFramework\Cli\Colors as color;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
@@ -6,7 +7,7 @@ class newkeyCommand
 {
     public function execute()
     {
-        if (cfg::get("encryption","key") == "") {
+        if (cfg::get("encryption", "key") == "") {
             $this->generate();
         } else {
             echo color::translateColorsCode("&4&lWARNING: &fA key already exists. Do you want to generate a new one?&o");
@@ -21,12 +22,12 @@ class newkeyCommand
         }
     }
     /**
-     * 
+     *
      */
     public function generate()
     {
-        $key = "mythicalcore_".bin2hex(random_bytes(64*32));
-        cfg::set("encryption","key",$key);
+        $key = "mythicalcore_".bin2hex(random_bytes(64 * 32));
+        cfg::set("encryption", "key", $key);
         echo color::translateColorsCode("&fKey generated successfully!&o");
     }
 }

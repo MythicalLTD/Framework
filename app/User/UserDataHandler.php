@@ -2,11 +2,12 @@
 
 /**
  * UNIT TEST REQUIRED!!!
- * 
+ *
  * This file is responsible for handling the user data!
- * 
+ *
  * @category User
  */
+
 namespace MythicalSystemsFramework\User;
 
 use DateTime;
@@ -26,11 +27,11 @@ class UserDataHandler
 {
     /**
      * Login a user
-     * 
+     *
      * @param string $email
      * @param string $password
      * @param string $ip
-     * 
+     *
      * MAKE SURE YOU CHECK THE DOCS FOR THIS FUNCTION
      * @return string|null The user token
      */
@@ -85,20 +86,20 @@ class UserDataHandler
                 }
             }
         } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to login user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserDataHandler.php) Failed to login user: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
     /**
      * Create a user
-     * 
+     *
      * @param string $username
      * @param string $password
      * @param string $email
      * @param string $first_name
      * @param string $last_name
      * @param string $ip
-     * 
+     *
      * MAKE SURE YOU CHECK THE DOCS FOR THIS FUNCTION
      * @return string|null The user token
      */
@@ -155,18 +156,18 @@ class UserDataHandler
                 }
             }
         } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to create user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserDataHandler.php) Failed to create user: " . $e->getMessage());
             return "ERROR_DATABASE_INSERT_FAILED";
         }
     }
 
     /**
      * Get the user data
-     * 
+     *
      * @param string $account_token The token of the account you want the data for!
      * @param string $data The data you want to get from the user!
      * @param bool $encrypted Set to false in case the data is not encrypted!
-     * 
+     *
      * @return string The user data or null if not found!
      */
     public static function getSpecificUserData(string $account_token, string $data, bool $encrypted = true): string|null
@@ -196,22 +197,22 @@ class UserDataHandler
                 return "ERROR_FIELD_NOT_FOUND";
             }
         } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to get user data: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserDataHandler.php) Failed to get user data: " . $e->getMessage());
             return "ERROR_DATABASE_SELECT_FAILED";
         }
     }
 
     /**
      * Update the user data
-     * 
+     *
      * @param string $account_token The token of the account you want to update the data for!
      * @param string $data The data you want to update!
      * @param string $value The value you want to set!
      * @param bool $encrypted Set to false in case the data is not encrypted!
-     * 
+     *
      * @return bool True if the data was updated false if not!
      */
-    public static function updateSpecificUserData(string $account_token, string $data, string $value, bool $encrypted = true): string 
+    public static function updateSpecificUserData(string $account_token, string $data, string $value, bool $encrypted = true): string
     {
         try {
             $isAccountValid = UserHelper::isSessionValid($account_token);
@@ -231,7 +232,7 @@ class UserDataHandler
             $stmt->close();
             return "SUCCESS";
         } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to update user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserDataHandler.php) Failed to update user: " . $e->getMessage());
             return "ERROR_DATABASE_UPDATE_FAILED";
         }
     }

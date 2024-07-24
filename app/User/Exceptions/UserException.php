@@ -11,11 +11,13 @@ class UserException extends Exception
     {
         parent::__construct($message, $code, $previous);
     }
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
-    
-    public function toString() : string {
+
+    public function toString(): string
+    {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
 }

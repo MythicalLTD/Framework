@@ -1,5 +1,7 @@
 <?php
 
+use MythicalSystemsFramework\Database\exception\database\MySQLError;
+use MythicalSystemsFramework\Database\exception\migration\NoMigrationsFound;
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\ConfigManager;
 use MythicalSystemsFramework\Managers\SettingsManager as settings;
@@ -59,7 +61,15 @@ try {
     ConfigManager::set('database', 'name', $mysql_name);
     ConfigManager::set('encryption', 'key', generateKey());
     try {
-        migrateDB();
+        try {
+            MySQL::migrate();
+        } catch (MySQLError $e) {
+            die("Failed to migrate the database: " . $e->getMessage());
+        } catch (NoMigrationsFound $e) {
+            die("No migrations found!");
+        } catch (Exception $e) {
+            die("Failed to migrate the database: " . $e->getMessage());
+        }
         migrateCfg();
         settings::update('app', 'name', $app_name);
         settings::update('app', 'timezone', $app_timezone);
@@ -82,9 +92,9 @@ try {
 
 /**
  * Install functions
- * 
+ *
  * Do not touch those functions please
- * 
+ *
  * If you touch you gay
  */
 function migrateDB()
@@ -104,7 +114,7 @@ function migrateDB()
         $sqlFiles = glob(__DIR__ . '/..//migrate/database/*.sql');
 
         if (count($sqlFiles) > 0) {
-            usort($sqlFiles, function($a, $b) {
+            usort($sqlFiles, function ($a, $b) {
                 $aDate = intval(basename($a, '.sql'));
                 $bDate = intval(basename($b, '.sql'));
                 return $aDate - $bDate;
@@ -129,7 +139,7 @@ function migrateDB()
                 }
             }
         } else {
-            die("(DB) No migrations found!");
+
         }
     } catch (PDOException $e) {
         die("Failed to migrate the database: " . $e->getMessage() . "");

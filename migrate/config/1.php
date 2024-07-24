@@ -1,4 +1,5 @@
 <?php
+
 use MythicalSystemsFramework\Managers\SettingsManager as settings;
 
 settings::set("app", "name", "MythicalSystems");

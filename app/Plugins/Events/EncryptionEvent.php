@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class EncryptionEvent {
+class EncryptionEvent
+{
     public static function OnEncrypt(): void
     {
     }
@@ -10,5 +11,5 @@ class EncryptionEvent {
     public static function OnDecrypt(): void
     {
     }
-    
+
 }

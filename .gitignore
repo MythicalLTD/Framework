@@ -12,3 +12,4 @@ composer.phar
 /test.json
 /caches/*/
 caches/last_settings_migrate_run
+.php-cs-fixer.cache

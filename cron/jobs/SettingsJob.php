@@ -1,4 +1,5 @@
 <?php
+
 use MythicalSystemsFramework\Database\MySQLCache;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Cli\Colors as color;

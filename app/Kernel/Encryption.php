@@ -9,9 +9,9 @@ class Encryption
 {
     /**
      * Encrypt the data
-     * 
+     *
      * @param string $data
-     * 
+     *
      * @return string
      */
     public static function encrypt(string $data): string
@@ -21,9 +21,9 @@ class Encryption
 
     /**
      * Decrypt the data
-     * 
+     *
      * @param string $data
-     * 
+     *
      * @return string
      */
     public static function decrypt(string $data): string

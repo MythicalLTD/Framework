@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class SettingEvent {
+class SettingEvent
+{
     public static function OnSettingUpdate(): void
     {
     }
@@ -15,8 +16,9 @@ class SettingEvent {
     {
     }
 
-    public static function OnSettingMigration() : void {
-        
+    public static function OnSettingMigration(): void
+    {
+
     }
-    
+
 }

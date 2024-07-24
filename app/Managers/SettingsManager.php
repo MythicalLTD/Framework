@@ -3,6 +3,7 @@
 namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystemsFramework\Database\MySQL;
+
 /**
  * DEPRECATED: Use Settings class instead!!
  */
@@ -10,9 +11,9 @@ class SettingsManager
 {
     /**
      * DEPRECATED: Use Settings class instead!!
-     * 
+     *
      * Get a setting from the database!
-     * 
+     *
      * @param string $category The category of the setting you want to get!
      * @param string $key The key of the setting you want to get!
      *
@@ -38,7 +39,7 @@ class SettingsManager
     /**
      * DEPRECATED: Use Settings class instead!!
      * Set a setting in the database!
-     * 
+     *
      * @param string $category The category of the setting you want to set!
      * @param string $key The key of the setting you want to set!
      * @param string $value The value of the setting you want to set!
@@ -59,7 +60,7 @@ class SettingsManager
     /**
      * DEPRECATED: Use Settings class instead!!
      * Delete a setting from the database!
-     * 
+     *
      * @param string $category The category of the setting you want to delete!
      * @param string $key The key of the setting you want to delete!
      *
@@ -82,9 +83,9 @@ class SettingsManager
 
     /**
      * DEPRECATED: Use Settings class instead!!
-     * 
+     *
      * Delete all settings from the database!
-     * 
+     *
      * @return bool True if successfully deleted, false otherwise!
      */
     public static function deleteAll(): bool
@@ -97,9 +98,9 @@ class SettingsManager
 
     /**
      * DEPRECATED: Use Settings class instead!!
-     * 
+     *
      * Update a setting in the database!
-     * 
+     *
      * @param string $category The category of the setting you want to update!
      * @param string $key The key of the setting you want to update!
      * @param string $value The value of the setting you want to update!
@@ -125,7 +126,7 @@ class SettingsManager
      * DEPRECATED: Use Settings class instead!!
      *
      * Check if a setting exists in the database!
-     * 
+     *
      * @param string $category The category of the setting you want to check!
      * @param string $key The key of the setting you want to check!
      *

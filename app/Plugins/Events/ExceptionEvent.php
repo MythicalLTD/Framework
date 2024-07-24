@@ -2,9 +2,10 @@
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class ExceptionEvent {
+class ExceptionEvent
+{
     public static function OnException(): void
     {
-        
+
     }
 }

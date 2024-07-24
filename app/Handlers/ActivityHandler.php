@@ -8,7 +8,7 @@ class ActivityHandler
 {
     /**
      * Adds a new activity to the database.
-     * 
+     *
      * @param string $userId The user ID.
      * @param string $username The username.
      * @param string $description The activity description.
@@ -30,7 +30,7 @@ class ActivityHandler
 
     /**
      * Removes all activities for a specific user.
-     * 
+     *
      * @param string $userId The user ID.
      */
     public static function removeUserActivities(string $userId): void
@@ -57,9 +57,9 @@ class ActivityHandler
 
     /**
      * Gets activities for a specific user.
-     * 
+     *
      * @param string $userId The user ID.
-     * 
+     *
      * @return array The activities for the specified user.
      */
     public static function getActivities(string $userId): array

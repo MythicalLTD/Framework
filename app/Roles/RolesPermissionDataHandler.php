@@ -7,15 +7,14 @@ use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 
-
 class RolesPermissionDataHandler
 {
     /**
      * Create a role permission
-     * 
+     *
      * @param int $roleId The role id
      * @param string $permission The permission
-     * 
+     *
      * @return string|null The role permission id in a string
      */
     public static function create(int $roleId, string $permission): string|null
@@ -40,9 +39,9 @@ class RolesPermissionDataHandler
 
     /**
      * Delete a role permission
-     * 
+     *
      * @param int $id The role permission id
-     * 
+     *
      * @return string|null
      */
     public static function delete(int $id): string|null
@@ -74,10 +73,10 @@ class RolesPermissionDataHandler
 
     /**
      * Update a role permission
-     * 
+     *
      * @param int $id The role permission id
      * @param string $permission The permission
-     * 
+     *
      * @return string|null
      */
     public static function update(int $id, string $permission): string|null
@@ -110,9 +109,9 @@ class RolesPermissionDataHandler
 
     /**
      * Get all permissions for a role
-     * 
+     *
      * @param int $roleId The role id
-     * 
+     *
      * @return array|null An array of permissions or null if role does not exist
      */
     public static function getAllPermissionsForRole(int $roleId): ?array
@@ -149,10 +148,10 @@ class RolesPermissionDataHandler
 
     /**
      * Get a role permission
-     * 
+     *
      * @param int $id The role permission id
      * @param string $data The data you are looking for
-     * 
+     *
      * @return string|null
      */
     public static function getSpecificRolePermissionInfo(int $id, string $data): string|null
@@ -182,9 +181,9 @@ class RolesPermissionDataHandler
 
     /**
      * This function checks if the role permission exists
-     * 
+     *
      * @param int $id The role permission id
-     * 
+     *
      * @return string|null
      */
     public static function rolePermissionExists(int $id): string|null
@@ -215,11 +214,11 @@ class RolesPermissionDataHandler
 
     /**
      * Check if a role has a specific permission
-     * 
+     *
      * @param int $roleId The role id
      * @param string $permission The permission
-     * 
-     * @return string|null 
+     *
+     * @return string|null
      */
     public static function doesRoleHavePermission(int $roleId, string $permission): string|null
     {

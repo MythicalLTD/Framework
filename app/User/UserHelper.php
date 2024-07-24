@@ -16,12 +16,11 @@ use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserHelper extends UserDataHandler
 {
-
     /**
-     * This function will ban a user from the system. 
-     * 
+     * This function will ban a user from the system.
+     *
      * @param string $account_token The account token of the user you want to ban.
-     * 
+     *
      * @return string The response of the ban.
      */
     public static function banUser(string $account_token): string
@@ -44,10 +43,10 @@ class UserHelper extends UserDataHandler
     }
 
     /**
-     * This function will unban a user from the system. 
-     * 
+     * This function will unban a user from the system.
+     *
      * @param string $account_token The account token of the user you want to unban.
-     * 
+     *
      * @return string The response of the unban.
      */
     public static function unbanUser(string $account_token): string
@@ -71,9 +70,9 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will check if the user is banned.
-     * 
+     *
      * @param string $account_token The account token of the user you want to check.
-     * 
+     *
      * @return string If the user is banned or not.
      */
     public static function isUserBanned(string $account_token): string
@@ -95,11 +94,11 @@ class UserHelper extends UserDataHandler
         }
     }
 
-        /**
+    /**
      * Check if the user session is valid
-     * 
+     *
      * @param string $account_token The token of the account you want the check the session for!
-     * 
+     *
      * @return bool True if yes false if no!
      */
     public static function isSessionValid(string $account_token): bool
@@ -123,14 +122,14 @@ class UserHelper extends UserDataHandler
                 return true;
             }
         } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL,LoggerTypes::DATABASE,"(App/User/UserDataHandler.php) Failed to validate user: " . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "(App/User/UserDataHandler.php) Failed to validate user: " . $e->getMessage());
             return false;
         }
     }
 
     /**
      * Log the user out of his account
-     * 
+     *
      * @return void This functions removes the token header!
      */
     public static function killSession(): void
@@ -141,14 +140,15 @@ class UserHelper extends UserDataHandler
         Cookies::unSetCookie("token");
     }
 
-    /** 
+    /**
      * This function will soft delete a user
      *
      * @param string $account_token The account token of the user you want to delete.
-     * 
+     *
      * @return string The response of the delete.
-     */ 
-    public static function deleteUser(string $account_token): string {
+     */
+    public static function deleteUser(string $account_token): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $update_user = self::updateSpecificUserData($account_token, "deleted", "true", false);
@@ -168,12 +168,13 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will restore a soft deleted user
-     * 
+     *
      * @param string $account_token The account token of the user you want to restore.
-     * 
+     *
      * @return string The response of the restore.
      */
-    public static function restoreUser(string $account_token): string {
+    public static function restoreUser(string $account_token): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $update_user = self::updateSpecificUserData($account_token, "deleted", "false", false);
@@ -193,12 +194,13 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will check if the user is soft deleted
-     * 
+     *
      * @param string $account_token The account token of the user you want to check.
-     * 
+     *
      * @return string The response of the check.
      */
-    public static function isUserDeleted(string $account_token): string {
+    public static function isUserDeleted(string $account_token): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $delete_state = self::getSpecificUserData($account_token, "deleted", false);
@@ -218,12 +220,13 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will check if the user is verified
-     * 
+     *
      * @param string $account_token The account token of the user you want to check.
-     * 
+     *
      * @return string The response of the check.
      */
-    public static function isUserVerified(string $account_token): string {
+    public static function isUserVerified(string $account_token): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $verified_state = self::getSpecificUserData($account_token, "verified", false);
@@ -243,12 +246,13 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will verify a user
-     * 
+     *
      * @param string $account_token The account token of the user you want to verify.
-     * 
+     *
      * @return string The response of the verification.
      */
-    public static function verifyUser(string $account_token): string {
+    public static function verifyUser(string $account_token): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $update_user = self::updateSpecificUserData($account_token, "verified", "true", false);
@@ -268,12 +272,13 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will unverify a user
-     * 
+     *
      * @param string $account_token The account token of the user you want to unverify.
-     * 
+     *
      * @return string The response of the unverification.
      */
-    public static function unverifyUser(string $account_token): string {
+    public static function unverifyUser(string $account_token): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $update_user = self::updateSpecificUserData($account_token, "verified", "false", false);
@@ -293,13 +298,14 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will update the last seen and the last ip of the user
-     * 
+     *
      * @param string $account_token The account token of the user you want to update.
      * @param string $ip The ip of the user.
-     * 
+     *
      * @return string
      */
-    public static function updateLastSeen(string $account_token, string $ip): string {
+    public static function updateLastSeen(string $account_token, string $ip): string
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $update_user = self::updateSpecificUserData($account_token, "last_seen", date("Y-m-d H:i:s"), false);
@@ -324,12 +330,13 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will return your the role id of a user
-     * 
+     *
      * @param string $account_token The account token of the user you want to get the role id from.
-     * 
+     *
      * @return string|null The role id of the user or an error.
      */
-    public static function getUserRoleId($account_token) : string|null {
+    public static function getUserRoleId($account_token): string|null
+    {
         try {
             if (self::isSessionValid($account_token)) {
                 $role_id = self::getSpecificUserData($account_token, "role", false);
@@ -343,12 +350,12 @@ class UserHelper extends UserDataHandler
         }
     }
 
-        /**
+    /**
      * Does this user have permission?
-     * 
+     *
      * @param string $account_token The account token.
      * @param string $permission The permission name.
-     * 
+     *
      * @return string|null
      */
     public static function doesUserHavePermission(string $account_token, string $permission): string|null

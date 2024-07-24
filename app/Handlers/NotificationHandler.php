@@ -5,13 +5,11 @@ namespace MythicalSystemsFramework\Handlers;
 use Exception;
 use MythicalSystemsFramework\Database\MySQL;
 
-
 class NotificationHandler
 {
-
     /**
      * Create a new notification.
-     *                      
+     *
      * @param string $user_id The user id.
      * @param string $name The notification name.
      * @param string $description The notification description.
@@ -36,7 +34,7 @@ class NotificationHandler
 
     /**
      * Edit an existing notification by ID.
-     *   
+     *
      * @param int $id The id of the notification to edit.
      * @param string $name The new notification name.
      * @param string $description The new notification description.
@@ -96,7 +94,7 @@ class NotificationHandler
 
     /**
      * Get a single notification by ID.
-     * 
+     *
      * @param int $id The id of the notification to retrieve.
      *
      * @return array|null The notification data or null if not found.
@@ -186,7 +184,7 @@ class NotificationHandler
 
     /**
      * Get framework_users_notifications filtered by user ID.
-     * 
+     *
      * @param string $user_id The user id to filter by.
      *
      * @return array Filtered framework_users_notifications.
@@ -212,9 +210,9 @@ class NotificationHandler
     }
     /**
      * Does a notification exist in the database?
-     * 
+     *
      * @param int $id The id of the notification to check.
-     * 
+     *
      * @return bool True if the notification exists, false if not.
      */
     public static function exists(string $id): bool
@@ -232,17 +230,18 @@ class NotificationHandler
             return false;
         }
     }
-    
+
     /**
      * Mark a notification as read.
-     * 
+     *
      * @param string $notification_id The id of the notification to mark as read.
      * @param string $user_uuid The user uuid.
-     * 
-     * @return void 
+     *
+     * @return void
      * @throws Exception
      */
-    public static function markAsRead(string $notification_id, string $user_uuid) : void {
+    public static function markAsRead(string $notification_id, string $user_uuid): void
+    {
         try {
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
@@ -253,17 +252,18 @@ class NotificationHandler
         } catch (Exception $e) {
             throw new Exception("" . $e->getMessage());
         }
-    } 
+    }
     /**
      * Check if a notification was already read!
-     * 
+     *
      * @param string $notification_id The id of the notification
      * @param string $user_uuid The uuid of the user
-     * 
+     *
      * @throws Exception
      * @return bool
      */
-    public static function hasAlreadyRead(string $notification_id, string $user_uuid) : bool {
+    public static function hasAlreadyRead(string $notification_id, string $user_uuid): bool
+    {
         try {
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();

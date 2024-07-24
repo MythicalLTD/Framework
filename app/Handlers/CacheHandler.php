@@ -9,7 +9,7 @@ class CacheHandler
     public static $cache_file = __DIR__ . '/../../caches/cache.json';
     /**
      * Create the cache file
-     * 
+     *
      * @return void
      */
     public static function createFile(): void
@@ -54,7 +54,7 @@ class CacheHandler
      * @param string $key The key of the cache entry to update.
      * @param mixed $value The new value to set for the cache entry.
      * @param int $expiryTimestamp The new expiration timestamp for the cache entry.
-     * 
+     *
      * @return void
      */
     public function update(string $key, mixed $value, int $expiryTimestamp): void
@@ -67,7 +67,7 @@ class CacheHandler
      * Delete a cache entry by key.
      *
      * @param string $key The key of the cache entry to delete.
-     * 
+     *
      * @return void
      */
     public function delete($key): void

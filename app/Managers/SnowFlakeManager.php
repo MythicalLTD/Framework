@@ -8,8 +8,8 @@ class SnowFlakeManager
 {
     /**
      * Function to generate a unique user ID
-     * 
-     * @return string The new user id 
+     *
+     * @return string The new user id
      */
     private static function generateUserID(): string
     {
@@ -18,7 +18,7 @@ class SnowFlakeManager
 
     /**
      * Function to get the cached user IDs from the database
-     * 
+     *
      * @return array Array of cached user IDs
      */
     private static function getCachedUserIDs(): array
@@ -40,9 +40,9 @@ class SnowFlakeManager
 
     /**
      * Function to save user IDs to the database
-     * 
+     *
      * @param string $userId Save the user id inside the database
-     * 
+     *
      * @return bool True if successfully saved, false otherwise
      */
     private static function saveUserIDToDatabase(string $userId): bool
@@ -58,7 +58,7 @@ class SnowFlakeManager
 
     /**
      * Function to check if a user ID is already used
-     * 
+     *
      * @return bool If this is used or not
      */
     private static function isUserIDUsed(string $userId, array $cachedUserIds): bool
@@ -68,7 +68,7 @@ class SnowFlakeManager
 
     /**
      * Function to get a unique user ID
-     * 
+     *
      * @return string The user id
      */
     public static function getUniqueUserID(): string
@@ -89,9 +89,9 @@ class SnowFlakeManager
 
     /**
      * Function to delete a user ID from the database
-     * 
+     *
      * @param string $userId The user ID to be deleted from the database
-     * 
+     *
      * @return bool True if the user ID was successfully deleted, false otherwise
      */
     public static function deleteUserFromDatabase(string $userId): bool
@@ -107,9 +107,9 @@ class SnowFlakeManager
 
     /**
      * Function to check if a user ID exists in the database
-     * 
+     *
      * @param string $userId The user ID to check
-     * 
+     *
      * @return bool True if the user ID exists in the database, false otherwise
      */
     public static function doesUserExistInDatabase(string $userId): bool
