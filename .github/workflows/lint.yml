@@ -1,15 +1,10 @@
 name: Lint
 
-on:
-  push:
-    branches:
-      - "develop"
-      - "1.0-develop"
-  pull_request:
-    branches:
-      - "develop"
-      - "1.0-develop"
+on: [push, pull_request]
 
+permissions:
+  contents: read
+  
 jobs:
   lint:
     name: Lint
