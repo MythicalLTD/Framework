@@ -1,0 +1,1 @@
+ALTER TABLE `framework_users_activities` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `ip_address`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

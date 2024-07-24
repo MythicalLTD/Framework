@@ -139,3 +139,9 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
+      
+      - name: Install dependencies
+        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+      
+      - name: Run PHPUnit
+        run: composer run tests

@@ -3,10 +3,14 @@
 namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystemsFramework\Database\MySQL;
-
+/**
+ * DEPRECATED: Use Settings class instead!!
+ */
 class SettingsManager
 {
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * 
      * Get a setting from the database!
      * 
      * @param string $category The category of the setting you want to get!
@@ -32,6 +36,7 @@ class SettingsManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
      * Set a setting in the database!
      * 
      * @param string $category The category of the setting you want to set!
@@ -45,13 +50,14 @@ class SettingsManager
         $mysql = new MySQL();
         $conn = $mysql->connectMYSQLI();
         $stmt = $conn->prepare("INSERT INTO framework_settings (`scategory`, `skey`, `svalue`) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss",$category, $key, $value);
+        $stmt->bind_param("sss", $category, $key, $value);
         $success = $stmt->execute();
         $stmt->close();
         return $success;
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
      * Delete a setting from the database!
      * 
      * @param string $category The category of the setting you want to delete!
@@ -75,6 +81,8 @@ class SettingsManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * 
      * Delete all settings from the database!
      * 
      * @return bool True if successfully deleted, false otherwise!
@@ -88,6 +96,8 @@ class SettingsManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * 
      * Update a setting in the database!
      * 
      * @param string $category The category of the setting you want to update!
@@ -112,6 +122,8 @@ class SettingsManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
+     *
      * Check if a setting exists in the database!
      * 
      * @param string $category The category of the setting you want to check!

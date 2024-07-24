@@ -9,6 +9,9 @@ class ConfigManager
 {
     private static string $configpath = __DIR__ . "/../../settings.json";
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * DEPRECATED: This class is used for the settings.json file!
+     * 
      * Get value form the config!
      * 
      * @param string $category The category of the value you want to take from the config
@@ -34,12 +37,15 @@ class ConfigManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * DEPRECATED: This class is used for the settings.json file!
+     * 
      * Set a value in the config file!
      * 
      * @param string $category The category of the value you want to set in the config
      * @param string $value The value you want to set in the config file!  
      * 
-     * @return bool If true then sucess if false then false!
+     * @return bool If true then success if false then false!
      */
     public static function set(string $category, string $key, string $value): bool
     {
@@ -59,6 +65,9 @@ class ConfigManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * DEPRECATED: This class is used for the settings.json file!
+     * 
      * Add a value to the config file!
      * 
      * @param string $category The category of the value you want to add in the config
@@ -85,6 +94,9 @@ class ConfigManager
     }
 
     /**
+     * DEPRECATED: Use Settings class instead!!
+     * DEPRECATED: This class is used for the settings.json file!
+     * 
      * Remove a value from the config file!
      * 
      * @param string $category The category of the value you want to remove from the config

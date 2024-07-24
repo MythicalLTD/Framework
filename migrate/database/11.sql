@@ -1,0 +1,2 @@
+ALTER TABLE `framework_users` DROP `deleted`;
+ALTER TABLE `framework_users` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `verified`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

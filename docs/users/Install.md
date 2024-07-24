@@ -83,6 +83,8 @@ Once it is downloaded you'll need to set the correct permissions on the core/ an
 
 ```bash
 chown -R www-data:www-data /var/www/framework/*
+chmod -R g+rwx /var/www/framework/*
+chmod -R 7777 /var/www/framework
 ```
 
 ### Install vendors

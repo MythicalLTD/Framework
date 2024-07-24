@@ -16,13 +16,16 @@ try {
 
 use MythicalSystems\Api\ResponseHandler as rsp;
 use MythicalSystems\Api\Api as api;
+use MythicalSystemsFramework\Database\MySQLCache;
 use MythicalSystemsFramework\Managers\SettingsManager as setting;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use MythicalSystemsFramework\Managers\LanguageManager;
+use MythicalSystemsFramework\Managers\Settings;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 $router = new \Router\Router();
+
 
 /**
  * Check if the app is installed
@@ -60,12 +63,10 @@ if (!is_writable(__DIR__)) {
 if (!is_writable(__DIR__ . '/../caches')) {
     die("We have no access to the cache directory!");
 }
-
 date_default_timezone_set(setting::get('app', 'timezone'));
 define('DIR_TEMPLATE', __DIR__ . '/../themes/' . setting::get('app', 'theme'));
 define('DIR_CACHE', __DIR__ . '/../caches');
 define('TIMEZONE', setting::get('app', 'timezone'));
-
 /**
  * Load the template engine
  */
@@ -149,8 +150,6 @@ foreach ($phpViewFiles as $phpViewFile) {
         die('Failed to start app: ' . $ex->getMessage());
     }
 }
-$e = new Exception("das");
-Debugger::throw_error(VIEW_ENGINE, "Critical Error while starting up multithread action!", $e->__toString(), 24, "/public/index.php");
 
 $router->add('/(.*)', function () {
     global $renderer;

@@ -1,0 +1,1 @@
+ALTER TABLE `framework_settings` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `svalue`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

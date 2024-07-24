@@ -9,6 +9,7 @@ use MythicalSystemsFramework\Kernel\LoggerTypes;
 use PDO;
 use PDOException;
 use mysqli;
+use Exception;
 
 class MySQL
 {
@@ -92,6 +93,128 @@ class MySQL
             return true;
         } catch (PDOException $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to execute PDO query: " . $e);
+            return false;
+        }
+    }
+
+    /**
+     * Try to lock a record!
+     * 
+     * @param string $table The table name!
+     * @param string $id The record id!
+     * 
+     * @return void
+     */
+    public function requestLock(string $table, string $id): void
+    {
+        try {
+            if (self::doesTableExist($table) === false) {
+                return;
+            }
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare("UPDATE ? SET `locked` = 'true' WHERE `id` = ?;");
+            $stmt->bind_param("si", $table, $id);
+            $stmt->execute();
+            $stmt->close();
+        } catch (Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to lock table: " . $e);
+            return;
+        }
+    }
+    /**
+     * Try to unlock a record.
+     * Unlock a record so you can write and read it!
+     * 
+     * @param string $table The table name!
+     * @param string $id The id of the record!
+     * 
+     * @return void
+     */
+    public static function requestUnLock(string $table, string $id): void
+    {
+        try {
+            if (self::doesTableExist($table) === false) {
+                return;
+            }
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare("UPDATE ? SET `locked` = 'false' WHERE `id` = ?;");
+            $stmt->bind_param("si", $table, $id);
+            $stmt->execute();
+            $stmt->close();
+        } catch (Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to unlock table: " . $e);
+            return;
+        }
+    }
+    /**
+     * Get the lock status of a record.
+     * 
+     * @param string $table The table name
+     * @param string $id The id of the record
+     * 
+     * @return bool
+     */
+    public static function getLock(string $table, string $id): bool
+    {
+        try {
+            if (self::doesTableExist($table) === false) {
+                return false;
+            }
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare("SELECT `locked` FROM ? WHERE `id` = ?;");
+            $stmt->bind_param("si", $table, $id);
+            $stmt->execute();
+            $stmt->close();
+            return $stmt->get_result()->fetch_assoc()["locked"];
+        } catch (Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to get lock status: " . $e);
+            return false;
+        }
+    }
+    /**
+     * Does a table exist in the database?
+     * 
+     * @param string $table The table name
+     * 
+     * @return bool
+     */
+    public static function doesTableExist(string $table): bool
+    {
+        try {
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $conn->query("SELECT * FROM ".mysqli_real_escape_string($conn, $table));    
+            return true;
+        } catch (Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to check if table exists: " . $e);
+            return false;
+        }
+    }
+    /**
+     * Does a record exist in the database?
+     * 
+     * @param string $table Table name
+     * @param string $search The term you want to search for (id)
+     * @param string $term What the value should be (1)
+     * @return bool
+     */
+    public static function doesRecordExist(string $table, string $search, string $term) : bool {
+        try {
+            if (self::doesTableExist($table) === false) {
+                return false;
+            }
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare("SELECT * FROM ? WHERE ? = ?;");
+            $stmt->bind_param("sss", $table, $search, $term);
+            $stmt->execute();
+            $stmt->close();
+            return true;
+        } catch (Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, "Failed to check if record exists: " . $e);
             return false;
         }
     }
