@@ -6,11 +6,16 @@ use MythicalSystemsFramework\Managers\Settings;
 
 class MySQLCache extends MySQL
 {
-    public static function saveCache(string $table_name): void
+    /**
+     * Summary of saveCache.
+     *
+     * @param string $table_name The name of the table
+     */
+    public static function saveCache(string $table_name): string
     {
         try {
             if (self::doesTableExist($table_name) == false) {
-                throw new \Exception('Table does not exist.');
+                return 'ERROR_TABLE_DOES_NOT_EXIST';
             }
 
             $mysqli = new MySQL();
@@ -19,7 +24,7 @@ class MySQLCache extends MySQL
             $result = $conn->query($query);
 
             if ($result->num_rows == 0) {
-                throw new \Exception('No data found.');
+                return 'ERROR_NO_DATA_FOUND_IN_TABLE';
             }
 
             /*
@@ -61,8 +66,9 @@ class MySQLCache extends MySQL
                     }
                 }
             } elseif ($table_name == 'framework_users') {
+                // TODO: ADD SUPPORT FOR DUMP USERS IN CACHE!
             } else {
-                throw new \Exception('Table not supported.');
+                return 'ERROR_TABLE_NOT_SUPPORTED';
             }
 
             $cache_info['cache_info'] = [
@@ -74,8 +80,10 @@ class MySQLCache extends MySQL
             $json = json_encode($data, JSON_PRETTY_PRINT);
             Settings::up();
             file_put_contents(Settings::$cache_path . '/' . $table_name . '.json', $json);
+
+            return 'OK';
         } catch (\Exception $e) {
-            throw new \Exception('Failed to save cache: ' . $e);
+            return 'ERROR_MYSQL_ERROR';
         }
     }
 

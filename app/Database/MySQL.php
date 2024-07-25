@@ -267,12 +267,12 @@ class MySQL
                         $stmt = $db->prepare('INSERT INTO framework_migrations (script) VALUES (?)');
                         $stmt->execute([$fileName]);
                         if ($isCli == true) {
-                            echo Kernel::translateColorsCode('&fExecuted migration: &e' . $fileName . '&o');
+                            echo Kernel::translateColorsCode('&rExecuted migration: &e' . $fileName . '&o');
                             echo Kernel::NewLine();
                         }
                     } else {
                         if ($isCli == true) {
-                            echo Kernel::translateColorsCode('&fSkipping migration: &e' . $fileName . ' &f(&ealready executed&f)&o');
+                            echo Kernel::translateColorsCode('&rSkipping migration: &e' . $fileName . ' &r(&ealready executed&r)&o');
                             echo Kernel::NewLine();
                         }
                     }

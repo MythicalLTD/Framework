@@ -24,7 +24,7 @@ class Migrate extends Command
                 self::db();
                 break;
             case '2':
-                echo self::translateColorsCode('&cThis option is not available yet!&o');
+                self::cfg();
                 break;
             case '3':
                 self::exit();
@@ -38,11 +38,11 @@ class Migrate extends Command
     public static function db(): void
     {
         try {
-            self::log_info('Migrating the database...');
+            self::log_info('Migrating the database...&o');
             self::log_info('');
             MySQL::migrate(true);
             Settings::migrate(true);
-            self::log_success('&rDatabase migrated &asuccessfully&r!');
+            self::log_success('&rDatabase migrated &asuccessfully&r!&o');
             self::exit();
         } catch (\Exception $e) {
             exit('Failed to migrate the database: ' . $e->getMessage() . '');
@@ -51,5 +51,14 @@ class Migrate extends Command
 
     public static function cfg(): void
     {
+        try {
+            self::log_info('Migrating the config...&o');
+            self::log_info('');
+            Settings::migrate(true);
+            self::log_success('&rConfig migrated &asuccessfully&r!&o');
+            self::exit();
+        } catch (\Exception $e) {
+            exit('Failed to migrate the config: ' . $e->getMessage() . '');
+        }
     }
 }

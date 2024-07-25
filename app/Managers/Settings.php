@@ -85,16 +85,16 @@ class Settings
                     }
                 }
                 if ($isTerminal) {
-                    echo color::translateColorsCode('&fMigration completed. Migrated &e' . $migratedCount . ' &ffiles.');
+                    echo color::translateColorsCode('&rMigration completed. &oMigrated &e' . $migratedCount . ' &rfiles.&o');
                 }
             } else {
                 if ($isTerminal) {
-                    echo color::translateColorsCode('&fNo migrations found!');
+                    echo color::translateColorsCode('&rNo migrations found!');
                 }
             }
         } catch (\Exception $e) {
             if ($isTerminal) {
-                echo color::translateColorsCode('&cFailed to migrate the database: &f' . $e->getMessage() . '');
+                echo color::translateColorsCode('&cFailed to migrate the database: &r' . $e->getMessage() . '');
             } else {
                 throw new NoMigrationsFound('No migrations found!' . $e->getMessage());
             }

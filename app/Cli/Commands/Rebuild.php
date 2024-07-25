@@ -41,14 +41,14 @@ class Rebuild extends Command
         try {
             $db = new MySQL();
             if ($db->tryConnection(cfg::get('database', 'host'), cfg::get('database', 'port'), cfg::get('database', 'username'), cfg::get('database', 'password'), cfg::get('database', 'name')) == true) {
-                echo self::translateColorsCode('&o&fConnection to the database was &asuccessful!&o');
+                echo self::translateColorsCode('&o&rConnection to the database was &asuccessful!&o');
                 echo self::NewLine();
-                echo self::translateColorsCode('&4&lWARNING: &fThis option will wipe the database. &o');
-                echo self::translateColorsCode('&4&lWARNING: &fOnly use this function if you know what you are doing &o');
-                echo self::translateColorsCode('&4&lWARNING: &fOnce you wipe the database there is no going back! &o');
-                echo self::translateColorsCode("&4&lWARNING: &fPlease be careful and don't play around with commands!  &o");
-                echo self::translateColorsCode('&4&lWARNING: &fThere is no other message then this so keep in mind! &o');
-                echo self::translateColorsCode('&4&lWARNING: &fDo you really want to wipe the database? (&ey&f/&en&f): ');
+                echo self::translateColorsCode('&4&lWARNING: &rThis option will wipe the database. &o');
+                echo self::translateColorsCode('&4&lWARNING: &rOnly use this function if you know what you are doing &o');
+                echo self::translateColorsCode('&4&lWARNING: &rOnce you wipe the database there is no going back! &o');
+                echo self::translateColorsCode("&4&lWARNING: &rPlease be careful and don't play around with commands!  &o");
+                echo self::translateColorsCode('&4&lWARNING: &rThere is no other message then this so keep in mind! &o');
+                echo self::translateColorsCode('&4&lWARNING: &rDo you really want to wipe the database? (&ey&r/&en&r): ');
 
                 $confirm = readline();
                 if (strtolower($confirm) == 'y') {
@@ -67,19 +67,19 @@ class Rebuild extends Command
                         echo self::NewLine();
                         echo self::NewLine();
                         echo self::NewLine();
-                        echo self::translateColorsCode('&fDatabase wiped!!&o');
+                        echo self::translateColorsCode('&rDatabase wiped!!&o');
                         MySQL::migrate(true);
                         Settings::migrate(true);
                         echo self::NewLine();
-                        echo self::translateColorsCode('&fDatabase rebuilt!&o');
-                        echo self::translateColorsCode("&fLet's start by setting up your configuration!&o");
+                        echo self::translateColorsCode('&rDatabase rebuilt!&o');
+                        echo self::translateColorsCode("&rLet's start by setting up your configuration!&o");
                         Configure::configure();
                     } catch (\PDOException $e) {
-                        echo self::translateColorsCode('&fFailed to drop tables: &c' . $e->getMessage() . '&o');
+                        echo self::translateColorsCode('&rFailed to drop tables: &c' . $e->getMessage() . '&o');
                         echo self::NewLine();
                     }
                 } else {
-                    self::exit('&fExiting...&o');
+                    self::exit('&rExiting...&o');
                 }
             } else {
                 self::exit('&cFailed to connect to the database!&o');
