@@ -65,7 +65,8 @@
             "bash devtools/push.bash",
             "git push origin develop",
             "composer run tests",
-            "composer run lint"
+            "composer run lint",
+            "bash devtools/count_php_lines.bash"
         ],
         "pull": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
