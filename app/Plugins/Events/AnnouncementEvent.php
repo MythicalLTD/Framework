@@ -27,6 +27,7 @@ class AnnouncementEvent
     public static function OnAnnouncementRemoveLike(): void
     {
     }
+
     public static function OnAnnouncementDisLike(): void
     {
     }

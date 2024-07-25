@@ -15,5 +15,4 @@ class RoleEvent
     public static function OnRoleUpdate(): void
     {
     }
-
 }

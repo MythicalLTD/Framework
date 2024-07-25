@@ -7,5 +7,4 @@ class SnowFlakeEvent
     public static function OnNewUserID(): void
     {
     }
-
 }

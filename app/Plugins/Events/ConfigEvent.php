@@ -15,5 +15,4 @@ class ConfigEvent
     public static function OnConfigUpdate(): void
     {
     }
-
 }

@@ -6,6 +6,5 @@ class ExceptionEvent
 {
     public static function OnException(): void
     {
-
     }
 }

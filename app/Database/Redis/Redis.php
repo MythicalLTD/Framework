@@ -6,7 +6,5 @@ class Redis
 {
     public static function getConnection()
     {
-
-
     }
 }

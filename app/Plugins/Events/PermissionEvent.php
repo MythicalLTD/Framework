@@ -15,5 +15,4 @@ class PermissionEvent
     public static function OnPermissionUpdate(): void
     {
     }
-
 }

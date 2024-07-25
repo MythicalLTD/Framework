@@ -19,17 +19,18 @@ class SettingsManager
      *
      * @return string|null Incase if found then return the value else return null!
      */
-    public static function get(string $category, string $key): string|null
+    public static function get(string $category, string $key): ?string
     {
         if (self::exists($category, $key)) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare("SELECT `svalue` FROM framework_settings WHERE `skey` = ? AND `scategory` = ?");
-            $stmt->bind_param("ss", $key, $category);
+            $stmt = $conn->prepare('SELECT `svalue` FROM framework_settings WHERE `skey` = ? AND `scategory` = ?');
+            $stmt->bind_param('ss', $key, $category);
             $stmt->execute();
             $stmt->bind_result($value);
             $stmt->fetch();
             $stmt->close();
+
             return $value;
         } else {
             return null;
@@ -50,10 +51,11 @@ class SettingsManager
     {
         $mysql = new MySQL();
         $conn = $mysql->connectMYSQLI();
-        $stmt = $conn->prepare("INSERT INTO framework_settings (`scategory`, `skey`, `svalue`) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $category, $key, $value);
+        $stmt = $conn->prepare('INSERT INTO framework_settings (`scategory`, `skey`, `svalue`) VALUES (?, ?, ?)');
+        $stmt->bind_param('sss', $category, $key, $value);
         $success = $stmt->execute();
         $stmt->close();
+
         return $success;
     }
 
@@ -71,10 +73,11 @@ class SettingsManager
         if (self::exists($category, $key)) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare("DELETE FROM framework_settings WHERE `skey` = ? AND `scategory` = ?");
-            $stmt->bind_param("s", $key);
+            $stmt = $conn->prepare('DELETE FROM framework_settings WHERE `skey` = ? AND `scategory` = ?');
+            $stmt->bind_param('s', $key);
             $success = $stmt->execute();
             $stmt->close();
+
             return $success;
         } else {
             return false;
@@ -92,7 +95,8 @@ class SettingsManager
     {
         $mysql = new MySQL();
         $conn = $mysql->connectMYSQLI();
-        $success = $conn->query("TRUNCATE TABLE framework_settings");
+        $success = $conn->query('TRUNCATE TABLE framework_settings');
+
         return $success;
     }
 
@@ -112,10 +116,11 @@ class SettingsManager
         if (self::exists($category, $key)) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare("UPDATE framework_settings SET `svalue` = ? WHERE `skey` = ? AND `scategory` = ?");
-            $stmt->bind_param("sss", $scategory, $value, $key);
+            $stmt = $conn->prepare('UPDATE framework_settings SET `svalue` = ? WHERE `skey` = ? AND `scategory` = ?');
+            $stmt->bind_param('sss', $scategory, $value, $key);
             $success = $stmt->execute();
             $stmt->close();
+
             return $success;
         } else {
             return false;
@@ -136,12 +141,13 @@ class SettingsManager
     {
         $mysql = new MySQL();
         $conn = $mysql->connectMYSQLI();
-        $stmt = $conn->prepare("SELECT COUNT(*) FROM framework_settings WHERE `skey` = ? AND `scategory` = ?");
-        $stmt->bind_param("ss", $key, $category);
+        $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_settings WHERE `skey` = ? AND `scategory` = ?');
+        $stmt->bind_param('ss', $key, $category);
         $stmt->execute();
         $stmt->bind_result($count);
         $stmt->fetch();
         $stmt->close();
+
         return $count > 0;
     }
 }

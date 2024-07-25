@@ -18,7 +18,5 @@ class SettingEvent
 
     public static function OnSettingMigration(): void
     {
-
     }
-
 }

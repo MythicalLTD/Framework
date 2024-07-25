@@ -86,7 +86,7 @@
         ],
         "lint": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "vendor/bin/php-cs-fixer fix ."
+            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
         ]
     }
 }

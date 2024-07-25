@@ -9,7 +9,7 @@ interface LoggerTypes
     public const DATABASE = 'DATABASE';
     public const PLUGIN = 'PLUGIN';
     public const LOG = 'LOG';
-    public const LANGUAGE = "LANGUAGE";
+    public const LANGUAGE = 'LANGUAGE';
     // Other
     public const OTHER = 'OTHER';
 }

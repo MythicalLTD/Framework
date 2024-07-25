@@ -11,8 +11,8 @@ class ApplicationEvent
     public static function OnApplicationUp(): void
     {
     }
+
     public static function OnApplicationStartup(): void
     {
-
     }
 }

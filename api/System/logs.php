@@ -7,9 +7,8 @@ use MythicalSystemsFramework\Kernel\LoggerLevels;
 
 api::init();
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    api::OK("Showing you latest logs", [
-        "logs" => Logger::getAllSortedByDate(LoggerTypes::OTHER, LoggerLevels::OTHER, 10)
+    api::OK('Showing you latest logs', [
+        'logs' => Logger::getAllSortedByDate(LoggerTypes::OTHER, LoggerLevels::OTHER, 10),
     ]);
 }

@@ -6,6 +6,5 @@ class RendererEvent
 {
     public static function OnRendererLoad(): void
     {
-
     }
 }

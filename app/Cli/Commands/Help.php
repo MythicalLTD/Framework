@@ -8,11 +8,11 @@ class Help extends Command
 
     public static function execute(bool $isFrameworkCommand = false): void
     {
-        echo self::log_info("");
-        echo self::log_info("-----------------------");
-        echo self::log_info("| Available commands: |");
-        echo self::log_info("-----------------------");
-        echo self::log_info("");
+        echo self::log_info('');
+        echo self::log_info('-----------------------');
+        echo self::log_info('| Available commands: |');
+        echo self::log_info('-----------------------');
+        echo self::log_info('');
 
         $commands = scandir(__DIR__);
         foreach ($commands as $command) {
@@ -30,6 +30,6 @@ class Help extends Command
 
             echo self::log_info("{$command} > {$reflectionClass->getProperty('description')->getValue()}");
         }
-        echo self::log_info("");
+        echo self::log_info('');
     }
 }

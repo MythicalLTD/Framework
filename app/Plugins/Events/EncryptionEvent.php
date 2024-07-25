@@ -11,5 +11,4 @@ class EncryptionEvent
     public static function OnDecrypt(): void
     {
     }
-
 }

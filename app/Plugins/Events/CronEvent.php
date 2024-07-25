@@ -7,5 +7,4 @@ class CronEvent
     public static function OnCronTabRun(): void
     {
     }
-
 }

@@ -15,5 +15,4 @@ class ActivityEvent
     public static function OnRemoveAllActivities(): void
     {
     }
-
 }

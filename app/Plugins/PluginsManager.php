@@ -5,9 +5,7 @@ namespace MythicalSystemsFramework\Plugins;
 class PluginsManager
 {
     /**
-     * Get all plugins
-     *
-     * @return array
+     * Get all plugins.
      */
     public static function getAllPlugins(): array
     {
@@ -24,8 +22,6 @@ class PluginsManager
             $pluginConfigFile = $pluginDir . '/MythicalFramework.json';
 
             $plugins[] = $addonDir;
-
-
         }
 
         return $plugins;

@@ -7,5 +7,4 @@ class RouterEvent
     public static function OnRouterLoad(): void
     {
     }
-
 }

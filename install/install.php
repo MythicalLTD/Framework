@@ -1,10 +1,10 @@
 <?php
 
-use MythicalSystemsFramework\Database\exception\database\MySQLError;
-use MythicalSystemsFramework\Database\exception\migration\NoMigrationsFound;
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\ConfigManager;
 use MythicalSystemsFramework\Managers\SettingsManager as settings;
+use MythicalSystemsFramework\Database\exception\database\MySQLError;
+use MythicalSystemsFramework\Database\exception\migration\NoMigrationsFound;
 
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
@@ -25,33 +25,32 @@ $mysql_username = $mysql['username'];
 $mysql_password = $mysql['password'];
 $mysql_name = $mysql['name'];
 
-if (!isset($app_name) || $app_name === "") {
-    die("Missing APP Name");
+if (!isset($app_name) || $app_name === '') {
+    exit('Missing APP Name');
 }
 
-if (!isset($app_timezone) || $app_timezone === "") {
-    die("Missing Timezone");
+if (!isset($app_timezone) || $app_timezone === '') {
+    exit('Missing Timezone');
 }
-if (!isset($settings_app_seo_title) || $settings_app_seo_title === "") {
-    die("Missing SEO Title");
-}
-
-if (!isset($settings_app_seo_description) || $settings_app_seo_description === "") {
-    die("Missing SEO Description");
+if (!isset($settings_app_seo_title) || $settings_app_seo_title === '') {
+    exit('Missing SEO Title');
 }
 
-if (!isset($settings_app_seo_keywords) || $settings_app_seo_keywords === "") {
-    die("Missing SEO Keywords");
+if (!isset($settings_app_seo_description) || $settings_app_seo_description === '') {
+    exit('Missing SEO Description');
 }
 
-if (!isset($settings_app_logo) || $settings_app_logo === "") {
-    die("Missing APP Logo");
+if (!isset($settings_app_seo_keywords) || $settings_app_seo_keywords === '') {
+    exit('Missing SEO Keywords');
+}
+
+if (!isset($settings_app_logo) || $settings_app_logo === '') {
+    exit('Missing APP Logo');
 }
 
 if (!in_array($app_timezone, timezone_identifiers_list())) {
-    die("Invalid Timezone! Please check the timezone list.");
+    exit('Invalid Timezone! Please check the timezone list.');
 }
-
 
 try {
     ConfigManager::set('database', 'host', $mysql_host);
@@ -64,11 +63,11 @@ try {
         try {
             MySQL::migrate();
         } catch (MySQLError $e) {
-            die("Failed to migrate the database: " . $e->getMessage());
+            exit('Failed to migrate the database: ' . $e->getMessage());
         } catch (NoMigrationsFound $e) {
-            die("No migrations found!");
+            exit('No migrations found!');
         } catch (Exception $e) {
-            die("Failed to migrate the database: " . $e->getMessage());
+            exit('Failed to migrate the database: ' . $e->getMessage());
         }
         migrateCfg();
         settings::update('app', 'name', $app_name);
@@ -79,19 +78,19 @@ try {
         settings::update('app', 'logo', $settings_app_logo);
         try {
             unlink(__DIR__ . '/../FIRST_INSTALL');
-            die("OK_DEL_FIRST_INSTALL");
+            exit('OK_DEL_FIRST_INSTALL');
         } catch (Exception $e) {
-            die("OK_DEL_FIRST_INSTALL");
+            exit('OK_DEL_FIRST_INSTALL');
         }
     } catch (Exception $e) {
-        die("Failed to migrate the database: " . $e->getMessage());
+        exit('Failed to migrate the database: ' . $e->getMessage());
     }
 } catch (Exception $e) {
-    die("Failed to configure the database: " . $e->getMessage());
+    exit('Failed to configure the database: ' . $e->getMessage());
 }
 
 /**
- * Install functions
+ * Install functions.
  *
  * Do not touch those functions please
  *
@@ -103,13 +102,13 @@ function migrateDB()
         $mysql = new MySQL();
         $db = $mysql->connectPDO();
 
-        $db->exec("
+        $db->exec('
             CREATE TABLE IF NOT EXISTS framework_migrations (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 script VARCHAR(255) NOT NULL,
                 executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-        ");
+        ');
 
         $sqlFiles = glob(__DIR__ . '/..//migrate/database/*.sql');
 
@@ -117,6 +116,7 @@ function migrateDB()
             usort($sqlFiles, function ($a, $b) {
                 $aDate = intval(basename($a, '.sql'));
                 $bDate = intval(basename($b, '.sql'));
+
                 return $aDate - $bDate;
             });
 
@@ -125,24 +125,23 @@ function migrateDB()
 
                 $fileName = basename($sqlFile);
 
-                $stmt = $db->prepare("SELECT COUNT(*) FROM framework_migrations WHERE script = ?");
+                $stmt = $db->prepare('SELECT COUNT(*) FROM framework_migrations WHERE script = ?');
                 $stmt->execute([$fileName]);
                 $count = $stmt->fetchColumn();
 
                 if ($count == 0) {
                     $db->exec($script);
 
-                    $stmt = $db->prepare("INSERT INTO framework_migrations (script) VALUES (?)");
+                    $stmt = $db->prepare('INSERT INTO framework_migrations (script) VALUES (?)');
                     $stmt->execute([$fileName]);
                 } else {
                     return;
                 }
             }
         } else {
-
         }
     } catch (PDOException $e) {
-        die("Failed to migrate the database: " . $e->getMessage() . "");
+        exit('Failed to migrate the database: ' . $e->getMessage() . '');
     }
 }
 function migrateCfg()
@@ -150,7 +149,7 @@ function migrateCfg()
     try {
         $mysql = new MySQL();
         $db = $mysql->connectPDO();
-        $db->exec("CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;");
+        $db->exec('CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;');
         $phpFiles = glob(__DIR__ . '/../migrate/config/*.php');
 
         if (count($phpFiles) > 0) {
@@ -159,29 +158,28 @@ function migrateCfg()
             foreach ($phpFiles as $phpFile) {
                 $fileName = basename($phpFile);
 
-                $stmt = $db->prepare("SELECT COUNT(*) FROM framework_settings_migrations WHERE script = ?");
+                $stmt = $db->prepare('SELECT COUNT(*) FROM framework_settings_migrations WHERE script = ?');
                 $stmt->execute([$fileName]);
                 $count = $stmt->fetchColumn();
 
                 if ($count == 0) {
                     include $phpFile;
 
-                    $stmt = $db->prepare("INSERT INTO framework_settings_migrations (script) VALUES (?)");
+                    $stmt = $db->prepare('INSERT INTO framework_settings_migrations (script) VALUES (?)');
                     $stmt->execute([$fileName]);
                 }
             }
         } else {
-            die("(CFG) No migrations found!");
+            exit('(CFG) No migrations found!');
         }
     } catch (PDOException $e) {
-        die("Failed to migrate the database: " . $e->getMessage() . "");
+        exit('Failed to migrate the database: ' . $e->getMessage() . '');
     }
 }
 
-
-
 function generateKey(): string
 {
-    $key = "mythicalcore_" . bin2hex(random_bytes(64 * 32));
+    $key = 'mythicalcore_' . bin2hex(random_bytes(64 * 32));
+
     return $key;
 }

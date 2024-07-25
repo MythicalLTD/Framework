@@ -1,7 +1,7 @@
 <?php
 
-use MythicalSystemsFramework\Handlers\CacheHandler as cache;
 use MythicalSystemsFramework\Cli\Colors as color;
+use MythicalSystemsFramework\Handlers\CacheHandler as cache;
 
 cache::process();
-echo color::translateColorsCode("Cache processed by &acrontab&r!&o");
+echo color::translateColorsCode('Cache processed by &acrontab&r!&o');

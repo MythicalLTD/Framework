@@ -2,12 +2,12 @@
 
 namespace MythicalSystemsFramework\Managers;
 
-use Exception;
 use MythicalSystems\Helpers\ConfigHelper;
 
 class ConfigManager
 {
-    private static string $configpath = __DIR__ . "/../../settings.json";
+    private static string $configpath = __DIR__ . '/../../settings.json';
+
     /**
      * DEPRECATED: Use Settings class instead!!
      * DEPRECATED: This class is used for the settings.json file!
@@ -15,24 +15,22 @@ class ConfigManager
      * Get value form the config!
      *
      * @param string $category The category of the value you want to take from the config
-     * @param string $value The value you want to take from the config file!
-     *
-     * @return string|null
      */
-    public static function get(string $category, string $key): string|null
+    public static function get(string $category, string $key): ?string
     {
         try {
             if (!file_exists(self::$configpath)) {
-                die("Config file not found!");
+                exit('Config file not found!');
             }
             if (!is_writable(self::$configpath)) {
-                die("We have no access to the config file!");
+                exit('We have no access to the config file!');
             } else {
                 $config = new ConfigHelper(self::$configpath);
             }
-        } catch (Exception $e) {
-            die("Failed to init the config class! \n" . $e->__toString());
+        } catch (\Exception $e) {
+            exit("Failed to init the config class! \n" . $e->__toString());
         }
+
         return $config->get($category, $key);
     }
 
@@ -51,16 +49,17 @@ class ConfigManager
     {
         try {
             if (!file_exists(self::$configpath)) {
-                die("Config file not found!");
+                exit('Config file not found!');
             }
             if (!is_writable(self::$configpath)) {
-                die("We have no access to the config file!");
+                exit('We have no access to the config file!');
             } else {
                 $config = new ConfigHelper(self::$configpath);
             }
-        } catch (Exception $e) {
-            die("Failed to init the config class! \n" . $e->__toString());
+        } catch (\Exception $e) {
+            exit("Failed to init the config class! \n" . $e->__toString());
         }
+
         return $config->set($category, $key, $value);
     }
 
@@ -73,23 +72,22 @@ class ConfigManager
      * @param string $category The category of the value you want to add in the config
      * @param string $key The key of the value you want to add in the config file!
      * @param string $value The value you want to add in the config file!
-     *
-     * @return bool
      */
     public static function add(string $category, string $key, string $value): bool
     {
         try {
             if (!file_exists(self::$configpath)) {
-                die("Config file not found!");
+                exit('Config file not found!');
             }
             if (!is_writable(self::$configpath)) {
-                die("We have no access to the config file!");
+                exit('We have no access to the config file!');
             } else {
                 $config = new ConfigHelper(self::$configpath);
             }
-        } catch (Exception $e) {
-            die("Failed to init the config class! \n" . $e->__toString());
+        } catch (\Exception $e) {
+            exit("Failed to init the config class! \n" . $e->__toString());
         }
+
         return $config->add($category, $key, $value);
     }
 
@@ -101,23 +99,22 @@ class ConfigManager
      *
      * @param string $category The category of the value you want to remove from the config
      * @param string $key The key of the value you want to remove from the config file!
-     *
-     * @return bool
      */
     public static function remove(string $category, string $key): bool
     {
         try {
             if (!file_exists(self::$configpath)) {
-                die("Config file not found!");
+                exit('Config file not found!');
             }
             if (!is_writable(self::$configpath)) {
-                die("We have no access to the config file!");
+                exit('We have no access to the config file!');
             } else {
                 $config = new ConfigHelper(self::$configpath);
             }
-        } catch (Exception $e) {
-            die("Failed to init the config class! \n" . $e->__toString());
+        } catch (\Exception $e) {
+            exit("Failed to init the config class! \n" . $e->__toString());
         }
+
         return $config->remove($category, $key);
     }
 }

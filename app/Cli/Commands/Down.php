@@ -10,12 +10,13 @@ class Down extends Command
 
     public static function execute(bool $isFrameworkCommand = false): void
     {
-        echo self::log_info("Marking the application as down...");
-        if (cfg::get('app', 'maintenance') == "true" && cfg::get('app', 'maintenance') != "false") {
-            echo self::translateColorsCode("&aApplication &ris already in maintenance mode!");
+        echo self::log_info('Marking the application as down...');
+        if (cfg::get('app', 'maintenance') == 'true' && cfg::get('app', 'maintenance') != 'false') {
+            echo self::translateColorsCode('&aApplication &ris already in maintenance mode!');
+
             return;
         }
-        cfg::set('app', 'maintenance', "true");
-        echo self::log_success("Application is now down!");
+        cfg::set('app', 'maintenance', 'true');
+        echo self::log_success('Application is now down!');
     }
 }
