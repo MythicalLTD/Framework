@@ -1,16 +1,17 @@
 <?php
+
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(null);
 if (
-    isset($_GET['host']) &&
-    !$_GET['host'] == null &&
-    isset($_GET['port']) &&
-    !$_GET['port'] == null &&
-    isset($_GET['username']) &&
-    !$_GET['username'] == null &&
-    isset($_GET['name']) &&
-    !$_GET['name'] == null
+    isset($_GET['host'])
+    && !$_GET['host'] == null
+    && isset($_GET['port'])
+    && !$_GET['port'] == null
+    && isset($_GET['username'])
+    && !$_GET['username'] == null
+    && isset($_GET['name'])
+    && !$_GET['name'] == null
 ) {
     $hostname = $_GET['host'];
     $port = (int) $_GET['port'];
@@ -24,30 +25,30 @@ if (
             try {
                 $fp = fsockopen($hostname, $port, $errCode, $errStr, $waitTimeoutInSeconds);
             } catch (Exception $e) {
-                die($e->getMessage());
+                exit($e->getMessage());
             }
             if ($fp) {
                 $conn = new mysqli($hostname, $username, $password, $name, $port);
 
                 if ($conn->connect_error) {
-                    die($conn->connect_error);
+                    exit($conn->connect_error);
                 } else {
                     echo 'OK';
                 }
                 $conn->close();
             } else {
-                die('Failed to ping: ' . $hostname . ':' . $port);
+                exit('Failed to ping: ' . $hostname . ':' . $port);
             }
 
-            die();
+            exit;
         } else {
-            die('Please provide an valid ipv4/ipv6!');
+            exit('Please provide an valid ipv4/ipv6!');
         }
     } catch (Exception $e) {
-        die($e->getMessage());
+        exit($e->getMessage());
     }
 } else {
-    die('You are missing the required connection details');
+    exit('You are missing the required connection details');
 }
 
 function isValidIP($ip)
@@ -60,4 +61,3 @@ function isValidIP($ip)
 
     return preg_match($ipv4_pattern, $ip) || preg_match($ipv6_pattern, $ip);
 }
-?>

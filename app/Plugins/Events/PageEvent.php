@@ -2,7 +2,8 @@
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class PageEvent {
+class PageEvent
+{
     public static function OnPageLoad(): void
     {
     }

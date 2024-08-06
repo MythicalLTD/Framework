@@ -2,7 +2,8 @@
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class RoleEvent {
+class RoleEvent
+{
     public static function OnRoleCreate(): void
     {
     }
@@ -14,5 +15,4 @@ class RoleEvent {
     public static function OnRoleUpdate(): void
     {
     }
-    
 }

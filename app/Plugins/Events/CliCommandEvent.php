@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class CliCommandEvent {
+class CliCommandEvent
+{
     public static function OnCLICommand(): void
     {
     }

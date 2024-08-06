@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class PermissionEvent {
+class PermissionEvent
+{
     public static function OnPermissionCreate(): void
     {
     }
@@ -14,5 +15,4 @@ class PermissionEvent {
     public static function OnPermissionUpdate(): void
     {
     }
-    
 }

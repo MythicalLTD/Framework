@@ -1,7 +1,9 @@
-<?php 
+<?php
+
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class UnitTestEvent {
+class UnitTestEvent
+{
     public static function OnUnitTest(): void
     {
     }

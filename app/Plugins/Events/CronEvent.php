@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class CronEvent {
+class CronEvent
+{
     public static function OnCronTabRun(): void
     {
     }
-    
 }

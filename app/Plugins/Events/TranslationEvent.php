@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class TranslationEvent {
+class TranslationEvent
+{
     public static function OnTranslationKeyNotFound(): void
     {
     }

@@ -1,17 +1,16 @@
-# Framework
+# MythicalFramework
 
-The core framework for our projects ;)
+One of the best frameworks to start learning php <3
 
-For devs that want to modify the frontend using tailwind css make sure you build the frontend first :)
+## Support
+Donations: 
+- [GitHub](https://github.com/sponsors/nayskutzu/)
+- [PayPal](https://paypal.me/nayskutzu)
+- [Discord](https://discord.mythicalsystems.xyz) (Joining the server also helps <3)
+- [Star](https://github.com/MythicalLTD/Framework) (Consider staring this repo!)
 
-```bash
-# Clean old build files
-composer run frontend:clear
-# Download the dependency's (Requires NodeJS)
-composer run frontend:install:dependency
-# Build the new frontend
-composer run frontend:build
+## Repository Activity
 
-# Or you can also use watch to watch the changes live!
-composer run frontend:watch
-```
+![Alt](https://repobeats.axiom.co/api/embed/c403f00d546911a7f80a4e9ace2628c2ab760b04.svg "Repobeats analytics image")
+
+*Copyright MythicalSystems LTD® 2020-2024*

@@ -1,0 +1,1 @@
+CREATE TABLE `framework_users_notifications_reads` (`id` INT NOT NULL AUTO_INCREMENT , `user_uuid` TEXT NOT NULL , `notification_id` INT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;

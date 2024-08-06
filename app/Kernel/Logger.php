@@ -2,20 +2,17 @@
 
 namespace MythicalSystemsFramework\Kernel;
 
-use Exception;
 use MythicalSystemsFramework\Database\MySQL;
-use MythicalSystemsFramework\Kernel\LoggerTypes;
-use MythicalSystemsFramework\Kernel\LoggerLevels;
 
 class Logger
 {
     /**
-     * Log something inside the kernel framework_logs
-     * 
+     * Log something inside the kernel framework_logs.
+     *
      * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
      * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
      * @param string $message The message you want to log
-     * 
+     *
      * @return int The log id!
      */
     public static function log(LoggerTypes|string $level, LoggerLevels|string $type, string $message): int
@@ -23,13 +20,13 @@ class Logger
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
         if (empty($level) || empty($type)) {
-            throw new Exception("Both log level and type must be provided");
+            throw new \Exception('Both log level and type must be provided');
         }
 
-        $output = "[" . date("Y-m-d H:i:s") . "] (" . $type . '/' . $level . ") " . $message . "";
+        $output = '[' . date('Y-m-d H:i:s') . '] (' . $type . '/' . $level . ') ' . $message . '';
 
-        $stmt = $conn->prepare("INSERT INTO framework_logs (l_type, levels, message, formatted) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $type, $level, $message, $output);
+        $stmt = $conn->prepare('INSERT INTO framework_logs (l_type, levels, message, formatted) VALUES (?, ?, ?, ?)');
+        $stmt->bind_param('ssss', $type, $level, $message, $output);
         $stmt->execute();
         $logId = $stmt->insert_id;
         $stmt->close();
@@ -39,76 +36,67 @@ class Logger
 
     /**
      * Delete a log by ID.
-     *
-     * @param int $id
-     * @return void
      */
     public static function delete(int $id): void
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $stmt = $conn->prepare("DELETE FROM framework_logs WHERE id = ?");
-        $stmt->bind_param("i", $id);
+        $stmt = $conn->prepare('DELETE FROM framework_logs WHERE id = ?');
+        $stmt->bind_param('i', $id);
         $stmt->execute();
         $stmt->close();
     }
 
     /**
      * Delete all framework_logs.
-     *
-     * @return void
      */
     public static function deleteAll(): void
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $conn->query("TRUNCATE TABLE framework_logs");
+        $conn->query('TRUNCATE TABLE framework_logs');
     }
 
     /**
      * Get a single log by ID.
-     *
-     * @param int $id
-     * @return array|null
      */
     public static function getOne(int $id): ?array
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $stmt = $conn->prepare("SELECT * FROM framework_logs WHERE id = ?");
-        $stmt->bind_param("i", $id);
+        $stmt = $conn->prepare('SELECT * FROM framework_logs WHERE id = ?');
+        $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         $log = $result->fetch_assoc();
         $stmt->close();
+
         return $log ? $log : null;
     }
 
     /**
      * Get all framework_logs.
-     *
-     * @return array
      */
     public static function getAll(): array
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $result = $conn->query("SELECT * FROM framework_logs");
+        $result = $conn->query('SELECT * FROM framework_logs');
         $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
+
         return $framework_logs;
     }
 
     /**
      * Get all framework_logs sorted by ID in descending order.
-     *
-     * @return array
      */
     public static function getAllSortedById(): array
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $result = $conn->query("SELECT * FROM framework_logs ORDER BY id DESC");
+        $result = $conn->query('SELECT * FROM framework_logs ORDER BY id DESC');
         $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
+
         return $framework_logs;
     }
 
@@ -118,20 +106,21 @@ class Logger
      * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
      * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
      * @param int $limit The amount of logs you want to get (15 by default)
-     * 
+     *
      * @return array|null Returns the logs in an array
      */
-    public static function getAllSortedByDate(LoggerTypes|string $level, LoggerLevels|string $type, int $limit = 15): array|null
+    public static function getAllSortedByDate(LoggerTypes|string $level, LoggerLevels|string $type, int $limit = 15): ?array
     {
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
-        $query = "SELECT * FROM framework_logs WHERE levels = ? AND l_type = ? ORDER BY date DESC LIMIT ?";
+        $query = 'SELECT * FROM framework_logs WHERE levels = ? AND l_type = ? ORDER BY date DESC LIMIT ?';
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssi", $level, $type, $limit);
+        $stmt->bind_param('ssi', $level, $type, $limit);
         $stmt->execute();
         $result = $stmt->get_result();
         $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
+
         return $framework_logs;
     }
 }

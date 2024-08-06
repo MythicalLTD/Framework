@@ -98,8 +98,6 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.0"
-          - "8.1"
           - "8.2"
           - "8.3"
         count: ${{ fromJson(needs.chunk-matrix.outputs.count) }}
@@ -139,3 +137,9 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
+      
+      - name: Install dependencies
+        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+      
+      - name: Run PHPUnit
+        run: composer run tests

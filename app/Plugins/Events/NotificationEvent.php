@@ -2,7 +2,8 @@
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class NotificationEvent {
+class NotificationEvent
+{
     public static function OnNewNotification(): void
     {
     }
@@ -14,12 +15,12 @@ class NotificationEvent {
     public static function OnNotificationDelete(): void
     {
     }
-    public static function OnNotificationDeleteAll() : void {
 
+    public static function OnNotificationDeleteAll(): void
+    {
     }
 
     public static function OnNotificationRead(): void
     {
     }
-    
 }

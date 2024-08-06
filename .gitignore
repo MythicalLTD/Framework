@@ -10,4 +10,6 @@ composer.phar
 /package-lock.json
 /node_modules
 /test.json
-/caches/*
+/caches/*/
+caches/last_settings_migrate_run
+.php-cs-fixer.cache

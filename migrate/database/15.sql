@@ -1,0 +1,1 @@
+ALTER TABLE `framework_users_userids` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `uid`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

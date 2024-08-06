@@ -1,60 +1,54 @@
 <?php
+
 namespace MythicalSystemsFramework\Cli;
 
-use Exception;
-
-class Kernel
+class Kernel extends Colors
 {
     /**
-     * Executes the command specified by the command name.
+     * Executes the framework command with the specified command name.
      *
-     * @param string $commandName The name of the command to execute.
-     * 
-     * @return void
-     * @throws Exception If the command file cannot be found or the command class does not exist.
+     * @param string $commandName the name of the command to execute
+     *
+     * @throws \Exception if the command file cannot be found, the command class does not exist,
+     *                    or the command class does not have 'name' or 'description' properties
      */
-    public static function executeCommand($commandName): void
+    public static function executeFrameworkCommand(string $commandName): void
     {
-        $commandFile = self::findCommandFile($commandName);
-        if ($commandFile !== null) {
-            require_once $commandFile;
-            $commandClass = ucfirst(strtolower($commandName)) . 'Command';
-            if (class_exists($commandClass)) {
-                $command = new $commandClass();
-                $command->execute(true);
-            } else {
-                throw new Exception("Command class not found: $commandClass");
-            }
-        } else {
-            throw new Exception("Command file not found: $commandName");
+        $commandName = ucfirst($commandName);
+        $commandFile = __DIR__ . "/Commands/$commandName.php";
+
+        if (!file_exists($commandFile)) {
+            throw new \Exception('Command not found!');
         }
+
+        require_once $commandFile;
+
+        $commandClass = "MythicalSystemsFramework\\Cli\\Commands\\$commandName";
+
+        if (!class_exists($commandClass)) {
+            throw new \Exception('Command not found!');
+        }
+
+        $reflectionClass = new \ReflectionClass($commandClass);
+
+        if (!$reflectionClass->hasProperty('description')) {
+            throw new \Exception("Command class '$commandClass' does not have 'name' or 'description' properties.");
+        }
+
+        $commandClass::execute(true);
     }
 
     /**
-     * Recursively searches for the command file with the specified command name.
+     * Exit the CLI application.
      *
-     * @param string $commandName The name of the command to search for.
-     * @param string $directory The directory to search in. Defaults to '/var/www/network-masters/framework/commands'.
-     * 
-     * @return string|null The path to the command file if found, or null if not found.
+     * @param string $message the message to display before exiting
      */
-    public static function findCommandFile($commandName, $directory = __DIR__ . '/../../commands'): string|null
+    public static function exit(string $message = '&7Application exited &asuccessfully&7!'): void
     {
-        $files = scandir($directory);
-        foreach ($files as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            $path = $directory . '/' . $file;
-            if (is_dir($path)) {
-                $subCommandFile = self::findCommandFile($commandName, $path);
-                if ($subCommandFile !== null) {
-                    return $subCommandFile;
-                }
-            } elseif (pathinfo($file, PATHINFO_FILENAME) === $commandName) {
-                return $path;
-            }
+        if ($message !== '') {
+            echo self::translateColorsCode($message);
         }
-        return null;
+
+        exit;
     }
 }

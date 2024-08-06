@@ -1,0 +1,1 @@
+ALTER TABLE `framework_settings_migrations` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `script`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

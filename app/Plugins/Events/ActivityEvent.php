@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
-class ActivityEvent {
+class ActivityEvent
+{
     public static function OnAddActivity(): void
     {
     }
@@ -14,5 +15,4 @@ class ActivityEvent {
     public static function OnRemoveAllActivities(): void
     {
     }
-    
 }

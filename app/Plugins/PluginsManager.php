@@ -2,30 +2,28 @@
 
 namespace MythicalSystemsFramework\Plugins;
 
-class PluginsManager {
+class PluginsManager
+{
     /**
-     * Get all plugins
-     * 
-     * @return array
+     * Get all plugins.
      */
-    public static function getAllPlugins() : array {
+    public static function getAllPlugins(): array
+    {
         $plugins = [];
         $addonsDir = __DIR__ . '/../../addons';
         $addonDirs = scandir($addonsDir);
-        
+
         foreach ($addonDirs as $addonDir) {
             if ($addonDir === '.' || $addonDir === '..') {
-            continue;
+                continue;
             }
-            
+
             $pluginDir = $addonsDir . '/' . $addonDir;
             $pluginConfigFile = $pluginDir . '/MythicalFramework.json';
-            
-            $plugins[] = $addonDir;
 
-            
+            $plugins[] = $addonDir;
         }
-        
+
         return $plugins;
     }
 }

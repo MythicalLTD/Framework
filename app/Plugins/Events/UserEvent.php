@@ -10,8 +10,9 @@ class UserEvent
      */
     public static function onUserLogin(): void
     {
-        //This is where you can add your code to run when a user logs in
+        // This is where you can add your code to run when a user logs in
     }
+
     /**
      * Event: OnUserLogOut
      * Description: Triggered when a user logs out.
@@ -19,6 +20,7 @@ class UserEvent
     public static function OnUserLogOut(): void
     {
     }
+
     /**
      * Event: OnUserBan
      * Description: Triggered when a user gets banned.
@@ -26,6 +28,7 @@ class UserEvent
     public static function OnUserBan(): void
     {
     }
+
     /**
      * Event: OnUserUnBan
      * Description: Triggered when a user gets unbanned.
@@ -33,6 +36,7 @@ class UserEvent
     public static function OnUserUnBan(): void
     {
     }
+
     /**
      * Event: OnUserDelete
      * Description: Triggered when a user gets deleted.
@@ -40,6 +44,7 @@ class UserEvent
     public static function OnUserDelete(): void
     {
     }
+
     /**
      * Event: OnUserRestore
      * Description: Triggered when a user gets undeleted.
@@ -47,6 +52,7 @@ class UserEvent
     public static function OnUserRestore(): void
     {
     }
+
     /**
      * Event: OnUserVerify
      * Description: Triggered when a user gets verified.
@@ -54,6 +60,7 @@ class UserEvent
     public static function OnUserVerify(): void
     {
     }
+
     /**
      * Event: OnUserUnVerify
      * Description: Triggered when a user needs to verify again.
@@ -61,6 +68,7 @@ class UserEvent
     public static function OnUserUnVerify(): void
     {
     }
+
     /**
      * Event: OnUserLastSeen
      * Description: Triggered when a user gets last seen.
@@ -68,6 +76,7 @@ class UserEvent
     public static function OnUserLastSeen(): void
     {
     }
+
     /**
      * Event: OnUserRegister
      * Description: Triggered when a new user registers.
@@ -75,6 +84,7 @@ class UserEvent
     public static function OnUserRegister(): void
     {
     }
+
     /**
      * Event: OnUserUpdate
      * Description: Triggered when a user gets updated in the database.
