@@ -16,7 +16,7 @@ class LanguageManager
         try {
             $fallback_lang = __DIR__ . '/../../lang/en_US.php';
             if (file_exists($fallback_lang)) {
-                $langConfig = SettingsManager::get('app', 'lang');
+                $langConfig = Settings::getSetting('app', 'lang');
                 if (!$langConfig == '') {
                     $langFilePath = __DIR__ . '/../../lang/' . $langConfig . '.php';
                     if (file_exists($langFilePath)) {

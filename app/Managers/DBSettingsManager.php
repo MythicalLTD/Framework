@@ -7,36 +7,8 @@ use MythicalSystemsFramework\Database\MySQL;
 /**
  * DEPRECATED: Use Settings class instead!!
  */
-class SettingsManager
+class DBSettingsManager
 {
-    /**
-     * DEPRECATED: Use Settings class instead!!
-     *
-     * Get a setting from the database!
-     *
-     * @param string $category The category of the setting you want to get!
-     * @param string $key The key of the setting you want to get!
-     *
-     * @return string|null Incase if found then return the value else return null!
-     */
-    public static function get(string $category, string $key): ?string
-    {
-        if (self::exists($category, $key)) {
-            $mysql = new MySQL();
-            $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT `svalue` FROM framework_settings WHERE `skey` = ? AND `scategory` = ?');
-            $stmt->bind_param('ss', $key, $category);
-            $stmt->execute();
-            $stmt->bind_result($value);
-            $stmt->fetch();
-            $stmt->close();
-
-            return $value;
-        } else {
-            return null;
-        }
-    }
-
     /**
      * DEPRECATED: Use Settings class instead!!
      * Set a setting in the database!

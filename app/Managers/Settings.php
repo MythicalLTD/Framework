@@ -50,7 +50,7 @@ class Settings
      */
     public static function updateSetting(string $category, string $name, string $value, bool $updateCache = true): void
     {
-        SettingsManager::update($category, $name, $value);
+        DBSettingsManager::update($category, $name, $value);
         if ($updateCache) {
             MySQLCache::saveCache('framework_settings');
         }

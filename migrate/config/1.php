@@ -1,6 +1,6 @@
 <?php
 
-use MythicalSystemsFramework\Managers\SettingsManager as settings;
+use MythicalSystemsFramework\Managers\DBSettingsManager as settings;
 
 settings::set('app', 'name', 'MythicalSystems');
 settings::set('app', 'logo', 'https://avatars.githubusercontent.com/u/117385445');

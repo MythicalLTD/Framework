@@ -2,8 +2,8 @@
 
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\ConfigManager;
-use MythicalSystemsFramework\Managers\SettingsManager as settings;
 use MythicalSystemsFramework\Database\exception\database\MySQLError;
+use MythicalSystemsFramework\Managers\DBSettingsManager as settings;
 use MythicalSystemsFramework\Database\exception\migration\NoMigrationsFound;
 
 ini_set('display_errors', 0);

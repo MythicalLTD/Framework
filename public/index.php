@@ -20,7 +20,6 @@ use MythicalSystems\Api\ResponseHandler as rsp;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Managers\LanguageManager;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
-use MythicalSystemsFramework\Managers\SettingsManager as setting;
 
 $router = new Router\Router();
 
@@ -58,10 +57,12 @@ if (!is_writable(__DIR__)) {
 if (!is_writable(__DIR__ . '/../caches')) {
     exit('We have no access to the cache directory!');
 }
-date_default_timezone_set(setting::get('app', 'timezone'));
-define('DIR_TEMPLATE', __DIR__ . '/../themes/' . setting::get('app', 'theme'));
+
+date_default_timezone_set(Settings::getSetting('app', 'timezone'));
+
+define('DIR_TEMPLATE', __DIR__ . '/../themes/' . Settings::getSetting('app', 'theme'));
 define('DIR_CACHE', __DIR__ . '/../caches');
-define('TIMEZONE', setting::get('app', 'timezone'));
+define('TIMEZONE', Settings::getSetting('app', 'timezone'));
 /*
  * Load the template engine
  */
@@ -91,7 +92,7 @@ $renderer = new Environment($loader, [
  * Add the settings function to the renderer
  */
 $renderer->addFunction(new Twig\TwigFunction('setting', function ($section, $key) {
-    return setting::get($section, $key);
+    return Settings::getSetting($section, $key);
 }));
 /*
  * Add the cfg function to the renderer
