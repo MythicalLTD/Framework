@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 try {
     if (file_exists('../vendor/autoload.php')) {
         require '../vendor/autoload.php';
@@ -17,11 +14,13 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use MythicalSystems\Api\Api as api;
 use MythicalSystems\Api\ResponseHandler as rsp;
+use MythicalSystemsFramework\Firewall\Firewall;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Managers\LanguageManager;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
 $router = new Router\Router();
+Firewall::check(Firewall::getUserIP());
 
 /*
  * Check if the app is installed
@@ -80,30 +79,23 @@ $renderer = new Environment($loader, [
     'auto_reload' => true,
     'debug' => true,
 ]);
-
-/*
- * Add global functions to the renderer
- *
- * This will allow the renderer to get the settings and cfg values
- *
- */
-
+$renderer->addExtension(new Twig\Extension\DebugExtension());
 /*
  * Add the settings function to the renderer
  */
-$renderer->addFunction(new Twig\TwigFunction('setting', function ($section, $key) {
+$renderer->addFunction(new Twig\TwigFunction('setting', function ($section, $key): string {
     return Settings::getSetting($section, $key);
 }));
 /*
  * Add the cfg function to the renderer
  */
-$renderer->addFunction(new Twig\TwigFunction('cfg', function ($section, $key) {
+$renderer->addFunction(new Twig\TwigFunction('cfg', function ($section, $key): string {
     return cfg::get($section, $key);
 }));
 /*
  * Add the language function to the renderer
  */
-$renderer->addFunction(new Twig\TwigFunction('lang', function ($key) {
+$renderer->addFunction(new Twig\TwigFunction('lang', function ($key): string {
     $translations = LanguageManager::getLang();
 
     return $translations[$key] ?? LanguageManager::logKeyTranslationNotFound($key);
@@ -125,7 +117,7 @@ foreach ($phpApiFiles as $phpApiFile) {
         include $phpApiFile->getPathname();
     } catch (Exception $ex) {
         api::init();
-        rsp::InternalServerError($e->getMessage(), null);
+        rsp::InternalServerError($ex->getMessage(), null);
     }
 }
 
@@ -150,9 +142,11 @@ foreach ($phpViewFiles as $phpViewFile) {
 
 $router->add('/(.*)', function () {
     global $renderer;
+    $renderer->addGlobal('page_name', '404');
     http_response_code(404);
     exit($renderer->render('/errors/404.twig'));
 });
+
 try {
     $router->route();
 } catch (Exception $e) {

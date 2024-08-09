@@ -8,8 +8,10 @@ namespace MythicalSystemsFramework\User;
 
 use MythicalSystems\User\Cookies;
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Roles\RolesDataHandler;
 use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
@@ -107,7 +109,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             // Connect to the database
-            $database = new \MythicalSystemsFramework\Database\MySQL();
+            $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
             // Check if the user exists
             $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE token = ?');
@@ -386,5 +388,51 @@ class UserHelper extends UserDataHandler
 
             return 'ERROR_DATABASE_SELECT_FAILED';
         }
+    }
+
+    /**
+     * Does the info exist?
+     */
+    public static function doesInfoAboutExist(string $info, string $username): string
+    {
+        try {
+            $mysql = new MySQL();
+            $conn = $mysql->connectMYSQLI();
+
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_users WHERE ? = ?');
+            if (!$stmt) {
+                Logger::log(LoggerLevels::ERROR, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to prepare statement: ' . $conn->error);
+
+                return 'ERROR_DATABASE_SELECT_FAILED';
+            }
+
+            $stmt->bind_param('ss', $info, $username);
+            $stmt->execute();
+            $stmt->bind_result($count);
+            $stmt->fetch();
+
+            $stmt->close();
+            $conn->close();
+
+            if ($count > 0) {
+                return 'INFO_EXISTS';
+            } else {
+                return 'INFO_NOT_FOUND';
+            }
+        } catch (\Exception $exception) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to check if username exists: ' . $exception->getMessage());
+
+            return 'ERROR_DATABASE_SELECT_FAILED';
+        }
+    }
+
+    /**
+     * Get the user ip.
+     *
+     * @uses CloudFlare::getUserIP()
+     */
+    public static function getUserIP(): ?string
+    {
+        return CloudFlare::getUserIP();
     }
 }

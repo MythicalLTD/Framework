@@ -1,5 +1,5 @@
 <?php
 
-use MythicalSystemsFramework\Managers\DBSettingsManager as settings;
+use MythicalSystemsFramework\Managers\Settings as settings;
 
-settings::set('caches', 'max_query_last_time', '600');
+settings::setSetting('caches', 'max_query_last_time', '600');

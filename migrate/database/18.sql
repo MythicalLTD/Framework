@@ -1,0 +1,1 @@
+ALTER TABLE `framework_firewall` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `blocked`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

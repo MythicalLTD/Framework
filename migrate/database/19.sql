@@ -1,0 +1,1 @@
+ALTER TABLE `framework_firewall` CHANGE `blocked` `action` ENUM('drop','allow','none') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'none';

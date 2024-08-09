@@ -1,0 +1,1 @@
+ALTER TABLE `framework_firewall` ADD `blocked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `uuid`;

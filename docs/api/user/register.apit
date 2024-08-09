@@ -1,0 +1,64 @@
+{
+  "url": "https://framework.mythicalsystems.xyz/api/user/register",
+  "method": "post",
+  "data": {
+    "username": "NaysKutzu",
+    "email": "ghermancassian2008@gmail.com",
+    "password": "test",
+    "first_name": "Cassian",
+    "last_name": "Gherman"
+  },
+  "backup": {
+    "bodyType": "form-data",
+    "data": {},
+    "dataArray": [
+      [
+        "1df925bc-fd84-464d-a4ff-8da9f7c9b3f3",
+        "username",
+        "NaysKutzu",
+        true,
+        "STRING"
+      ],
+      [
+        "d0bbf490-fbc1-4273-a3e0-4070cf108c9c",
+        "email",
+        "ghermancassian2008@gmail.com",
+        true,
+        "STRING"
+      ],
+      [
+        "484d9a13-e5bc-415a-9fd0-ae2c73f876f8",
+        "password",
+        "test",
+        true,
+        "STRING"
+      ],
+      [
+        "aa1dc417-12cf-4826-ae5b-1253f2070b56",
+        "first_name",
+        "Cassian",
+        true,
+        "STRING"
+      ],
+      [
+        "3c3005b9-6bb2-4ef8-b8bb-12aae6bc6891",
+        "last_name",
+        "Gherman",
+        true,
+        "STRING"
+      ]
+    ]
+  },
+  "headers": {
+    "Content-Type": "multipart/form-data"
+  },
+  "headersArray": [
+    [
+      "b1ce53cc-41fc-463a-975d-9b63374e2b56",
+      "Content-Type",
+      "multipart/form-data",
+      true,
+      "STRING"
+    ]
+  ]
+}

@@ -22,9 +22,8 @@
         "chuaple.php-formatter",
         "esbenp.prettier-vscode",
         "lkrms.pretty-php",
-        "m-thorsen.smarty-double-delimiters",
-        "aswinkumar863.smarty-template-support",
         "bradlc.vscode-tailwindcss",
-        "zarifprogrammer.tailwind-snippets"
+        "zarifprogrammer.tailwind-snippets",
+        "fincity.rest-api-tester"
     ]
 }

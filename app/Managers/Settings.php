@@ -56,6 +56,21 @@ class Settings
         }
     }
 
+    public static function setSetting(string $category, string $name, string $value, bool $updateCache = true): void
+    {
+        DBSettingsManager::set($category, $name, $value);
+        if ($updateCache) {
+            MySQLCache::saveCache('framework_settings');
+        }
+    }
+
+    /**
+     * Migrate the settings table :).
+     *
+     * @param bool $isTerminal Is this a terminal?
+     *
+     * @throws NoMigrationsFound
+     */
     public static function migrate(bool $isTerminal = false): void
     {
         try {

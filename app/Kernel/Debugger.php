@@ -169,4 +169,24 @@ class Debugger
             exit($e->getMessage());
         }
     }
+
+    /**
+     * Show all errors to a page!
+     */
+    public static function ShowAllErrors(): void
+    {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+    }
+
+    /**
+     * Hide all errors from a page!
+     */
+    public static function HideAllErrors(): void
+    {
+        ini_set('display_errors', 0);
+        ini_set('display_startup_errors', 0);
+        error_reporting(0);
+    }
 }

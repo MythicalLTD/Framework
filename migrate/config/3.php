@@ -1,5 +1,5 @@
 <?php
 
-use MythicalSystemsFramework\Managers\DBSettingsManager as settings;
+use MythicalSystemsFramework\Managers\Settings as settings;
 
-settings::set('caches', 'settings_cache_life', '3600');
+settings::setSetting('caches', 'settings_cache_life', '3600');

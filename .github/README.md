@@ -1,6 +1,6 @@
 # MythicalFramework
 
-One of the best frameworks to start learning php <3
+One of the best frameworks to start learning php <3 and building production ready applications with over `11.40K` lines of code!
 
 ## Support
 Donations: 
