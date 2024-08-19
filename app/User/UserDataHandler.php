@@ -11,6 +11,7 @@
 namespace MythicalSystemsFramework\User;
 
 use Gravatar\Gravatar;
+use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\Kernel\Logger as logger;
@@ -32,7 +33,7 @@ class UserDataHandler
     {
         try {
             // Connect to the database
-            $database = new \MythicalSystemsFramework\Database\MySQL();
+            $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
             // Check if the user exists
             $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE email = ? OR username = ?');
@@ -102,7 +103,7 @@ class UserDataHandler
             $email = enc::encrypt($email);
 
             // Connect to the database
-            $database = new \MythicalSystemsFramework\Database\MySQL();
+            $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
             // New gravatar instance for avatars!
             $gravatar = new Gravatar([], true);
@@ -171,7 +172,7 @@ class UserDataHandler
                 return 'ERROR_ACCOUNT_NOT_VALID';
             }
             // Connect to the database
-            $database = new \MythicalSystemsFramework\Database\MySQL();
+            $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
             // Check if the user exists
             $stmt = $mysqli->prepare('SELECT * FROM framework_users WHERE token = ?');
@@ -204,7 +205,7 @@ class UserDataHandler
      * @param string $value The value you want to set!
      * @param bool $encrypted Set to false in case the data is not encrypted!
      *
-     * @return bool True if the data was updated false if not!
+     * @return string (ERROR_ACCOUNT_NOT_VALID,ERROR_RECORD_IS_LOCKED,ERROR_DATABASE_UPDATE_FAILED,SUCCESS)
      */
     public static function updateSpecificUserData(string $account_token, string $data, string $value, bool $encrypted = true): string
     {
@@ -213,9 +214,18 @@ class UserDataHandler
             if (!$isAccountValid) {
                 return 'ERROR_ACCOUNT_NOT_VALID';
             }
+
             // Connect to the database
-            $database = new \MythicalSystemsFramework\Database\MySQL();
+            $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
+
+            if (MySQL::getLock('framework_users', self::getSpecificUserData($account_token, 'id', false)) == true) {
+                logger::log(LoggerLevels::WARNING, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Illegally tried to update a locked record!');
+
+                return 'ERROR_RECORD_IS_LOCKED';
+            }
+
+            MySQL::requestLock('framework_users', self::getSpecificUserData($account_token, 'id', false));
             // Check if the user exists
             $stmt = $mysqli->prepare("UPDATE framework_users SET $data = ? WHERE token = ?");
             if ($encrypted) {
@@ -224,6 +234,7 @@ class UserDataHandler
             $stmt->bind_param('ss', $value, $account_token);
             $stmt->execute();
             $stmt->close();
+            MySQL::requestUnLock('framework_users', self::getSpecificUserData($account_token, 'id', false));
 
             return 'SUCCESS';
         } catch (\Exception $e) {

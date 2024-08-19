@@ -11,8 +11,17 @@ try {
 
 use MythicalSystemsFramework\Cli\Kernel;
 
+if (function_exists('exec')) {
+    define('IS_EXEC_ENABLED', true);
+} else {
+    define('IS_EXEC_ENABLED', false);
+    echo Kernel::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&lThe exec function is disabled, please enable it in your php.ini file");
+}
+
+
 try {
-    Kernel::executeFrameworkCommand(isset($argv[1]) ? $argv[1] : '');
+    $args = array_slice($argv, 1); // Exclude the command name and the first argument
+    Kernel::executeFrameworkCommand(isset($argv[1]) ? $argv[1] : '', $args);
 } catch (Exception $e) {
     die(Kernel::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&l" . $e->getMessage() . ""));
 }

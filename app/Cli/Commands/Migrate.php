@@ -4,12 +4,13 @@ namespace MythicalSystemsFramework\Cli\Commands;
 
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\Settings;
+use MythicalSystemsFramework\Cli\CommandBuilder;
 
-class Migrate extends Command
+class Migrate extends Command implements CommandBuilder
 {
     public static string $description = 'A command that can help if you want to migrate the database or the config!';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         echo self::log_info('');
         echo self::log_info('&c1.&7 Migrate the database');

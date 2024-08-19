@@ -14,11 +14,11 @@ class LanguageManager
     public static function getLang(): mixed
     {
         try {
-            $fallback_lang = __DIR__ . '/../../lang/en_US.php';
+            $fallback_lang = __DIR__ . '/../../storage/lang/en_US.php';
             if (file_exists($fallback_lang)) {
                 $langConfig = Settings::getSetting('app', 'lang');
                 if (!$langConfig == '') {
-                    $langFilePath = __DIR__ . '/../../lang/' . $langConfig . '.php';
+                    $langFilePath = __DIR__ . '/../../storage/lang/' . $langConfig . '.php';
                     if (file_exists($langFilePath)) {
                         return include $langFilePath;
                     } else {
@@ -47,7 +47,7 @@ class LanguageManager
      */
     public static function getAllAvailableLanguages(): array
     {
-        $langFiles = scandir(__DIR__ . '/../../lang/');
+        $langFiles = scandir(__DIR__ . '/../../storage/lang/');
         $langFiles = array_diff($langFiles, ['..', '.']);
 
         return $langFiles;

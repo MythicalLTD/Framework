@@ -12,11 +12,10 @@ class Kernel extends Colors
      * @throws \Exception if the command file cannot be found, the command class does not exist,
      *                    or the command class does not have 'name' or 'description' properties
      */
-    public static function executeFrameworkCommand(string $commandName): void
+    public static function executeFrameworkCommand(string $commandName, array $args): void
     {
         $commandName = ucfirst($commandName);
         $commandFile = __DIR__ . "/Commands/$commandName.php";
-
         if (!file_exists($commandFile)) {
             throw new \Exception('Command not found!');
         }
@@ -35,7 +34,7 @@ class Kernel extends Colors
             throw new \Exception("Command class '$commandClass' does not have 'name' or 'description' properties.");
         }
 
-        $commandClass::execute(true);
+        $commandClass::execute(true, $args);
     }
 
     /**

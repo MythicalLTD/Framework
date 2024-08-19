@@ -6,7 +6,7 @@ use MythicalSystems\Cache\Handler as MythicalCoreCache;
 
 class CacheHandler
 {
-    public static $cache_file = __DIR__ . '/../../caches/cache.json';
+    public static $cache_file = __DIR__ . '/../../storage/caches/cache.json';
 
     /**
      * Create the cache file.

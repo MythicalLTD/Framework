@@ -11,16 +11,21 @@ try {
 }
 
 use Twig\Environment;
+use MythicalSystemsFramework\App;
 use Twig\Loader\FilesystemLoader;
 use MythicalSystems\Api\Api as api;
 use MythicalSystems\Api\ResponseHandler as rsp;
-use MythicalSystemsFramework\Firewall\Firewall;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Managers\LanguageManager;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
 $router = new Router\Router();
-Firewall::check(Firewall::getUserIP());
+
+if (function_exists('exec')) {
+    define('IS_EXEC_ENABLED', true);
+} else {
+    define('IS_EXEC_ENABLED', false);
+}
 
 /*
  * Check if the app is installed
@@ -53,14 +58,14 @@ if (!is_writable(__DIR__)) {
     exit('We have no access to the framework directory!');
 }
 
-if (!is_writable(__DIR__ . '/../caches')) {
+if (!is_writable(__DIR__ . '/../storage/caches')) {
     exit('We have no access to the cache directory!');
 }
 
 date_default_timezone_set(Settings::getSetting('app', 'timezone'));
 
-define('DIR_TEMPLATE', __DIR__ . '/../themes/' . Settings::getSetting('app', 'theme'));
-define('DIR_CACHE', __DIR__ . '/../caches');
+define('DIR_TEMPLATE', __DIR__ . '/../storage/themes/' . Settings::getSetting('app', 'theme'));
+define('DIR_CACHE', __DIR__ . '/../storage/caches');
 define('TIMEZONE', Settings::getSetting('app', 'timezone'));
 /*
  * Load the template engine
@@ -78,6 +83,7 @@ $renderer = new Environment($loader, [
     'cache' => DIR_CACHE,
     'auto_reload' => true,
     'debug' => true,
+    'charset' => 'utf-8',
 ]);
 $renderer->addExtension(new Twig\Extension\DebugExtension());
 /*
@@ -102,6 +108,7 @@ $renderer->addFunction(new Twig\TwigFunction('lang', function ($key): string {
 }));
 
 $renderer->addGlobal('php_version', phpversion());
+
 $renderer->addGlobal('page_name', 'Home');
 define('VIEW_ENGINE', $renderer);
 

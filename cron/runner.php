@@ -28,7 +28,7 @@ try {
     date_default_timezone_set('UTC');
 }
 
-$jobsDirectory = __DIR__ . '/jobs';
+$jobsDirectory = __DIR__ . '/php';
 $files = scandir($jobsDirectory);
 foreach ($files as $file) {
     if ($file !== '.' && $file !== '..') {

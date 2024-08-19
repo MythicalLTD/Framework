@@ -2,14 +2,15 @@
 
 namespace MythicalSystemsFramework\Cli\Commands;
 
+use MythicalSystemsFramework\Cli\CommandBuilder;
 use MythicalSystemsFramework\Database\MySQLCache;
 use MythicalSystemsFramework\Handlers\CacheHandler as CacheWorker;
 
-class Cache extends Command
+class Cache extends Command implements CommandBuilder
 {
     public static string $description = 'A command that can help if you want to cache the database or the config!';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         echo self::log_info('');
         echo self::log_info('&c1.&7 Flush the caches!');

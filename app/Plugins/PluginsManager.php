@@ -10,7 +10,7 @@ class PluginsManager
     public static function getAllPlugins(): array
     {
         $plugins = [];
-        $addonsDir = __DIR__ . '/../../addons';
+        $addonsDir = __DIR__ . '/../../storage/addons';
         $addonDirs = scandir($addonsDir);
 
         foreach ($addonDirs as $addonDir) {

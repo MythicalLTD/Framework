@@ -3,13 +3,15 @@
 namespace MythicalSystemsFramework\Cli\Commands;
 
 use MythicalSystemsFramework\Database\MySQL;
+use MythicalSystemsFramework\Cli\CommandBuilder;
+use MythicalSystemsFramework\Encryption\XChaCha20;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
-class Configure extends Command
+class Configure extends Command implements CommandBuilder
 {
     public static string $description = 'A command that can help if you want to configure the app!';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         echo self::log_info('');
         echo self::log_info('&c1.&7 Configure the database');
@@ -86,8 +88,8 @@ class Configure extends Command
             cfg::set('database', 'password', $password);
             cfg::set('database', 'name', $database);
             echo self::translateColorsCode('&rGenerating an encryption key for database...!&o');
-            $key = 'mythicalcore_' . bin2hex(random_bytes(64 * 128));
-            cfg::set('encryption', 'key', $key);
+            echo self::translateColorsCode('&rPlease wait...&o');
+            echo self::translateColorsCode('&rWe generated a key for you: &e' . XChaCha20::generateKey() . '&o');
             echo self::translateColorsCode('&rKey generated &asuccessfully&r!&o');
             echo self::translateColorsCode('&rConfiguration saved &asuccessfully&r!&o');
         } else {
@@ -97,6 +99,13 @@ class Configure extends Command
 
     public static function configure(): void
     {
-        self::exit('This feature is not implemented yet.');
+        echo self::translateColorsCode('Enter the name of the application &8[&eMythicalFramework&8]&r: ');
+        $app_name = readline() ?: 'MythicalFramework';
+        echo self::translateColorsCode('Enter the logo of the application &8[&ehttps://avatars.githubusercontent.com/u/117385445&8]&r: ');
+        $app_logo = readline() ?: 'https://avatars.githubusercontent.com/u/117385445';
+        echo self::translateColorsCode('Enter the timezone of the application &8[&eEurope/Vienna&8]&r: ');
+        $app_timezone = readline() ?: 'Europe/Vienna';
+
+        // SAVE IT SOMEWHERE I THINK:::
     }
 }

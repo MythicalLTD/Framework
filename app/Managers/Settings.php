@@ -9,7 +9,7 @@ use MythicalSystemsFramework\Managers\exception\settings\NoMigrationsFound;
 
 class Settings
 {
-    public static string $cache_path = __DIR__ . '/../../caches';
+    public static string $cache_path = __DIR__ . '/../../storage/caches';
 
     public static function up(): void
     {
@@ -77,7 +77,7 @@ class Settings
             $mysql = new MySQL();
             $db = $mysql->connectPDO();
             $db->exec('CREATE TABLE IF NOT EXISTS `framework_settings_migrations` (`id` INT NOT NULL AUTO_INCREMENT , `script` TEXT NOT NULL , `executed_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;             ALTER TABLE `framework_settings_migrations` CHANGE `executed_at` `executed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;');
-            $phpFiles = glob(__DIR__ . '/../../migrate/config/*.php');
+            $phpFiles = glob(__DIR__ . '/../../storage/migrate/config/*.php');
             if (count($phpFiles) > 0) {
                 sort($phpFiles);
 

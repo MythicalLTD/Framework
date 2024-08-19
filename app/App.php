@@ -5,14 +5,13 @@ namespace MythicalSystemsFramework;
 class App extends \MythicalSystems\Main
 {
     /**
-     * Convert a string to a bool.
+     * Call the garbage collector.
      */
-    public static function convertStringToBool(string $value): bool
+    public static function callGarbageCollector(): void
     {
-        if ($value == 'true') {
-            return true;
-        } else {
-            return false;
-        }
+        gc_enable();
+        gc_mem_caches();
+        gc_collect_cycles();
+        gc_disable();
     }
 }

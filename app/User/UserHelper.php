@@ -32,7 +32,7 @@ class UserHelper extends UserDataHandler
                 if ($update_user == 'SUCCESS') {
                     return 'USER_BANNED';
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -59,7 +59,7 @@ class UserHelper extends UserDataHandler
                 if ($update_user == 'SUCCESS') {
                     return 'USER_UNBANNED';
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -160,7 +160,7 @@ class UserHelper extends UserDataHandler
                 if ($update_user == 'SUCCESS') {
                     return 'USER_DELETED';
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -187,7 +187,7 @@ class UserHelper extends UserDataHandler
                 if ($update_user == 'SUCCESS') {
                     return 'USER_RESTORED';
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -214,7 +214,7 @@ class UserHelper extends UserDataHandler
                 if ($delete_state == 'false') {
                     return 'USER_NOT_DELETED';
                 } else {
-                    return 'USER_DELETED';
+                    return $delete_state;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -241,7 +241,7 @@ class UserHelper extends UserDataHandler
                 if ($verified_state == 'false') {
                     return 'USER_NOT_VERIFIED';
                 } else {
-                    return 'USER_VERIFIED';
+                    return $verified_state;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -268,7 +268,7 @@ class UserHelper extends UserDataHandler
                 if ($update_user == 'SUCCESS') {
                     return 'USER_VERIFIED';
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -295,7 +295,7 @@ class UserHelper extends UserDataHandler
                 if ($update_user == 'SUCCESS') {
                     return 'USER_UNVERIFIED';
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -323,10 +323,10 @@ class UserHelper extends UserDataHandler
                     if ($update_user == 'SUCCESS') {
                         return 'SUCCESS';
                     } else {
-                        return 'ERROR_DATABASE_UPDATE_FAILED';
+                        return $update_user;
                     }
                 } else {
-                    return 'ERROR_DATABASE_UPDATE_FAILED';
+                    return $update_user;
                 }
             } else {
                 return 'ERROR_ACCOUNT_NOT_VALID';
@@ -393,26 +393,24 @@ class UserHelper extends UserDataHandler
     /**
      * Does the info exist?
      */
-    public static function doesInfoAboutExist(string $info, string $username): string
+    public static function doesInfoAboutExist(string $info, string $value): string
     {
         try {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
 
-            $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_users WHERE ? = ?');
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_users WHERE ' . mysqli_real_escape_string($conn, $info) . ' = ?');
             if (!$stmt) {
                 Logger::log(LoggerLevels::ERROR, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to prepare statement: ' . $conn->error);
 
                 return 'ERROR_DATABASE_SELECT_FAILED';
             }
 
-            $stmt->bind_param('ss', $info, $username);
+            $stmt->bind_param('s', $value);
             $stmt->execute();
             $stmt->bind_result($count);
             $stmt->fetch();
-
             $stmt->close();
-            $conn->close();
 
             if ($count > 0) {
                 return 'INFO_EXISTS';

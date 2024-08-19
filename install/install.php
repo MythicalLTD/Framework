@@ -2,9 +2,7 @@
 
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\ConfigManager;
-use MythicalSystemsFramework\Database\exception\database\MySQLError;
 use MythicalSystemsFramework\Managers\DBSettingsManager as settings;
-use MythicalSystemsFramework\Database\exception\migration\NoMigrationsFound;
 
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
@@ -62,10 +60,6 @@ try {
     try {
         try {
             MySQL::migrate();
-        } catch (MySQLError $e) {
-            exit('Failed to migrate the database: ' . $e->getMessage());
-        } catch (NoMigrationsFound $e) {
-            exit('No migrations found!');
         } catch (Exception $e) {
             exit('Failed to migrate the database: ' . $e->getMessage());
         }

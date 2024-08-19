@@ -1,8 +1,11 @@
 <?php
 
+use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Api\Api as api;
 use MythicalSystemsFramework\Kernel\Debugger;
 use MythicalSystemsFramework\Mail\MailService;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\User\UserHelper as user;
 use MythicalSystemsFramework\Handlers\ActivityHandler;
 
@@ -51,15 +54,18 @@ try {
     } elseif ($user == 'ERROR_DATABASE_INSERT_FAILED') {
         api::BadRequest('Failed to insert the user into the database!', ['RESULT' => $user]);
     } else {
-        $user_id = user::getSpecificUserData($user, 'uuid', false);
+        $user_id = user::getSpecificUserData($user, 'uuid', true);
         if (MailService::isEnabled() == true) {
             // TODO: Add a verify system
         } else {
             user::updateSpecificUserData($user, 'verified', 'true');
-            ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', false), 'User created an account!', MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_CREATED');
-            ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', false), 'User verified his account!', MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_VERIFIED');
+
+            ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User created an account!', MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_CREATED');
+            ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User verified his account!', MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_VERIFIED');
         }
         api::OK('The user has been created!', ['TOKEN' => $user]);
     }
 } catch (Exception $e) {
+    api::InternalServerError('An error occurred!', ['ERROR' => $e->getMessage()]);
+    Logger::log(LoggerTypes::CORE, LoggerLevels::CRITICAL, '(Api/User/register.php) An error occurred in the register.php file!');
 }

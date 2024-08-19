@@ -13,3 +13,8 @@ composer.phar
 /caches/*/
 caches/last_settings_migrate_run
 .php-cs-fixer.cache
+/storage/caches/*.json
+/storage/caches/*.txt
+/storage/caches/*.log
+/storage/caches/*/
+/storage/logs/*.log

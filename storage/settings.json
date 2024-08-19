@@ -1,5 +1,5 @@
 {
-    "__last_updated": "-",
+    "__last_updated": "2024-08-19 21:10:55",
     "framework": {
         "version": "1.0.1",
         "branch": "develop",
@@ -9,12 +9,15 @@
     "database": {
         "host": "127.0.0.1",
         "port": "3306",
-        "username": "",
+        "username": "framework",
         "password": "",
         "name": "framework"
     },
     "encryption": {
         "method": "MythicalCore",
-        "key": ""
+        "key": "0pDYJ1PoL6Mv1rLmjQHPikUgPIbuCCVFXUQDUXwwPjw="
+    },
+    "app": {
+        "maintenance": "false"
     }
-    }
+}

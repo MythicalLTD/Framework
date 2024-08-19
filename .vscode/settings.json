@@ -1,6 +1,34 @@
 {
     "php.version": "8.3",
     "cSpell.words": [
-        "tailwindcss"
-    ]
+        "acaches",
+        "asuccessful",
+        "asuccessfully",
+        "autoloader",
+        "ccaches",
+        "dbconfigure",
+        "ealready",
+        "ERRMODE",
+        "fklmnor",
+        "Inno",
+        "jsyaml",
+        "Kutzu",
+        "mythicalcore",
+        "mythicalframework",
+        "rfiles",
+        "Swal",
+        "tailwindcss",
+        "unban",
+        "unic",
+        "unverification",
+        "unverify"
+    ],
+    "cSpell.useGitignore": true,
+    "cSpell.ignorePaths": [
+        "settings.json",
+        "composer-lock.json",
+    ],
+    "window.title": "${appName}",
+    "window.autoDetectColorScheme": true,
+    "editor.minimap.enabled": true,
 }

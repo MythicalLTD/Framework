@@ -9,8 +9,6 @@ use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
-use MythicalSystemsFramework\Database\exception\database\MySQLError;
-use MythicalSystemsFramework\Database\exception\migration\NoMigrationsFound;
 
 class MySQL
 {
@@ -105,7 +103,7 @@ class MySQL
      * @param string $table The table name!
      * @param string $id The record id!
      */
-    public function requestLock(string $table, string $id): void
+    public static function requestLock(string $table, string $id): void
     {
         try {
             if (self::doesTableExist($table) === false) {
@@ -242,7 +240,7 @@ class MySQL
             )
         ');
 
-            $sqlFiles = glob(__DIR__ . '/../../migrate/database/*.sql');
+            $sqlFiles = glob(__DIR__ . '/../../storage/migrate/database/*.sql');
 
             if (count($sqlFiles) > 0) {
                 usort($sqlFiles, function ($a, $b) {
@@ -282,7 +280,7 @@ class MySQL
                     echo Kernel::translateColorsCode('&cNo migrations found!&o');
                     echo Kernel::NewLine();
                 } else {
-                    throw new NoMigrationsFound();
+                    throw new \Exception('No migrations found!');
                 }
             }
         } catch (\PDOException $e) {
@@ -290,7 +288,7 @@ class MySQL
                 echo Kernel::translateColorsCode('&cFailed to migrate the database: ' . $e->getMessage() . '&o');
                 echo Kernel::NewLine();
             } else {
-                throw new MySQLError('Failed to migrate the database: ' . $e->getMessage());
+                throw new \Exception('Failed to migrate the database: ' . $e->getMessage());
             }
         }
     }

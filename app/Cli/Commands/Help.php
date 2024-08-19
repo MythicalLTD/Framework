@@ -2,11 +2,13 @@
 
 namespace MythicalSystemsFramework\Cli\Commands;
 
-class Help extends Command
+use MythicalSystemsFramework\Cli\CommandBuilder;
+
+class Help extends Command implements CommandBuilder
 {
     public static string $description = 'The help command to get info about other commands!';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         echo self::log_info('');
         echo self::log_info('-----------------------');

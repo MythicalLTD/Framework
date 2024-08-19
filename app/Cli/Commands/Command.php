@@ -3,12 +3,13 @@
 namespace MythicalSystemsFramework\Cli\Commands;
 
 use MythicalSystemsFramework\Cli\Kernel;
+use MythicalSystemsFramework\Cli\CommandBuilder;
 
-class Command extends Kernel
+class Command extends Kernel implements CommandBuilder
 {
     public static string $description = 'A example command :)';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         /*
          * This method should be overridden in the child class.
@@ -62,5 +63,19 @@ class Command extends Kernel
     public static function log_info(string $message): void
     {
         echo self::translateColorsCode("&7$message&r&o");
+    }
+
+    /**
+     * Arguments start from 1 including one.
+     *
+     * @return mixed
+     */
+    public static function getArgument(array $args, int $index): ?string
+    {
+        try {
+            return $args[$index + 1];
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

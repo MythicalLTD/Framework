@@ -97,10 +97,26 @@
 	},
 	"Get translation": {
 		"prefix": "S_GetLang",
-		"scope": "php",
+		"scope": "twig",
 		"body": [
-			"\\$lang['$1']"
+			"{{ lang('$1') }}"
 		],
 		"description": "Get a specific value from the language file!"
 	},
+	"Get setting": {
+		"prefix": "S_GetSetting",
+		"scope": "twig",
+		"body": [
+			"{{ setting('$1', '$2') }}"
+		],
+		"description": "Get a specific value from the settings table!"
+	},	
+	"Get Config": {
+		"prefix": "S_GetConfig",
+		"scope": "twig",
+		"body": [
+			"{{ cfg('$1', '$2') }}"
+		],
+		"description": "Get a specific value from the config file!"
+	},	
 }

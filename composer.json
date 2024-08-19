@@ -62,16 +62,13 @@
         ],
         "push": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "bash devtools/push.bash",
             "git push origin develop",
             "composer run tests",
-            "composer run lint",
-            "bash devtools/count_php_lines.bash"
+            "composer run lint"
         ],
         "pull": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "git pull origin develop",
-            "bash devtools/restore.bash"
+            "git pull origin develop"
         ],
         "install:dependency": [
             "export COMPOSER_ALLOW_SUPERUSER=1",

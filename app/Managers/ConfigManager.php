@@ -6,7 +6,7 @@ use MythicalSystems\Helpers\ConfigHelper;
 
 class ConfigManager
 {
-    private static string $configpath = __DIR__ . '/../../settings.json';
+    private static string $configpath = __DIR__ . '/../../storage/settings.json';
 
     /**
      * DEPRECATED: Use Settings class instead!!

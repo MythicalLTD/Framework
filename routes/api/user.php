@@ -1,5 +1,7 @@
 <?php
 
+global $router;
+
 $router->add('/api/user/doesinfoexist', function () {
     include __DIR__ . '/../../api/User/infoalreadyexists.php';
     exit;

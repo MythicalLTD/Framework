@@ -2,7 +2,6 @@
 
 namespace MythicalSystemsFramework\CloudFlare;
 
-use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Managers\Settings as setting;
 
 class TurnStile extends \MythicalSystems\CloudFlare\Turnstile
@@ -12,6 +11,14 @@ class TurnStile extends \MythicalSystems\CloudFlare\Turnstile
      */
     public static function isEnabled(): bool
     {
-        return App::convertStringToBool(setting::getSetting('cloudflare_turnstile', 'enabled'));
+        try {
+            if (setting::getSetting('cloudflare_turnstile', 'enabled') == 'true') {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

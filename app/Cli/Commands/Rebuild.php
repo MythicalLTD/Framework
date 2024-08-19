@@ -4,13 +4,15 @@ namespace MythicalSystemsFramework\Cli\Commands;
 
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Managers\Settings;
+use MythicalSystemsFramework\Cli\CommandBuilder;
+use MythicalSystemsFramework\Encryption\XChaCha20;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
-class Rebuild extends Command
+class Rebuild extends Command implements CommandBuilder
 {
     public static string $description = 'A command that can help if you want to rebuild the app!';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         echo self::log_info('');
         echo self::log_info('&c1.&7 Rebuild the database');
@@ -72,6 +74,10 @@ class Rebuild extends Command
                         Settings::migrate(true);
                         echo self::NewLine();
                         echo self::translateColorsCode('&rDatabase rebuilt!&o');
+                        echo self::translateColorsCode('&rGenerating an encryption key for database...!&o');
+                        echo self::translateColorsCode('&rPlease wait...&o');
+                        echo self::translateColorsCode('&rWe generated a key for you: &e' . XChaCha20::generateKey() . '&o');
+                        echo self::translateColorsCode('&rKey generated &asuccessfully&r!&o');
                         echo self::translateColorsCode("&rLet's start by setting up your configuration!&o");
                         Configure::configure();
                     } catch (\PDOException $e) {

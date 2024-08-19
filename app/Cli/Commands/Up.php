@@ -2,13 +2,14 @@
 
 namespace MythicalSystemsFramework\Cli\Commands;
 
+use MythicalSystemsFramework\Cli\CommandBuilder;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
-class Up extends Command
+class Up extends Command implements CommandBuilder
 {
     public static string $description = 'Mark the application as up.';
 
-    public static function execute(bool $isFrameworkCommand = false): void
+    public static function execute(bool $isFrameworkCommand, array $args): void
     {
         echo self::log_info('&rMarking the application as up...');
         if (cfg::get('app', 'maintenance') == 'false'  && cfg::get('app', 'maintenance') != 'true') {

@@ -1,5 +1,7 @@
 <?php
 
+global $router;
+
 $router->add('/errors/404', function () {
     /*
      * The requirement for each template

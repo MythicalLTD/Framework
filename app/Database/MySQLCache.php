@@ -2,6 +2,7 @@
 
 namespace MythicalSystemsFramework\Database;
 
+use MythicalSystemsFramework\Kernel\Debugger;
 use MythicalSystemsFramework\Managers\Settings;
 
 class MySQLCache extends MySQL
@@ -14,6 +15,7 @@ class MySQLCache extends MySQL
     public static function saveCache(string $table_name): string
     {
         try {
+            Debugger::HideAllErrors();
             if (self::doesTableExist($table_name) == false) {
                 return 'ERROR_TABLE_DOES_NOT_EXIST';
             }

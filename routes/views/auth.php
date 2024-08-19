@@ -2,6 +2,8 @@
 
 use MythicalSystemsFramework\CloudFlare\TurnStile;
 
+global $router;
+
 $router->add('/auth/register', function () {
     /*
      * The requirement for each template

@@ -1,5 +1,7 @@
 <?php
 
+global $router;
+
 $router->add('/', function () {
     /*
      * The requirement for each template
