@@ -30,17 +30,17 @@ if (function_exists('exec')) {
 /*
  * Check if the app is installed
  */
-if (file_exists(__DIR__ . '/../FIRST_INSTALL')) {
+if (file_exists(__DIR__ . '/../storage/FIRST_INSTALL')) {
     $router->add('/', function () {
-        include __DIR__ . '/../install/index.php';
+        include __DIR__ . '/../app/Web/Installer/index.php';
     });
 
     $router->add('/mysql', function () {
-        include __DIR__ . '/../install/mysql.php';
+        include __DIR__ . '/../app/Web/Installer/mysql.php';
     });
 
     $router->add('/install', function () {
-        include __DIR__ . '/../install/install.php';
+        include __DIR__ . '/../app/Web/Installer/install.php';
     });
 
     $router->add('/(.*)', function () {

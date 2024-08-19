@@ -58,7 +58,7 @@
     "scripts": {
         "tests": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "vendor/bin/phpunit tests/*"
+            "vendor/bin/phpunit app/Tests/*"
         ],
         "push": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
@@ -70,10 +70,6 @@
             "export COMPOSER_ALLOW_SUPERUSER=1",
             "git pull origin develop"
         ],
-        "install:dependency": [
-            "export COMPOSER_ALLOW_SUPERUSER=1",
-            "composer install && npm i"
-        ],
         "framework": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
             "php framework"
@@ -84,7 +80,7 @@
         ],
         "lint": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+            "vendor/bin/php-cs-fixer fix --config=./.github/.php-cs-fixer.dist.php"
         ]
     }
 }

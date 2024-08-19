@@ -14,7 +14,7 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $finder = (new Finder())
-    ->in(__DIR__)
+    ->in(__DIR__.'/../')
     ->exclude([
         'vendor',
         'node_modules',
