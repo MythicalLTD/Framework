@@ -15,16 +15,15 @@ jobs:
     steps:
       - name: Code Checkout
         uses: actions/checkout@v3
-
+      - name: Go into the frontend directory
+        run: cd frontend
+      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
 
-      - name: Go into the frontend directory
-        run: cd frontend
-      
       - name: Install dependencies
         run:  yarn install --frozen-lockfile
 
