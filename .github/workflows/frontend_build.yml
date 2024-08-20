@@ -15,9 +15,7 @@ jobs:
     steps:
       - name: Code Checkout
         uses: actions/checkout@v3
-      - name: Go into the frontend directory
-        run: cd frontend
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -25,7 +23,7 @@ jobs:
           cache: "yarn"
 
       - name: Install dependencies
-        run:  yarn install --frozen-lockfile
+        run:  cd frontend && yarn install --frozen-lockfile
 
       - name: Build
-        run: yarn run build
+        run: cd frontend && yarn run build
