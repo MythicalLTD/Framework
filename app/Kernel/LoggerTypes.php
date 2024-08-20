@@ -10,6 +10,7 @@ interface LoggerTypes
     public const PLUGIN = 'PLUGIN';
     public const LOG = 'LOG';
     public const LANGUAGE = 'LANGUAGE';
+    public const BACKUP = 'BACKUP';
     // Other
     public const OTHER = 'OTHER';
 }

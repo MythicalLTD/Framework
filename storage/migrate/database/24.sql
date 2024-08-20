@@ -1,0 +1,1 @@
+ALTER TABLE `framework_backups` DROP `backup_name`;

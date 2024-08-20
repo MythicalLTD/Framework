@@ -9,7 +9,8 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "gravatarphp/gravatar": "^1.0",
-        "twig/twig": "^3.10"
+        "twig/twig": "^3.10",
+        "ifsnop/mysqldump-php": "^2.12"
     },
     "license": "MIT",
     "minimum-stability": "stable",

@@ -111,8 +111,8 @@ class MySQL
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-            $stmt = $conn->prepare("UPDATE ? SET `locked` = 'true' WHERE `id` = ?;");
-            $stmt->bind_param('si', $table, $id);
+            $stmt = $conn->prepare("UPDATE `$table` SET `locked` = 'true' WHERE `id` = ?;");
+            $stmt->bind_param('s', $id);
             $stmt->execute();
             $stmt->close();
         } catch (\Exception $e) {
@@ -137,8 +137,8 @@ class MySQL
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-            $stmt = $conn->prepare("UPDATE ? SET `locked` = 'false' WHERE `id` = ?;");
-            $stmt->bind_param('si', $table, $id);
+            $stmt = $conn->prepare("UPDATE `$table` SET `locked` = 'false' WHERE `id` = ?;");
+            $stmt->bind_param('s', $id);
             $stmt->execute();
             $stmt->close();
         } catch (\Exception $e) {
@@ -158,21 +158,24 @@ class MySQL
     {
         try {
             if (self::doesTableExist($table) === false) {
-                return false;
+            return false;
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT `locked` FROM ? WHERE `id` = ?;');
-            $stmt->bind_param('si', $table, $id);
+            $stmt = $conn->prepare('SELECT `locked` FROM `' . $table . '` WHERE `id` = ?;');
+            $stmt->bind_param('s', $id);
             $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
             $stmt->close();
 
-            return $stmt->get_result()->fetch_assoc()['locked'];
+            return $row['locked'];
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to get lock status: ' . $e);
 
             return false;
         }
+        
     }
 
     /**
@@ -291,5 +294,13 @@ class MySQL
                 throw new \Exception('Failed to migrate the database: ' . $e->getMessage());
             }
         }
+    }
+    /**
+     * Get the date that can be used in MySQL.
+     * 
+     * @return string 
+     */
+    public static function getDateLikeMySQL() : string {
+        return date('Y-m-d H:i:s');
     }
 }

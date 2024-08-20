@@ -10,7 +10,7 @@ class Logger
      * Log something inside the kernel framework_logs.
      *
      * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
-     * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
+     * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE, BACKUP)
      * @param string $message The message you want to log
      *
      * @return int The log id!
@@ -104,7 +104,7 @@ class Logger
      * Get all framework_logs sorted by date in descending order.
      *
      * @param LoggerTypes|string $level (INFO, WARNING, ERROR, CRITICAL, OTHER)
-     * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE)
+     * @param LoggerLevels|string $type (CORE, DATABASE, PLUGIN, LOG, OTHER, LANGUAGE,BACKUP)
      * @param int $limit The amount of logs you want to get (15 by default)
      *
      * @return array|null Returns the logs in an array

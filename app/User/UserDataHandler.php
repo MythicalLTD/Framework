@@ -18,6 +18,7 @@ use MythicalSystemsFramework\Kernel\Logger as logger;
 use MythicalSystemsFramework\Managers\SnowFlakeManager;
 use MythicalSystemsFramework\Encryption\XChaCha20 as enc;
 
+
 class UserDataHandler
 {
     /**
