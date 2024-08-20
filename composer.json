@@ -86,7 +86,7 @@
         "build": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
             "composer run lint",
-            "cd frontend && yarn && yarn build"
+            "cd storage/frontend && yarn && yarn build"
         ]
     }
 }

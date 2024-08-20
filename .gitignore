@@ -18,5 +18,5 @@ caches/last_settings_migrate_run
 /storage/caches/*.log
 /storage/caches/*/
 /storage/logs/*.log
-/frontend/node_modules
+/storage/frontend/node_modules
 /storage/backups/database/*.sql
