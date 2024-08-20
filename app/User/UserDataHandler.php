@@ -15,8 +15,8 @@ use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\Kernel\Logger as logger;
-use MythicalSystemsFramework\Kernel\Encryption as enc;
 use MythicalSystemsFramework\Managers\SnowFlakeManager;
+use MythicalSystemsFramework\Encryption\XChaCha20 as enc;
 
 class UserDataHandler
 {

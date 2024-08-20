@@ -10,149 +10,32 @@ try {
     exit('Hello, it looks like you did not run: <code>composer install --no-dev --optimize-autoloader</code> Please run that and refresh');
 }
 
-use Twig\Environment;
 use MythicalSystemsFramework\App;
-use Twig\Loader\FilesystemLoader;
-use MythicalSystems\Api\Api as api;
-use MythicalSystems\Api\ResponseHandler as rsp;
-use MythicalSystemsFramework\Managers\Settings;
-use MythicalSystemsFramework\Managers\LanguageManager;
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use MythicalSystemsFramework\Api\Api as api;
+use MythicalSystemsFramework\Web\Template\Engine;
+use MythicalSystemsFramework\Web\Installer\Installer;
 
 $router = new Router\Router();
-
-if (function_exists('exec')) {
-    define('IS_EXEC_ENABLED', true);
-} else {
-    define('IS_EXEC_ENABLED', false);
-}
 
 /*
  * Check if the app is installed
  */
-if (file_exists(__DIR__ . '/../storage/FIRST_INSTALL')) {
-    $router->add('/', function () {
-        include __DIR__ . '/../app/Web/Installer/index.php';
-    });
-
-    $router->add('/mysql', function () {
-        include __DIR__ . '/../app/Web/Installer/mysql.php';
-    });
-
-    $router->add('/install', function () {
-        include __DIR__ . '/../app/Web/Installer/install.php';
-    });
-
-    $router->add('/(.*)', function () {
-        header('location: /');
-    });
-    $router->route();
-    exit;
-}
-
-if (cfg::get('encryption', 'key') == '') {
-    exit('We are sorry but you are missing the encryption key!');
-}
-
-if (!is_writable(__DIR__)) {
-    exit('We have no access to the framework directory!');
-}
-
-if (!is_writable(__DIR__ . '/../storage/caches')) {
-    exit('We have no access to the cache directory!');
-}
-
-date_default_timezone_set(Settings::getSetting('app', 'timezone'));
-
-define('DIR_TEMPLATE', __DIR__ . '/../storage/themes/' . Settings::getSetting('app', 'theme'));
-define('DIR_CACHE', __DIR__ . '/../storage/caches');
-define('TIMEZONE', Settings::getSetting('app', 'timezone'));
+Installer::Installed($router);
 /*
- * Load the template engine
+ * Check if the app is healthy and all requirements are met
  */
-
-if (!is_dir(DIR_TEMPLATE)) {
-    exit('The theme directory does not exist!');
-}
-
-if (!is_dir(DIR_CACHE)) {
-    mkdir(DIR_CACHE, 0777, true);
-}
-$loader = new FilesystemLoader(DIR_TEMPLATE);
-$renderer = new Environment($loader, [
-    'cache' => DIR_CACHE,
-    'auto_reload' => true,
-    'debug' => true,
-    'charset' => 'utf-8',
-]);
-$renderer->addExtension(new Twig\Extension\DebugExtension());
-/*
- * Add the settings function to the renderer
- */
-$renderer->addFunction(new Twig\TwigFunction('setting', function ($section, $key): string {
-    return Settings::getSetting($section, $key);
-}));
-/*
- * Add the cfg function to the renderer
- */
-$renderer->addFunction(new Twig\TwigFunction('cfg', function ($section, $key): string {
-    return cfg::get($section, $key);
-}));
-/*
- * Add the language function to the renderer
- */
-$renderer->addFunction(new Twig\TwigFunction('lang', function ($key): string {
-    $translations = LanguageManager::getLang();
-
-    return $translations[$key] ?? LanguageManager::logKeyTranslationNotFound($key);
-}));
-
-$renderer->addGlobal('php_version', phpversion());
-
-$renderer->addGlobal('page_name', 'Home');
-define('VIEW_ENGINE', $renderer);
+App::checkIfAppIsHealthy();
 
 /**
+ * Get the renderer :).
+ */
+$renderer = Engine::getRenderer();
+
+/*
  * Load the routes.
  */
-$routesAPIDirectory = __DIR__ . '/../routes/api/';
-$iterator2 = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($routesAPIDirectory));
-$phpApiFiles = new RegexIterator($iterator2, '/\.php$/');
-
-foreach ($phpApiFiles as $phpApiFile) {
-    try {
-        include $phpApiFile->getPathname();
-    } catch (Exception $ex) {
-        api::init();
-        rsp::InternalServerError($ex->getMessage(), null);
-    }
-}
-
-$router->add('/api/(.*)', function () {
-    api::init();
-    rsp::NotFound('The api route does not exist!', null);
-});
-
-$routesViewDirectory = __DIR__ . '/../routes/views/';
-$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($routesViewDirectory));
-$phpViewFiles = new RegexIterator($iterator, '/\.php$/');
-
-foreach ($phpViewFiles as $phpViewFile) {
-    try {
-        http_response_code(200);
-        include $phpViewFile->getPathname();
-    } catch (Exception $ex) {
-        http_response_code(500);
-        exit('Failed to start app: ' . $ex->getMessage());
-    }
-}
-
-$router->add('/(.*)', function () {
-    global $renderer;
-    $renderer->addGlobal('page_name', '404');
-    http_response_code(404);
-    exit($renderer->render('/errors/404.twig'));
-});
+api::registerApiRoutes($router);
+App::registerRoutes($renderer);
 
 try {
     $router->route();

@@ -9,6 +9,11 @@ Donations:
 - [Discord](https://discord.mythicalsystems.xyz) (Joining the server also helps <3)
 - [Star](https://github.com/MythicalLTD/Framework) (Consider staring this repo!)
 
+## API Documentation
+
+We do not have any api documentation built in so you have to look at the postman documentation :) 
+- https://mythicalsystems.postman.co/workspace/mythicalframework/overview
+
 ## Repository Activity
 
 ![Alt](https://repobeats.axiom.co/api/embed/c403f00d546911a7f80a4e9ace2628c2ab760b04.svg "Repobeats analytics image")

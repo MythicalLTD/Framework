@@ -15,17 +15,17 @@
 		<meta name="twitter:title" content="{{ setting('seo','title') }}">
 		<meta name="keywords" content="{{ setting('seo','keywords') }}"/>
 		<meta name="author" content="MythicalSystems LTD"/>
-		<link href="/style.css" rel="stylesheet">
+		<link href="/assets/style.css" rel="stylesheet">
 
 		<title>{{ setting('app','name') }}
 			-
 			{{ page_name }}</title>
 
 		{% block head %}{% endblock %}
-		 <script src="/third_party/JQuery/jquery-3.7.1.min.js"></script>
+		 <script src="/assets/third_party/JQuery/jquery-3.7.1.min.js"></script>
 		<link
-		href="/third_party/SweetAlert2/sweetalert2.min.css" rel="stylesheet">
-	 <script src="/third_party/js-yaml.js"></script>
+		href="/assets/third_party/SweetAlert2/sweetalert2.min.css" rel="stylesheet">
+	 <script src="/assets/third_party/js-yaml.js"></script>
 
 	</head>
 
@@ -77,8 +77,8 @@
 			<!-- ===== Content Area End ===== -->
 		</div>
 		<!-- ===== Page Wrapper End ===== -->
-		 <script defer src="/bundle.js"></script>
+		 <script defer src="/assets/bundle.js"></script>
 		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js"></script>
-		 <script src="/MythicalFramework.js"></script>{% block footer %}
+		 <script src="/assets/MythicalFramework.js"></script>{% block footer %}
 	{% endblock %}
 </body></html>

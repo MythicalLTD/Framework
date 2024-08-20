@@ -20,7 +20,7 @@ class MySQL
      *
      * @return \PDO the PDO object representing the database connection
      *
-     * @throws \PDOException if the connection to the database fails
+     * @throws \Exception if the connection to the database fails
      */
     public function connectPDO(): \PDO
     {
@@ -30,9 +30,9 @@ class MySQL
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
             return $pdo;
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to connect to the database!');
-            throw new \PDOException('Failed to connect to the database: ' . $e->getMessage());
+            throw new \Exception('Failed to connect to the database: ' . $e->getMessage());
         }
     }
 
@@ -80,7 +80,7 @@ class MySQL
      *
      * @return bool true if the connection is successful, false otherwise
      *
-     * @throws \PDOException If the connection to the database fails.     *
+     * @throws \Exception If the connection to the database fails.     *
      */
     public function tryConnection(string $host, string|int $port, string $username, string $password, string $database): bool
     {
@@ -90,7 +90,7 @@ class MySQL
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
             return true;
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to execute PDO query: ' . $e);
 
             return false;
@@ -283,7 +283,7 @@ class MySQL
                     throw new \Exception('No migrations found!');
                 }
             }
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             if ($isCli == true) {
                 echo Kernel::translateColorsCode('&cFailed to migrate the database: ' . $e->getMessage() . '&o');
                 echo Kernel::NewLine();

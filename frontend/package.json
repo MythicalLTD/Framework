@@ -5,8 +5,8 @@
     "tailwindcss": "^3.4.4"
   },
   "scripts": {
-    "watch": "npx tailwindcss -i ./styles.css -o ./../public/style.css  --watch",
-    "build": "npx tailwindcss -i ./styles.css -o ./../public/style.css --minify --jit",
+    "watch": "npx tailwindcss -i ./styles.css -o ./../public/assets/style.css  --watch",
+    "build": "npx tailwindcss -i ./styles.css -o ./../public/assets/style.css --minify --jit",
     "clean": "rm -rf ./public/theme.css",
     "tests": "composer run tests",
     "install:dependency": "npm i && composer install"
