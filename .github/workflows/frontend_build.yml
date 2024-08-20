@@ -22,8 +22,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
 
+      - name: Go into the frontend directory
+        run: cd frontend
+      
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run:  yarn install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: yarn run build
