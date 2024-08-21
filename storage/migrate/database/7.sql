@@ -1,1 +1,0 @@
-ALTER TABLE `framework_roles` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `weight`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

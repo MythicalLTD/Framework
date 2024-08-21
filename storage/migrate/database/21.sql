@@ -1,1 +1,0 @@
-ALTER TABLE `framework_logs` CHANGE `l_type` `l_type` ENUM('OTHER','CORE','DATABASE','PLUGIN','LOG','LANGUAGE','BACKUP') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'OTHER';

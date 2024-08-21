@@ -1,1 +1,0 @@
-ALTER TABLE `framework_users_notifications` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `description`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

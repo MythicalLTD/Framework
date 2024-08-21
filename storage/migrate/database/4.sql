@@ -1,1 +1,0 @@
-ALTER TABLE `framework_announcements` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `text`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

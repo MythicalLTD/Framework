@@ -1,1 +1,0 @@
-ALTER TABLE `framework_roles_permissions` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `permission`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

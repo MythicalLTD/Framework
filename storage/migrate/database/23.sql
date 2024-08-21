@@ -1,1 +1,0 @@
-ALTER TABLE `framework_backups` DROP `backup_type`;

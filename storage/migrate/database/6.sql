@@ -1,1 +1,0 @@
-ALTER TABLE `framework_logs` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `formatted`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

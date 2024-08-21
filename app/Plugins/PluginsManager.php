@@ -9,21 +9,6 @@ class PluginsManager
      */
     public static function getAllPlugins(): array
     {
-        $plugins = [];
-        $addonsDir = __DIR__ . '/../../storage/addons';
-        $addonDirs = scandir($addonsDir);
-
-        foreach ($addonDirs as $addonDir) {
-            if ($addonDir === '.' || $addonDir === '..') {
-                continue;
-            }
-
-            $pluginDir = $addonsDir . '/' . $addonDir;
-            $pluginConfigFile = $pluginDir . '/MythicalFramework.json';
-
-            $plugins[] = $addonDir;
-        }
-
-        return $plugins;
+        
     }
 }

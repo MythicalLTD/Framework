@@ -1,1 +1,0 @@
-ALTER TABLE `framework_backups` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `backup_status`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;

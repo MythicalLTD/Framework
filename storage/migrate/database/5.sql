@@ -1,1 +1,0 @@
-ALTER TABLE `framework_announcements_social` ADD `deleted` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `type`, ADD `locked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `deleted`;
