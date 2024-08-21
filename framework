@@ -10,7 +10,13 @@ try {
 }
 
 use MythicalSystemsFramework\Cli\Kernel;
+use MythicalSystemsFramework\Plugins\Database;
+use MythicalSystemsFramework\Plugins\Interfaces\Stability;
+use MythicalSystemsFramework\Plugins\PluginsManager;
 
+#echo Database::registerNewPlugin('MythicalCore', "The core plugin for MythicalFramework", null, null, "MIT", Stability::STABILITY_STABLE,["NaysKutzu","MythicalSystems"],null,null,"1.0.0.0");
+
+die();
 if (function_exists('exec')) {
     define('IS_EXEC_ENABLED', true);
 } else {

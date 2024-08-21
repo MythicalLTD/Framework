@@ -12,6 +12,7 @@ try {
 
 use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Api\Api as api;
+use MythicalSystemsFramework\Plugins\PluginsManager;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\Web\Installer\Installer;
 
@@ -38,6 +39,7 @@ api::registerApiRoutes($router);
 App::registerRoutes($renderer);
 
 try {
+    PluginsManager::init($router, $renderer);
     $router->route();
 } catch (Exception $e) {
     exit('Failed to start app: ' . $e->getMessage());

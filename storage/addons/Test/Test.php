@@ -1,7 +1,6 @@
 <?php
 
-class Example
-{
+class Test {
     public function Main()
     {
         //TODO: Implement the main function

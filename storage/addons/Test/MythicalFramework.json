@@ -1,13 +1,13 @@
 {
-    "name": "Example",
+    "name": "Test",
     "description": "A framework for MythicalSystems",
     "version": "1.0.0",
     "homepage": "https://mythicalsystems.xyz",
-    "require": [
-        "Test"
-    ],
     "license": "MIT",
     "stability": "stable",
+    "require": [
+        "MythicalSystemsFramework"
+    ],
     "authors": [
         "NaysKutzu",
         "MythicalDoggo"
