@@ -21,11 +21,11 @@ class Installer
             });
 
             $router->add('/mysql', function () {
-                include __DIR__ . '/ mysql.php';
+                include __DIR__ . '/mysql.php';
             });
 
             $router->add('/install', function () {
-                include __DIR__ . '/ install.php';
+                include __DIR__ . '/install.php';
             });
 
             $router->add('/(.*)', function () {

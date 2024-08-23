@@ -18,8 +18,6 @@ use MythicalSystemsFramework\Web\Installer\Installer;
 
 $router = new Router\Router();
 
-
-
 /*
  * Check if the app is installed
  */
