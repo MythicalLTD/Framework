@@ -88,7 +88,6 @@ class PluginsManager
                     // Let's check if we have events, routes, commands, and frontend.
                     $boolDoWeHaveEvents = false;
                     $boolDoWeHaveRoutes = false;
-                    $boolDoWeHaveCommands = false; 
                     $boolDoWeHaveFrontend = false; 
 
                     if ($boolDoWeHaveExtends) {
@@ -98,14 +97,12 @@ class PluginsManager
                         if (is_dir($plugin_home_dir.'/extends/routes')) {
                             $boolDoWeHaveRoutes = true;
                         }
-                        if (is_dir($plugin_home_dir.'/extends/commands')) {
-                            $boolDoWeHaveCommands = true;
-                        }
                         if (is_dir($plugin_home_dir.'/extends/frontend')) {
                             $boolDoWeHaveFrontend = true;
                         }
                     }
 
+                    
 
                 } else {
                     Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "The main class for plugin '$plugin' does not exist.");

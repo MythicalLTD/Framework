@@ -1,0 +1,53 @@
+version: "3"
+
+networks:
+  mythical:
+    external: false
+
+services:
+  nginx:
+    build:
+      context: ../
+      dockerfile: docker/nginx/Dockerfile
+    container_name: mythicalframework_nginx
+    ports:
+      - 81:80
+    volumes:
+      - "../:/var/www/html"
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - mythical
+
+  mysql:
+    image: mariadb
+    container_name: mythicalframework_mysql
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: mythicalframework
+      MYSQL_USER: mythicalframework
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - "mysql:/var/lib/mysql:delegated"
+    networks:
+      - mythical
+  php:
+    build:
+      context: ../
+      dockerfile: docker/php/Dockerfile
+    container_name: mythicalframework_php
+    volumes:
+      - "app:/var/www/html"
+    networks:
+      - mythical
+
+volumes:
+  mysql:
+    driver: local
+  app:
+    driver: local

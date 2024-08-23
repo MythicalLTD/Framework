@@ -6,6 +6,7 @@ class ActivityEvent
 {
     public static function OnAddActivity(): void
     {
+        
     }
 
     public static function OnRemoveUserActivities(): void

@@ -18,6 +18,8 @@ use MythicalSystemsFramework\Web\Installer\Installer;
 
 $router = new Router\Router();
 
+
+
 /*
  * Check if the app is installed
  */
@@ -37,6 +39,7 @@ $renderer = Engine::getRenderer();
  */
 api::registerApiRoutes($router);
 App::registerRoutes($renderer);
+
 
 try {
     PluginsManager::init($router, $renderer);

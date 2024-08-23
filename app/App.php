@@ -104,7 +104,7 @@ class App extends \MythicalSystems\Main
         }
 
         if (!is_writable(__DIR__ . '/../storage')) {
-            Installer::showError('We have no access to the cache directory!');
+            Installer::showError('We have no access to the storage directory!');
         }
 
         if (!is_writable(__DIR__ . '/../storage/caches')) {
