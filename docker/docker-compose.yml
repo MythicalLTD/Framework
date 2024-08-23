@@ -41,6 +41,7 @@ services:
       context: ../
       dockerfile: docker/php/Dockerfile
     container_name: mythicalframework_php
+    command: php-fpm -R
     volumes:
       - "app:/var/www/html"
     networks:

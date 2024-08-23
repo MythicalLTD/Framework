@@ -17,15 +17,15 @@ class Installer
          */
         if (file_exists(__DIR__ . '/../../../storage/FIRST_INSTALL')) {
             $router->add('/', function () {
-                include __DIR__ . '/../app/Web/Installer/index.php';
+                include __DIR__ . '/index.php';
             });
 
             $router->add('/mysql', function () {
-                include __DIR__ . '/../app/Web/Installer/mysql.php';
+                include __DIR__ . '/ mysql.php';
             });
 
             $router->add('/install', function () {
-                include __DIR__ . '/../app/Web/Installer/install.php';
+                include __DIR__ . '/ install.php';
             });
 
             $router->add('/(.*)', function () {
