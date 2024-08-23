@@ -31,3 +31,5 @@ try {
 } catch (Exception $e) {
     die(Kernel::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&l" . $e->getMessage() . ""));
 }
+
+# docker-compose up --build --remove-orphans --force-recreate --always-recreate-deps
