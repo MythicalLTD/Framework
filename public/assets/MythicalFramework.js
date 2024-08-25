@@ -26,14 +26,16 @@ if (isDebugMode == true && showDebugWarning == true) {
  * Warn users about the danger of pasting something in the browser console.
  */
 if (window.console && window.console.log) {
-    setInterval(function () {
-        console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 1px 1px black;');
-        console.log('%cPlease do not paste any code into the console.', 'color: red; font-size: 20px;');
-        console.log(
-            '%cPasting code into the console can compromise your account and result in suspension or hacking.',
-            'color: red; font-size: 14px;'
-        );
-    }, Math.floor(Math.random() * 4000) + 1000);
+    if (isDebugMode == false) {
+        setInterval(function () {
+            console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 1px 1px black;');
+            console.log('%cPlease do not paste any code into the console.', 'color: red; font-size: 20px;');
+            console.log(
+                '%cPasting code into the console can compromise your account and result in suspension or hacking.',
+                'color: red; font-size: 14px;'
+            );
+        }, Math.floor(Math.random() * 4000) + 1000);
+    }
 }
 
 /**

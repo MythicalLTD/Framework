@@ -6,7 +6,6 @@
 
 namespace MythicalSystemsFramework\User;
 
-use MythicalSystems\User\Cookies;
 use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
@@ -17,18 +16,31 @@ use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserHelper extends UserDataHandler
 {
+    private \MythicalSystemsFramework\Plugins\PluginEvent $eventHandler;
+    private string $account_token;
+
+    public function __construct(\MythicalSystemsFramework\Plugins\PluginEvent $eventHandler, string $token)
+    {
+        $this->eventHandler = $eventHandler;
+        $this->account_token = $token;
+        if ($this->isSessionValid()) {
+            $user_ip = CloudFlare::getUserIP();
+            $this->updateLastSeen($user_ip);
+        } else {
+            $this->killSession();
+        }
+    }
+
     /**
      * This function will ban a user from the system.
      *
-     * @param string $account_token the account token of the user you want to ban
-     *
      * @return string the response of the ban
      */
-    public static function banUser(string $account_token): string
+    public function banUser(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'banned', 'YES', false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'YES', false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_BANNED';
                 } else {
@@ -46,16 +58,14 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will unban a user from the system.
-     *
-     * @param string $account_token the account token of the user you want to unban
-     *
+     *     *
      * @return string the response of the unban
      */
-    public static function unbanUser(string $account_token): string
+    public function unbanUser(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'banned', 'NO', false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'NO', false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_UNBANNED';
                 } else {
@@ -73,16 +83,14 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will check if the user is banned.
-     *
-     * @param string $account_token the account token of the user you want to check
-     *
+     *     *
      * @return string if the user is banned or not
      */
-    public static function isUserBanned(string $account_token): string
+    public function isUserBanned(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $ban_state = self::getSpecificUserData($account_token, 'banned', false);
+            if ($this->isSessionValid()) {
+                $ban_state = $this->getSpecificUserData($this->account_token, 'banned', false, $this->eventHandler);
                 if ($ban_state == 'NO') {
                     return 'USER_NOT_BANNED';
                 } else {
@@ -101,11 +109,9 @@ class UserHelper extends UserDataHandler
     /**
      * Check if the user session is valid.
      *
-     * @param string $account_token The token of the account you want the check the session for!
-     *
      * @return bool True if yes false if no!
      */
-    public static function isSessionValid(string $account_token): bool
+    public function isSessionValid(): bool
     {
         try {
             // Connect to the database
@@ -113,7 +119,7 @@ class UserHelper extends UserDataHandler
             $mysqli = $database->connectMYSQLI();
             // Check if the user exists
             $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE token = ?');
-            $stmt->bind_param('s', $account_token);
+            $stmt->bind_param('s', $this->account_token);
             $stmt->execute();
             $stmt->bind_result($count);
 
@@ -137,26 +143,23 @@ class UserHelper extends UserDataHandler
      *
      * @return void This functions removes the token header!
      */
-    public static function killSession(): void
+    public function killSession(): void
     {
         // Kill the session
         session_destroy();
-        setcookie('token', '', time() - 3600);
-        Cookies::unSetCookie('token');
+        setcookie('token', '', time() - 3600 * 24 * 3600 * 2 * 2 * 9, '/');
     }
 
     /**
      * This function will soft delete a user.
-     *
-     * @param string $account_token the account token of the user you want to delete
-     *
+     *     *
      * @return string the response of the delete
      */
-    public static function deleteUser(string $account_token): string
+    public function deleteUser(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'deleted', 'true', false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'true', false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_DELETED';
                 } else {
@@ -174,16 +177,14 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will restore a soft deleted user.
-     *
-     * @param string $account_token the account token of the user you want to restore
-     *
+     *     *
      * @return string the response of the restore
      */
-    public static function restoreUser(string $account_token): string
+    public function restoreUser(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'deleted', 'false', false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'false', false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_RESTORED';
                 } else {
@@ -201,16 +202,14 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will check if the user is soft deleted.
-     *
-     * @param string $account_token the account token of the user you want to check
-     *
+     *     *
      * @return string the response of the check
      */
-    public static function isUserDeleted(string $account_token): string
+    public function isUserDeleted(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $delete_state = self::getSpecificUserData($account_token, 'deleted', false);
+            if ($this->isSessionValid()) {
+                $delete_state = $this->getSpecificUserData($this->account_token, 'deleted', false, $this->eventHandler);
                 if ($delete_state == 'false') {
                     return 'USER_NOT_DELETED';
                 } else {
@@ -229,15 +228,13 @@ class UserHelper extends UserDataHandler
     /**
      * This function will check if the user is verified.
      *
-     * @param string $account_token the account token of the user you want to check
-     *
      * @return string the response of the check
      */
-    public static function isUserVerified(string $account_token): string
+    public function isUserVerified(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $verified_state = self::getSpecificUserData($account_token, 'verified', false);
+            if ($this->isSessionValid()) {
+                $verified_state = $this->getSpecificUserData($this->account_token, 'verified', false, $this->eventHandler);
                 if ($verified_state == 'false') {
                     return 'USER_NOT_VERIFIED';
                 } else {
@@ -255,16 +252,14 @@ class UserHelper extends UserDataHandler
 
     /**
      * This function will verify a user.
-     *
-     * @param string $account_token the account token of the user you want to verify
-     *
+     *     *
      * @return string the response of the verification
      */
-    public static function verifyUser(string $account_token): string
+    public function verifyUser(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'verified', 'true', false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'true', false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_VERIFIED';
                 } else {
@@ -283,15 +278,13 @@ class UserHelper extends UserDataHandler
     /**
      * This function will unverify a user.
      *
-     * @param string $account_token the account token of the user you want to unverify
-     *
      * @return string the response of the unverification
      */
-    public static function unverifyUser(string $account_token): string
+    public function unverifyUser(): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'verified', 'false', false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'false', false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_UNVERIFIED';
                 } else {
@@ -310,16 +303,15 @@ class UserHelper extends UserDataHandler
     /**
      * This function will update the last seen and the last ip of the user.
      *
-     * @param string $account_token the account token of the user you want to update
      * @param string $ip the ip of the user
      */
-    public static function updateLastSeen(string $account_token, string $ip): string
+    public function updateLastSeen(string $ip): string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $update_user = self::updateSpecificUserData($account_token, 'last_seen', date('Y-m-d H:i:s'), false);
+            if ($this->isSessionValid()) {
+                $update_user = self::updateSpecificUserData($this->account_token, 'last_seen', date('Y-m-d H:i:s'), false, $this->eventHandler);
                 if ($update_user == 'SUCCESS') {
-                    $update_user = self::updateSpecificUserData($account_token, 'last_ip', $ip, false);
+                    $update_user = self::updateSpecificUserData($this->account_token, 'last_ip', $ip, false, $this->eventHandler);
                     if ($update_user == 'SUCCESS') {
                         return 'SUCCESS';
                     } else {
@@ -341,15 +333,13 @@ class UserHelper extends UserDataHandler
     /**
      * This function will return your the role id of a user.
      *
-     * @param string $account_token the account token of the user you want to get the role id from
-     *
      * @return string|null the role id of the user or an error
      */
-    public static function getUserRoleId($account_token): ?string
+    public function getUserRoleId(): ?string
     {
         try {
-            if (self::isSessionValid($account_token)) {
-                $role_id = self::getSpecificUserData($account_token, 'role', false);
+            if ($this->isSessionValid()) {
+                $role_id = $this->getSpecificUserData($this->account_token, 'role', false, $this->eventHandler);
 
                 return $role_id;
             } else {
@@ -365,13 +355,12 @@ class UserHelper extends UserDataHandler
     /**
      * Does this user have permission?
      *
-     * @param string $account_token the account token
      * @param string $permission the permission name
      */
-    public static function doesUserHavePermission(string $account_token, string $permission): ?string
+    public function doesUserHavePermission(string $permission): ?string
     {
         try {
-            $role_id = UserHelper::getSpecificUserData($account_token, 'role', false);
+            $role_id = UserHelper::getSpecificUserData($this->account_token, 'role', false, $this->eventHandler);
             $role_check = RolesDataHandler::roleExists($role_id);
             if ($role_check == 'ROLE_EXISTS') {
                 $permission_check = RolesPermissionDataHandler::doesRoleHavePermission($role_id, $permission);
@@ -393,7 +382,7 @@ class UserHelper extends UserDataHandler
     /**
      * Does the info exist?
      */
-    public static function doesInfoAboutExist(string $info, string $value): string
+    public function doesInfoAboutExist(string $info, string $value): string
     {
         try {
             $mysql = new MySQL();
@@ -429,8 +418,57 @@ class UserHelper extends UserDataHandler
      *
      * @uses CloudFlare::getUserIP()
      */
-    public static function getUserIP(): ?string
+    public function getUserIP(): ?string
     {
         return CloudFlare::getUserIP();
+    }
+
+    /**
+     * Make sure a user is logged in else redirect to login.
+     */
+    public function makeSureIsIsLoggedIn(): void
+    {
+        if (!isset($_COOKIE['token'])) {
+            header('Location: /auth/login');
+            exit;
+        }
+        $token = $_COOKIE['token'];
+        if (!$this->isSessionValid()) {
+            header('Location: /auth/login');
+            exit;
+        }
+        $user_ip = CloudFlare::getUserIP();
+        $this->updateLastSeen($user_ip);
+    }
+
+    /**
+     * Is this user sessions valid?
+     */
+    public function isUserSessionValid(): bool
+    {
+        if (!isset($_COOKIE['token'])) {
+            return false;
+        }
+        $token = $_COOKIE['token'];
+        if (!$this->isSessionValid()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get info about the user.
+     *
+     * @param string $info The info you want to get!
+     * @param bool $isEncrypted Is the info encrypted?
+     */
+    public function getInfo(string $info, bool $isEncrypted = true): string
+    {
+        if ($this->isSessionValid()) {
+            return $this->getSpecificUserData($this->account_token, $info, $isEncrypted, $this->eventHandler);
+        } else {
+            return 'ERROR_ACCOUNT_NOT_VALID';
+        }
     }
 }

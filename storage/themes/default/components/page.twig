@@ -61,7 +61,7 @@
 							<nav>
 								<ol class="flex items-center gap-2">
 									<li>
-										<a class="font-medium" href="/dashboard">Dashboard /</a>
+										<a class="font-medium" href="/dashboard">{{ lang('components_page_dashboard') }} /</a>
 									</li>
 									<li class="font-medium text-primary">{{ page_name  }}</li>
 								</ol>
@@ -79,6 +79,7 @@
 		<!-- ===== Page Wrapper End ===== -->
 		 <script defer src="/assets/bundle.js"></script>
 		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js"></script>
+		 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 		 <script src="/assets/MythicalFramework.js"></script>{% block footer %}
 	{% endblock %}
 </body></html>

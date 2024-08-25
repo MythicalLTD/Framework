@@ -12,6 +12,9 @@
         "NaysKutzu",
         "MythicalDoggo"
     ],
+    "permissions": [
+        "mythicalsystems.example"
+    ],
     "support": "https://discord.mythicalsystems.xyz",
     "funding": "https://github.com/sponsors/nayskutzu"
 }

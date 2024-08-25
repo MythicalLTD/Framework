@@ -1,7 +1,6 @@
 {% extends 'components/page.twig' %}
 
-{% block head %}
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
 	<!-- ====== Forms Section Start -->
@@ -61,7 +60,7 @@
 						<div class="mb-4">
 							<label class="mb-2.5 block font-medium text-black dark:text-white">{{ lang('pages_register_email') }}</label>
 							<div class="relative">
-								<input type="email" id="email" placeholder="{{ lang('pages_register_email_placeholder') }}" class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"/>
+								<input type="email" id="email" name="email" placeholder="{{ lang('pages_register_email_placeholder') }}" class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"/>
 
 								<span class="absolute right-4 top-4">
 									<svg class="fill-current" width="22" height="22" viewbox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,6 +87,10 @@
 								</span>
 							</div>
 						</div>
+						<!-- CSRF Token -->
+						{{ csrf_input | raw }}
+						<!-- Turnstile -->
+
 						{% if isTurnStileEnabled == true  %}
 							<center>
 								<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
@@ -113,10 +116,63 @@
 		</div>
 	</div>
 	<!-- ====== Forms Section End -->
-</div>{% endblock %}
-{% block footer %}
-	<script src="/pages/register.js"></script>
+</div>{% endblock %}{% block footer %}
 
 {% if isTurnStileEnabled == true %}
 	 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-{% endif %}{% endblock %}
+{% endif %}
+
+
+ <script>
+
+	document.getElementById('registerForm').addEventListener('submit', function(event) {
+		event.preventDefault();
+		
+		var firstNameAndLastName = document.getElementById('first_and_last_name').value;
+		var username = document.getElementById('username').value;
+		var email = document.getElementById('email').value;
+		var password = document.getElementById('password').value;
+
+		if (firstNameAndLastName === '' || username === '' || email === '' || password === '') {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Please fill in all the required fields.',
+			});
+			return false;
+		}
+		
+		axios.post('/backend/auth/register', {
+			first_and_last_name: firstNameAndLastName,
+			username: username,
+			email: email,
+			password: password,
+		})
+		.then(function (response) {
+			if (response.data.status === 'success') {
+				Swal.fire({
+					icon: 'success',
+					title: 'Success',
+					text: response.data.message,
+				});
+				document.getElementById('registerForm').reset();
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: response.data.message,
+				});
+			}
+		})
+		.catch(function (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'An error occurred while processing your request.',
+			});
+		});
+		
+	});
+
+
+</script>{% endblock %}

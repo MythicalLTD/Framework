@@ -27,13 +27,6 @@ class App extends \MythicalSystems\Main
                 exit('Failed to start app: ' . $ex->getMessage());
             }
         }
-
-        $router->add('/(.*)', function () {
-            global $renderer;
-            $renderer->addGlobal('page_name', '404');
-            http_response_code(404);
-            exit($renderer->render('/errors/404.twig'));
-        });
     }
 
     /**

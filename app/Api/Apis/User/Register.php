@@ -21,7 +21,6 @@ class Register extends Api implements ApiBuilder
     public function handleRequest(): void
     {
         Api::allowOnlyPOST();
-        Api::allowOnlyPOST();
 
         // Hide all errors
         Debugger::HideAllErrors();

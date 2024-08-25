@@ -15,10 +15,19 @@ class Engine
     /**
      * Add the requirements for the template engine.
      */
-    public static function getRenderer(): Environment
+    public static function getRenderer(?string $cache_dir = null, ?string $theme_dir = null): Environment
     {
-        define('DIR_TEMPLATE', __DIR__ . '/../../../storage/themes/' . Settings::getSetting('app', 'theme'));
-        define('DIR_CACHE', __DIR__ . '/../../../storage/caches');
+        if ($cache_dir == null) {
+            define('DIR_TEMPLATE', __DIR__ . '/../../../storage/themes/' . Settings::getSetting('app', 'theme'));
+        } else {
+            define('DIR_TEMPLATE', $theme_dir);
+        }
+
+        if ($theme_dir == null) {
+            define('DIR_CACHE', __DIR__ . '/../../../storage/caches');
+        } else {
+            define('DIR_CACHE', $cache_dir);
+        }
         /*
          * Load the template engine
          */
@@ -30,6 +39,7 @@ class Engine
         if (!is_dir(DIR_CACHE)) {
             mkdir(DIR_CACHE, 0777, true);
         }
+
         $loader = new FilesystemLoader(DIR_TEMPLATE);
         $renderer = new Environment($loader, [
             'cache' => DIR_CACHE,
@@ -42,6 +52,7 @@ class Engine
         self::registerConfig($renderer);
         self::registerLanguage($renderer);
         self::registerGlobals($renderer);
+        self::registerIsUserValid($renderer);
 
         return $renderer;
     }
@@ -89,5 +100,21 @@ class Engine
     {
         $renderer->addGlobal('php_version', phpversion());
         $renderer->addGlobal('page_name', 'Home');
+    }
+
+    /**
+     * Register the isUserSessionValid function.
+     *
+     * This is used so we know what should we display on the page.
+     */
+    public static function registerIsUserValid(Environment $renderer): void
+    {
+        $renderer->addFunction(new TwigFunction('isUserSessionValid', function (): bool {
+            if (isset($_COOKIE['token'])) {
+                return true;
+            } else {
+                return false;
+            }
+        }));
     }
 }

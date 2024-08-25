@@ -2,6 +2,8 @@
 
 namespace MythicalSystemsFramework\Plugins\Events;
 
+use MythicalSystemsFramework\Plugins\PluginEvent;
+
 class UserEvent
 {
     /**
@@ -10,7 +12,7 @@ class UserEvent
      */
     public static function onUserLogin(): void
     {
-        // This is where you can add your code to run when a user logs in
+        PluginEvent::getInstance()->emit('user_login');
     }
 
     /**

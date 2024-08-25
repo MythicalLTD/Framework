@@ -158,7 +158,7 @@ class MySQL
     {
         try {
             if (self::doesTableExist($table) === false) {
-            return false;
+                return false;
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
@@ -175,7 +175,6 @@ class MySQL
 
             return false;
         }
-        
     }
 
     /**
@@ -295,12 +294,12 @@ class MySQL
             }
         }
     }
+
     /**
      * Get the date that can be used in MySQL.
-     * 
-     * @return string 
      */
-    public static function getDateLikeMySQL() : string {
+    public static function getDateLikeMySQL(): string
+    {
         return date('Y-m-d H:i:s');
     }
 }

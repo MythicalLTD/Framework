@@ -27,4 +27,20 @@ return [
     'pages_register_description' => 'Create an account to access the platform.',
     'pages_register_description_above' => 'Start for free',
     'pages_register_register_to' => 'Register to',
+    // FILE /components/header.twig
+    'components_header_search' => 'Type to search..',
+    'components_header_notification' => 'Notification',
+    'components_header_myprofile' => 'My profile',
+    'components_header_settings' => 'Settings',
+    'components_header_logout' => 'Logout',
+    // FILE /components/page.twig
+    'components_page_dashboard' => 'Dashboard',
+
+    // FILE /components/sidebar.twig
+    'components_sidebar_dashboard' => 'Dashboard',
+    'components_sidebar_menu' => 'Menu',
+
+    // ALERTS
+    'alert_csrf_failed' => 'We could not validate your request. Please try again.',
+    'alert_unknown_error' => 'An unknown error occurred. Please try again.',
 ];

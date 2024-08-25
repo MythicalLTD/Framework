@@ -39,12 +39,13 @@ RUN apt-get update \
     && apt-get purge -y \
     libzip-dev
 
-
 RUN docker-php-ext-install -j$(nproc) sockets
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install bcmath 
-RUN docker-php-ext-enable mysqli mbstring bcmath
+RUN docker-php-ext-install pdo
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-enable mysqli mbstring bcmath pdo pdo_mysql
 
 ADD ./docker/php/www.conf /usr/local/etc/php-fpm.d/
 
@@ -56,8 +57,4 @@ WORKDIR /var/www/html
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-suggest
 
-#RUN php framework configure
-#RUN php framework migrate
-
 USER root
-

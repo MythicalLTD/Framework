@@ -12,11 +12,16 @@ try {
 
 use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Api\Api as api;
-use MythicalSystemsFramework\Plugins\PluginsManager;
+use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Web\Template\Engine;
+use MythicalSystemsFramework\Plugins\PluginsManager;
 use MythicalSystemsFramework\Web\Installer\Installer;
 
 $router = new Router\Router();
+$event = new PluginEvent();
+global $event;
+
+define('$event', $event);
 
 /*
  * Check if the app is installed
@@ -37,10 +42,21 @@ $renderer = Engine::getRenderer();
  */
 api::registerApiRoutes($router);
 App::registerRoutes($renderer);
+$event->emit('app.onRoutesLoaded', [$router]);
 
+/*
+ * Initialize the plugins manager.
+ */
+PluginsManager::init($router, $renderer, $event);
+
+$router->add('/(.*)', function () {
+    global $renderer;
+    $renderer->addGlobal('page_name', '404');
+    http_response_code(404);
+    exit($renderer->render('/errors/404.twig'));
+});
 
 try {
-    PluginsManager::init($router, $renderer);
     $router->route();
 } catch (Exception $e) {
     exit('Failed to start app: ' . $e->getMessage());
