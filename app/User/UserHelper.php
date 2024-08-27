@@ -16,13 +16,13 @@ use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserHelper extends UserDataHandler
 {
-    private \MythicalSystemsFramework\Plugins\PluginEvent $eventHandler;
     private string $account_token;
-
-    public function __construct(\MythicalSystemsFramework\Plugins\PluginEvent $eventHandler, string $token)
+    
+    public function __construct(string $token)
     {
-        $this->eventHandler = $eventHandler;
         $this->account_token = $token;
+        global $event;
+        $event->emit("user.onLoad");
         if ($this->isSessionValid()) {
             $user_ip = CloudFlare::getUserIP();
             $this->updateLastSeen($user_ip);
@@ -40,7 +40,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'YES', false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'YES', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_BANNED';
                 } else {
@@ -65,7 +65,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'NO', false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'NO', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_UNBANNED';
                 } else {
@@ -90,7 +90,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $ban_state = $this->getSpecificUserData($this->account_token, 'banned', false, $this->eventHandler);
+                $ban_state = $this->getSpecificUserData($this->account_token, 'banned', false);
                 if ($ban_state == 'NO') {
                     return 'USER_NOT_BANNED';
                 } else {
@@ -159,7 +159,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'true', false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'true', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_DELETED';
                 } else {
@@ -184,7 +184,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'false', false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'false', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_RESTORED';
                 } else {
@@ -209,7 +209,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $delete_state = $this->getSpecificUserData($this->account_token, 'deleted', false, $this->eventHandler);
+                $delete_state = $this->getSpecificUserData($this->account_token, 'deleted', false);
                 if ($delete_state == 'false') {
                     return 'USER_NOT_DELETED';
                 } else {
@@ -234,7 +234,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $verified_state = $this->getSpecificUserData($this->account_token, 'verified', false, $this->eventHandler);
+                $verified_state = $this->getSpecificUserData($this->account_token, 'verified', false);
                 if ($verified_state == 'false') {
                     return 'USER_NOT_VERIFIED';
                 } else {
@@ -259,7 +259,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'true', false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'true', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_VERIFIED';
                 } else {
@@ -284,7 +284,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'false', false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'false', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_UNVERIFIED';
                 } else {
@@ -309,9 +309,9 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'last_seen', date('Y-m-d H:i:s'), false, $this->eventHandler);
+                $update_user = self::updateSpecificUserData($this->account_token, 'last_seen', date('Y-m-d H:i:s'), false);
                 if ($update_user == 'SUCCESS') {
-                    $update_user = self::updateSpecificUserData($this->account_token, 'last_ip', $ip, false, $this->eventHandler);
+                    $update_user = self::updateSpecificUserData($this->account_token, 'last_ip', $ip, false);
                     if ($update_user == 'SUCCESS') {
                         return 'SUCCESS';
                     } else {
@@ -339,7 +339,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $role_id = $this->getSpecificUserData($this->account_token, 'role', false, $this->eventHandler);
+                $role_id = $this->getSpecificUserData($this->account_token, 'role', false);
 
                 return $role_id;
             } else {
@@ -360,7 +360,7 @@ class UserHelper extends UserDataHandler
     public function doesUserHavePermission(string $permission): ?string
     {
         try {
-            $role_id = UserHelper::getSpecificUserData($this->account_token, 'role', false, $this->eventHandler);
+            $role_id = UserHelper::getSpecificUserData($this->account_token, 'role', false);
             $role_check = RolesDataHandler::roleExists($role_id);
             if ($role_check == 'ROLE_EXISTS') {
                 $permission_check = RolesPermissionDataHandler::doesRoleHavePermission($role_id, $permission);
@@ -466,7 +466,7 @@ class UserHelper extends UserDataHandler
     public function getInfo(string $info, bool $isEncrypted = true): string
     {
         if ($this->isSessionValid()) {
-            return $this->getSpecificUserData($this->account_token, $info, $isEncrypted, $this->eventHandler);
+            return $this->getSpecificUserData($this->account_token, $info, $isEncrypted);
         } else {
             return 'ERROR_ACCOUNT_NOT_VALID';
         }

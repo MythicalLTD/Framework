@@ -24,7 +24,7 @@ class Example implements PluginBuilder
             });
         });
 
-        $eventHandler->on('user_created', function ($account_token) {
+        $eventHandler->on('user.onLoad', function () {
             exit('Events worked!');
         });
     }

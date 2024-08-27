@@ -10,8 +10,7 @@
         "ext-mbstring": "*",
         "gravatarphp/gravatar": "^1.0",
         "twig/twig": "^3.10",
-        "ifsnop/mysqldump-php": "^2.12",
-        "symfony/event-dispatcher": "^7.1"
+        "ifsnop/mysqldump-php": "^2.12"
     },
     "license": "MIT",
     "minimum-stability": "stable",

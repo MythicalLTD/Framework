@@ -68,7 +68,6 @@ class Register extends Api implements ApiBuilder
                 if (MailService::isEnabled() == true) {
                     // TODO: Add a verify system
                 } else {
-                    user::updateSpecificUserData($user, 'verified', 'true');
 
                     ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User created an account!', \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_CREATED');
                     ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User verified his account!', \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_VERIFIED');

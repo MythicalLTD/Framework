@@ -29,7 +29,7 @@ class UserDataHandler
      *
      * @return string|null The user token
      */
-    public static function login(string $email, string $password, string $ip, \MythicalSystemsFramework\Plugins\PluginEvent $event): ?string
+    public static function login(string $email, string $password, string $ip): ?string
     {
         try {
             // Connect to the database
@@ -55,7 +55,7 @@ class UserDataHandler
 
                 $stmt->fetch();
                 $stmt->close();
-                $user = new UserHelper($event, $token);
+                $user = new UserHelper($token);
 
                 // Check if the password is correct
                 if (enc::decrypt($db_password) == $password) {
@@ -97,7 +97,7 @@ class UserDataHandler
      *
      * @return string|null The user token
      */
-    public static function create(string $username, string $password, string $email, string $first_name, string $last_name, string $ip, \MythicalSystemsFramework\Plugins\PluginEvent $event): ?string
+    public static function create(string $username, string $password, string $email, string $first_name, string $last_name, string $ip): ?string
     {
         try {
             $username = enc::encrypt($username);
@@ -113,7 +113,6 @@ class UserDataHandler
             $stmtUsername->bind_param('s', $username);
             $stmtUsername->execute();
             $stmtUsername->bind_result($count);
-
             $stmtUsername->fetch();
             $stmtUsername->close();
 
@@ -131,6 +130,7 @@ class UserDataHandler
                 if ($emailCount > 0) {
                     return 'ERROR_EMAIL_EXISTS';
                 } else {
+
                     // Insert the user into the database
                     $stmtInsert = $mysqli->prepare('INSERT INTO framework_users (username, first_name, last_name, email, password, avatar, uuid, token, first_ip, last_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
                     // Hash the password
@@ -165,10 +165,10 @@ class UserDataHandler
      *
      * @return string The user data or null if not found!
      */
-    public static function getSpecificUserData(string $account_token, string $data, bool $encrypted, \MythicalSystemsFramework\Plugins\PluginEvent $event): ?string
+    public static function getSpecificUserData(string $account_token, string $data, bool $encrypted): ?string
     {
         try {
-            $user = new UserHelper($event, $account_token);
+            $user = new UserHelper($account_token);
 
             $isAccountValid = $user->isSessionValid();
             if (!$isAccountValid) {
@@ -210,10 +210,10 @@ class UserDataHandler
      *
      * @return string (ERROR_ACCOUNT_NOT_VALID,ERROR_RECORD_IS_LOCKED,ERROR_DATABASE_UPDATE_FAILED,SUCCESS)
      */
-    public static function updateSpecificUserData(string $account_token, string $data, string $value, bool $encrypted, \MythicalSystemsFramework\Plugins\PluginEvent $event): string
+    public static function updateSpecificUserData(string $account_token, string $data, string $value, bool $encrypted): string
     {
         try {
-            $user = new UserHelper($event, $account_token);
+            $user = new UserHelper($account_token);
 
             $isAccountValid = $user->isSessionValid();
             if (!$isAccountValid) {
@@ -224,13 +224,13 @@ class UserDataHandler
             $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
 
-            if (MySQL::getLock('framework_users', self::getSpecificUserData($account_token, 'id', false, $event)) == true) {
+            if (MySQL::getLock('framework_users', self::getSpecificUserData($account_token, 'id', false)) == true) {
                 logger::log(LoggerLevels::WARNING, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Illegally tried to update a locked record!');
 
                 return 'ERROR_RECORD_IS_LOCKED';
             }
 
-            MySQL::requestLock('framework_users', self::getSpecificUserData($account_token, 'id', false, $event));
+            MySQL::requestLock('framework_users', self::getSpecificUserData($account_token, 'id', false));
             // Check if the user exists
             $stmt = $mysqli->prepare("UPDATE framework_users SET $data = ? WHERE token = ?");
             if ($encrypted) {
@@ -239,7 +239,7 @@ class UserDataHandler
             $stmt->bind_param('ss', $value, $account_token);
             $stmt->execute();
             $stmt->close();
-            MySQL::requestUnLock('framework_users', self::getSpecificUserData($account_token, 'id', false, $event));
+            MySQL::requestUnLock('framework_users', self::getSpecificUserData($account_token, 'id', false));
 
             return 'SUCCESS';
         } catch (\Exception $e) {
