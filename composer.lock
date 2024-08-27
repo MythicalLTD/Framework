@@ -125,16 +125,16 @@
         },
         {
             "name": "mythicalsystems/core",
-            "version": "1.0.0.10",
+            "version": "1.0.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MythicalLTD/MythicalCore.git",
-                "reference": "5e1478f0ee9dc19a5bf7148c2435d09bc4daf927"
+                "reference": "948b339d77e11d780d2fa7ebddda585698d7265e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MythicalLTD/MythicalCore/zipball/5e1478f0ee9dc19a5bf7148c2435d09bc4daf927",
-                "reference": "5e1478f0ee9dc19a5bf7148c2435d09bc4daf927",
+                "url": "https://api.github.com/repos/MythicalLTD/MythicalCore/zipball/948b339d77e11d780d2fa7ebddda585698d7265e",
+                "reference": "948b339d77e11d780d2fa7ebddda585698d7265e",
                 "shasum": ""
             },
             "require": {
@@ -191,7 +191,7 @@
                 "docs": "https://docs.mythicalsystems.me",
                 "forum": "https://discord.gg/Tswkrhreu3",
                 "issues": "https://github.com/mythicalltd/mythicalcore/issues",
-                "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.10",
+                "source": "https://github.com/MythicalLTD/MythicalCore/tree/1.0.0.11",
                 "wiki": "https://docs.mythicalsystems.me"
             },
             "funding": [
@@ -200,7 +200,7 @@
                     "type": "GitHub"
                 }
             ],
-            "time": "2024-08-19T18:32:19+00:00"
+            "time": "2024-08-23T19:35:43+00:00"
         },
         {
             "name": "psr/event-dispatcher",
