@@ -2,15 +2,17 @@
     "name": "mythicalsystems/framework",
     "description": "The framework we use for our projects!",
     "type": "project",
-    "homepage": "https://github.com/mythicalltd/mythicalcore",
+    "homepage": "https://github.com/mythicalltd/framework",
     "require": {
         "mythicalsystems/core": "^1.0",
         "php": ">=8.1.0",
-        "ext-json": "*",
-        "ext-mbstring": "*",
         "gravatarphp/gravatar": "^1.0",
         "twig/twig": "^3.10",
-        "ifsnop/mysqldump-php": "^2.12"
+        "ifsnop/mysqldump-php": "^2.12",
+        "composer/composer": "^2.7"
+    },
+    "config": {
+        "vendor-dir": "storage/caches/vendor"
     },
     "license": "MIT",
     "minimum-stability": "stable",
@@ -36,10 +38,10 @@
     ],
     "support": {
         "wiki": "https://docs.mythicalsystems.xyz",
-        "chat": "https://discord.gg/Tswkrhreu3",
+        "chat": "https://discord.mythicalsystems.xyz",
         "issues": "https://github.com/mythicalltd/mythicalcore/issues",
         "docs": "https://docs.mythicalsystems.xyz",
-        "forum": "https://discord.gg/Tswkrhreu3"
+        "forum": "https://discord.mythicalsystems.xyz"
     },
     "funding": [
         {
@@ -59,7 +61,7 @@
     "scripts": {
         "tests": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "vendor/bin/phpunit app/Tests/*"
+            "storage/caches/vendor/bin/phpunit app/Tests/*"
         ],
         "push": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
@@ -81,7 +83,7 @@
         ],
         "lint": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "vendor/bin/php-cs-fixer fix --config=./.github/.php-cs-fixer.dist.php"
+            "storage/caches/vendor/bin/php-cs-fixer fix --config=./.github/.php-cs-fixer.dist.php"
         ],
         "build": [
             "export COMPOSER_ALLOW_SUPERUSER=1",

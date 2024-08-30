@@ -20,9 +20,24 @@ namespace MythicalSystemsFramework\Plugins;
  *  */
 class PluginEvent
 {
+    /**
+     * All listeners for the specified event.
+     */
     protected array $listeners = [];
 
-    protected array $onceListeners = [];
+    public static $_instance;
+
+    /**
+     * Returns the current instance of the PluginEvent class.
+     */
+    public static function getInstance(): PluginEvent
+    {
+        if (!(self::$_instance instanceof self)) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
+    }
 
     /**
      * Adds a listener for the specified event.
@@ -39,25 +54,6 @@ class PluginEvent
         }
 
         $this->listeners[$event][] = $listener;
-
-        return $this;
-    }
-
-    /**
-     * Adds a listener for the specified event that will be triggered only once.
-     *
-     * @param string $event the name of the event
-     * @param callable $listener the listener function to be added
-     *
-     * @return static returns the current instance of the PluginEvent class
-     */
-    public function once(string $event, callable $listener): static
-    {
-        if (!isset($this->onceListeners[$event])) {
-            $this->onceListeners[$event] = [];
-        }
-
-        $this->onceListeners[$event][] = $listener;
 
         return $this;
     }
@@ -81,18 +77,6 @@ class PluginEvent
                 }
             }
         }
-
-        if (isset($this->onceListeners[$event])) {
-            $index = array_search($listener, $this->onceListeners[$event], true);
-
-            if ($index !== false) {
-                unset($this->onceListeners[$event][$index]);
-
-                if (count($this->onceListeners[$event]) === 0) {
-                    unset($this->onceListeners[$event]);
-                }
-            }
-        }
     }
 
     /**
@@ -103,10 +87,9 @@ class PluginEvent
     public function removeAllListeners(?string $event = null): void
     {
         if ($event !== null) {
-            unset($this->listeners[$event], $this->onceListeners[$event]);
+            unset($this->listeners[$event]);
         } else {
             $this->listeners = [];
-            $this->onceListeners = [];
         }
     }
 
@@ -124,14 +107,12 @@ class PluginEvent
             $eventNames = array_unique(
                 array_merge(
                     array_keys($this->listeners),
-                    array_keys($this->onceListeners)
                 )
             );
 
             foreach ($eventNames as $eventName) {
                 $events[$eventName] = array_merge(
                     $this->listeners[$eventName] ?? [],
-                    $this->onceListeners[$eventName] ?? []
                 );
             }
 
@@ -140,7 +121,6 @@ class PluginEvent
 
         return array_merge(
             $this->listeners[$event] ?? [],
-            $this->onceListeners[$event] ?? []
         );
     }
 
@@ -157,31 +137,10 @@ class PluginEvent
             $listeners = array_values($this->listeners[$event]);
         }
 
-        $onceListeners = [];
-        if (isset($this->onceListeners[$event])) {
-            $onceListeners = array_values($this->onceListeners[$event]);
-        }
-
         if ($listeners !== []) {
             foreach ($listeners as $listener) {
                 $listener(...$arguments);
             }
         }
-
-        if ($onceListeners !== []) {
-            unset($this->onceListeners[$event]);
-
-            foreach ($onceListeners as $listener) {
-                $listener(...$arguments);
-            }
-        }
-    }
-
-    /**
-     * Get an instance of the PluginEvent class.
-     */
-    public static function getInstance(): PluginEvent
-    {
-        return new PluginEvent();
     }
 }

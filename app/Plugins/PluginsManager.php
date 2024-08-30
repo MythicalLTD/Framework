@@ -2,7 +2,6 @@
 
 namespace MythicalSystemsFramework\Plugins;
 
-use MythicalSystemsFramework\Kernel\Config;
 use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
@@ -11,7 +10,10 @@ class PluginsManager
 {
     public static string $plugins_path = __DIR__ . '/../../storage/addons';
 
-    public static function init(\Router\Router $router, \Twig\Environment $renderer, PluginEvent $eventHandler): void
+    /**
+     * Init the plugins.
+     */
+    public static function init(PluginEvent $eventHandler): void
     {
         if (!file_exists(self::$plugins_path)) {
             mkdir(self::$plugins_path, 0777, true);
@@ -26,9 +28,42 @@ class PluginsManager
             if (isset($plugin_info['require'])) {
                 $requirements = $plugin_info['require'];
                 foreach ($requirements as $requirement) {
+                    // Skip default plugin
                     if ($requirement == 'MythicalSystemsFramework') {
                         continue;
                     }
+
+                    // Check if the requirement is a composer package
+                    if (strpos($requirement, 'composer=') === 0) {
+                        $composerVersion = substr($requirement, strlen('composer='));
+                        if (\Composer\InstalledVersions::isInstalled($composerVersion, true)) {
+                            continue;
+                        } else {
+                            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires composer package $composerVersion to be installed.");
+                        }
+                    }
+
+                    // Check if the requirement is a php version
+                    if (strpos($requirement, 'php=') === 0) {
+                        $phpVersion = substr($requirement, strlen('php='));
+                        if (version_compare(PHP_VERSION, $phpVersion, '<')) {
+                            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires PHP version $phpVersion or higher.");
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    // Check if the requirement is a php extension
+                    if (strpos($requirement, 'php-ext=') === 0) {
+                        $ext = substr($requirement, strlen('php-ext='));
+                        if (!extension_loaded($ext)) {
+                            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires PHP extension $ext to be installed.");
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    // Check if the requirement is a plugin
                     $isInstalled = self::readPluginFile($requirement);
                     if ($isInstalled) {
                         continue;
@@ -52,12 +87,30 @@ class PluginsManager
                 Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
                 continue;
             }
-
             /**
              * Is plugin enabled?
              */
             $plugin_info_db = Database::getPlugin($plugin_info['name']);
             if ($plugin_info_db['enabled'] == 'true') {
+                $version_db = $plugin_info_db['version'];
+                $version_filesystem = $plugin_info['version'];
+
+                // Check if plugin is up to date or not!
+
+                if ($version_db != $version_filesystem) {
+                    $plugin_db_info_enabled = $plugin_info_db['enabled'];
+                    Database::unRegisterPlugin($plugin_info['name']);
+                    $p = $plugin_info;
+
+                    $p_homepage = $p['homepage'] ?? null;
+                    $p_license = $p['license'] ?? null;
+                    $p_support = $p['support'] ?? null;
+                    $p_funding = $p['funding'] ?? null;
+                    $p_require = $p['require'] ?? 'MythicalSystemsFramework';
+                    Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
+                    Database::updatePlugin($plugin_info['name'], 'enabled', $plugin_db_info_enabled);
+                    Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, 'Plugin ' . $plugin_info['name'] . ' has been updated to version ' . $plugin_info['version']);
+                }
                 $plugin_home_dir = self::$plugins_path . '/' . $plugin_info['name'];
                 $main_class = $plugin_home_dir . '/' . $plugin_info_db['name'] . '.php';
                 if (file_exists($main_class)) {
@@ -68,11 +121,7 @@ class PluginsManager
                         require_once $main_class;
                         $plugin_class = new $plugin_info_db['name']();
                         $plugin_class->Main();
-                        try {
-                            $plugin_class->Route($router, $renderer);
-                        } catch (\Exception $e) {
-                            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'Failed to add routes for plugin' . $plugin_info_db['name'] . '' . $e->getMessage());
-                        }
+
                         try {
                             $plugin_class->Event($eventHandler);
                         } catch (\Exception $e) {

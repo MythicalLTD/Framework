@@ -1,10 +1,13 @@
 {
     "name": "Example",
     "description": "A framework for MythicalSystems",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "homepage": "https://mythicalsystems.xyz",
     "require": [
-        "Test"
+        "MythicalSystemsFramework",
+        "php=8.2.0",
+        "php-ext=mysqli",
+        "composer=mythicalsystems/core"
     ],
     "license": "MIT",
     "stability": "stable",

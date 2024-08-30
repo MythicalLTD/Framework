@@ -4,7 +4,7 @@ namespace MythicalSystemsFramework\Handlers\interfaces;
 
 interface AnnouncementSocial
 {
-    public static const Read = "read";
-    public static const Like = "like";
-    public static const Dislike = "dislike";
+    public const Read = "read";
+    public const Like = "like";
+    public const Dislike = "dislike";
 }

@@ -164,4 +164,28 @@ class Database extends MySQL implements Stability
             return '';
         }
     }
+
+    /**
+     * Get all the plugins from the database.
+     */
+    public static function getAllPlugins(): array
+    {
+        try {
+            $db = self::getDatabase();
+            $conn = $db->connectMYSQLI();
+            $stmt = $conn->prepare('SELECT * FROM framework_plugins');
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $plugins = [];
+            while ($row = $result->fetch_assoc()) {
+                $plugins[] = $row;
+            }
+
+            return $plugins;
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while getting all plugins: ' . $e->getMessage());
+
+            return [];
+        }
+    }
 }

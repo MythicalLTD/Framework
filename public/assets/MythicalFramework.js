@@ -22,6 +22,10 @@ if (isDebugMode == true && showDebugWarning == true) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    window.history.scrollRestoration = 'auto';
+});
+
 /**
  * Warn users about the danger of pasting something in the browser console.
  */

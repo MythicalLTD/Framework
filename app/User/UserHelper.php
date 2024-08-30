@@ -17,12 +17,12 @@ use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 class UserHelper extends UserDataHandler
 {
     private string $account_token;
-    
+
     public function __construct(string $token)
     {
         $this->account_token = $token;
         global $event;
-        $event->emit("user.onLoad");
+        $event->emit('user.onLoad');
         if ($this->isSessionValid()) {
             $user_ip = CloudFlare::getUserIP();
             $this->updateLastSeen($user_ip);

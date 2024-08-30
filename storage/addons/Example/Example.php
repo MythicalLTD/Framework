@@ -9,23 +9,12 @@ class Example implements PluginBuilder
         // TODO: Implement the main function
     }
 
-    public function Route(Router\Router $router, Twig\Environment $renderer)
-    {
-        $router->add('/router/example', function () {
-            exit('Routes worked!');
-        });
-    }
-
     public function Event(MythicalSystemsFramework\Plugins\PluginEvent $eventHandler)
     {
         $eventHandler->on('app.onRoutesLoaded', function ($router) {
             $router->add('/example', function () {
-                exit('Events worked!');
+                exit('das');
             });
-        });
-
-        $eventHandler->on('user.onLoad', function () {
-            exit('Events worked!');
         });
     }
 }

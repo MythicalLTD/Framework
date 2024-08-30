@@ -130,7 +130,6 @@ class UserDataHandler
                 if ($emailCount > 0) {
                     return 'ERROR_EMAIL_EXISTS';
                 } else {
-
                     // Insert the user into the database
                     $stmtInsert = $mysqli->prepare('INSERT INTO framework_users (username, first_name, last_name, email, password, avatar, uuid, token, first_ip, last_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
                     // Hash the password

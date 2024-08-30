@@ -34,6 +34,8 @@ class Settings
 
         $settings = new \MythicalSystems\Helpers\ConfigHelper($settings_file);
         self::down();
+        global $event;
+        $event->emit('settings.get', [$category, $name, $settings]);
 
         return $settings->get($category, $name);
     }

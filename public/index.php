@@ -1,8 +1,8 @@
 <?php
 
 try {
-    if (file_exists('../vendor/autoload.php')) {
-        require '../vendor/autoload.php';
+    if (file_exists('../storage/caches/vendor/autoload.php')) {
+        require '../storage/caches/vendor/autoload.php';
     } else {
         exit('Hello, it looks like you did not run: "<code>composer install --no-dev --optimize-autoloader</code>". Please run that and refresh the page');
     }
@@ -21,8 +21,6 @@ $router = new Router\Router();
 $event = new PluginEvent();
 global $event;
 
-define('$event', $event);
-
 /*
  * Check if the app is installed
  */
@@ -31,6 +29,11 @@ Installer::Installed($router);
  * Check if the app is healthy and all requirements are met
  */
 App::checkIfAppIsHealthy();
+
+/*
+ * Start the plugin loader
+ */
+PluginsManager::init($event);
 
 /**
  * Get the renderer :).
@@ -44,16 +47,11 @@ api::registerApiRoutes($router);
 App::registerRoutes($renderer);
 $event->emit('app.onRoutesLoaded', [$router]);
 
-/*
- * Initialize the plugins manager.
- */
-PluginsManager::init($router, $renderer, $event);
-
 $router->add('/(.*)', function () {
     global $renderer;
     $renderer->addGlobal('page_name', '404');
     http_response_code(404);
-    exit($renderer->render('/errors/404.twig'));
+    echo $renderer->render('/errors/404.twig');
 });
 
 try {

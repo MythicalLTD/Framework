@@ -1,7 +1,7 @@
 <?php
 try {
-    if (file_exists('vendor/autoload.php')) {
-        require('vendor/autoload.php');
+    if (file_exists('storage/caches/vendor/autoload.php')) {
+        require('storage/caches/vendor/autoload.php');
     } else {
         die('Hello, it looks like you did not run: "composer install --no-dev --optimize-autoloader". Please run that and refresh the page');
     }
@@ -10,20 +10,6 @@ try {
 }
 
 use MythicalSystemsFramework\Cli\Kernel;
-use MythicalSystemsFramework\Plugins\Database;
-use MythicalSystemsFramework\Plugins\Interfaces\Stability;
-use MythicalSystemsFramework\Plugins\PluginsManager;
-
-#echo Database::registerNewPlugin('MythicalCore', "The core plugin for MythicalFramework", null, null, "MIT", Stability::STABILITY_STABLE,["NaysKutzu","MythicalSystems"],null,null,"1.0.0.0");
-
-#die();
-if (function_exists('exec')) {
-    define('IS_EXEC_ENABLED', true);
-} else {
-    define('IS_EXEC_ENABLED', false);
-    echo Kernel::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&lThe exec function is disabled, please enable it in your php.ini file");
-}
-
 
 try {
     $args = array_slice($argv, 1); // Exclude the command name and the first argument
@@ -31,5 +17,3 @@ try {
 } catch (Exception $e) {
     die(Kernel::translateColorsCode("&cE&0&lr&2&lr&3&lo&5&lr: &r&l" . $e->getMessage() . ""));
 }
-
-# docker-compose up --build --remove-orphans --force-recreate --always-recreate-deps

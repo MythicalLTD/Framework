@@ -112,6 +112,7 @@ CREATE TABLE `framework_plugins` (
   `funding` text DEFAULT NULL,
   `version` text NOT NULL,
   `enabled` enum('false','true') NOT NULL DEFAULT 'false',
+  `isInstalled` enum('false','true') NOT NULL DEFAULT 'false',
   `deleted` enum('false','true') NOT NULL DEFAULT 'false',
   `locked` enum('false','true') NOT NULL DEFAULT 'false',
   `date` datetime NOT NULL DEFAULT current_timestamp()

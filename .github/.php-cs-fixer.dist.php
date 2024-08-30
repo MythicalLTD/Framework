@@ -1,7 +1,7 @@
 <?php
 try {
-    if (file_exists('vendor/autoload.php')) {
-        require('vendor/autoload.php');
+    if (file_exists(__DIR__ . '/../storage/caches/vendor/autoload.php')) {
+        require(__DIR__ . '/../storage/caches/vendor/autoload.php');
     } else {
         die('Hello, it looks like you did not run: "composer install --no-dev --optimize-autoloader". Please run that and refresh the page');
     }
@@ -14,7 +14,7 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $finder = (new Finder())
-    ->in(__DIR__.'/../')
+    ->in(__DIR__ . '/../')
     ->exclude([
         'vendor',
         'node_modules',
@@ -33,6 +33,7 @@ $finder = (new Finder())
 return (new Config())
     ->setRiskyAllowed(true)
     ->setFinder($finder)
+    ->setUsingCache(false)
     ->setRules([
         '@Symfony' => true,
         '@PSR1' => true,

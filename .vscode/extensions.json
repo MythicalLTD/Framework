@@ -5,9 +5,6 @@
         "rifi2k.format-html-in-php",
         "mohd-akram.vscode-html-format",
         "devsense.phptools-vscode",
-        "github.vscode-github-actions",
-        "github.vscode-pull-request-github",
-        "equinusocio.vsc-material-theme-icons",
         "sophisticode.php-formatter",
         "eamodio.gitlens",
         "abusaidm.html-snippets",
@@ -23,7 +20,6 @@
         "esbenp.prettier-vscode",
         "lkrms.pretty-php",
         "bradlc.vscode-tailwindcss",
-        "zarifprogrammer.tailwind-snippets",
-        "fincity.rest-api-tester"
+        "zarifprogrammer.tailwind-snippets"
     ]
 }
