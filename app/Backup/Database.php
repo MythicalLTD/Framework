@@ -23,7 +23,6 @@ class Database implements Status
             $stmt->bind_param('s', $path);
             $stmt->execute();
             Logger::log(LoggerLevels::INFO, LoggerTypes::BACKUP, 'A new backup has been started.');
-
             return $stmt->insert_id;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to register backup: ' . $e->getMessage());
@@ -104,11 +103,9 @@ class Database implements Status
             $stmt->execute();
             $result = $stmt->get_result();
             $status = $result->fetch_assoc();
-
             return $status['backup_status'];
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to get backup status: ' . $e->getMessage());
-
             return null;
         }
     }
@@ -129,12 +126,10 @@ class Database implements Status
                 while ($row = $result->fetch_assoc()) {
                     $backups[] = $row;
                 }
-
                 return $backups;
             }
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to get backups: ' . $e->getMessage());
-
             return [];
         }
     }

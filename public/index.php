@@ -45,7 +45,7 @@ $renderer = Engine::getRenderer();
  */
 api::registerApiRoutes($router);
 App::registerRoutes($renderer);
-$event->emit('app.onRoutesLoaded', [$router]);
+$event->emit('app.onAppLoad', [$router,$renderer]);
 
 $router->add('/(.*)', function () {
     global $renderer;

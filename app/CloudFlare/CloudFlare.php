@@ -11,9 +11,11 @@ class CloudFlare extends \MythicalSystems\CloudFlare\CloudFlare
      */
     public static function getUserIP(): ?string
     {
+        global $event;
         $ip = \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP();
         // Check if the ip is valid
         if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            $event->emit('cloudflare.onGetUserIP', [$ip]);
             return $ip;
         } else {
             return null;

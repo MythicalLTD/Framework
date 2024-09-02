@@ -24,11 +24,12 @@ class MySQL
      */
     public function connectPDO(): \PDO
     {
+        global $event; // This is a global variable that is used to emit events.
         $dsn = 'mysql:host=' . cfg::get('database', 'host') . ';dbname=' . cfg::get('database', 'name') . ';port=' . cfg::get('database', 'port') . ';charset=utf8mb4';
         try {
             $pdo = new \PDO($dsn, cfg::get('database', 'username'), cfg::get('database', 'password'));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
+            $event->emit('database.onConnectPDO', [$pdo]);
             return $pdo;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to connect to the database!');
@@ -41,6 +42,7 @@ class MySQL
      */
     public function connectMYSQLI(): \mysqli
     {
+        global $event; // This is a global variable that is used to emit events.
         if (!isset(self::$connection)) {
             self::$connection = new \mysqli(
                 cfg::get('database', 'host'),
@@ -54,8 +56,9 @@ class MySQL
                 Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to connect to the database!');
             }
         }
-
-        return self::$connection;
+        $connection = self::$connection;
+        $event->emit('database.onConnectMYSQLI', [$connection]);
+        return $connection;
     }
 
     /**
@@ -84,11 +87,12 @@ class MySQL
      */
     public function tryConnection(string $host, string|int $port, string $username, string $password, string $database): bool
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             $dsn = 'mysql:host=' . $host . ';dbname=' . $database . ';port=' . $port . ';charset=utf8mb4';
             $pdo = new \PDO($dsn, $username, $password);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
+            $event->emit('database.ontryConnection');
             return true;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to execute PDO query: ' . $e);
@@ -105,6 +109,7 @@ class MySQL
      */
     public static function requestLock(string $table, string $id): void
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             if (self::doesTableExist($table) === false) {
                 return;
@@ -115,6 +120,7 @@ class MySQL
             $stmt->bind_param('s', $id);
             $stmt->execute();
             $stmt->close();
+            $event->emit('database.onRequestLock', [$table, $id]);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to lock table: ' . $e);
 
@@ -131,6 +137,7 @@ class MySQL
      */
     public static function requestUnLock(string $table, string $id): void
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             if (self::doesTableExist($table) === false) {
                 return;
@@ -141,6 +148,7 @@ class MySQL
             $stmt->bind_param('s', $id);
             $stmt->execute();
             $stmt->close();
+            $event->emit('database.onRequestUnlock', [$table, $id]);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to unlock table: ' . $e);
 
@@ -156,6 +164,7 @@ class MySQL
      */
     public static function getLock(string $table, string $id): bool
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             if (self::doesTableExist($table) === false) {
                 return false;
@@ -168,8 +177,9 @@ class MySQL
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
             $stmt->close();
-
-            return $row['locked'];
+            $locked = $row['locked'] ?? false;
+            $event->emit('database.onGetLockStatus', [$table, $id, $locked]);
+            return $locked;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to get lock status: ' . $e);
 
@@ -184,15 +194,16 @@ class MySQL
      */
     public static function doesTableExist(string $table): bool
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
             $conn->query('SELECT * FROM ' . mysqli_real_escape_string($conn, $table));
-
+            $event->emit('database.onCheckTableExistence', [$table, true]);
             return true;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to check if table exists: ' . $e);
-
+            $event->emit('database.onCheckTableExistence', [$table, false]);
             return false;
         }
     }
@@ -206,6 +217,7 @@ class MySQL
      */
     public static function doesRecordExist(string $table, string $search, string $term): bool
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             if (self::doesTableExist($table) === false) {
                 return false;
@@ -216,7 +228,7 @@ class MySQL
             $stmt->bind_param('sss', $table, $search, $term);
             $stmt->execute();
             $stmt->close();
-
+            
             return true;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to check if record exists: ' . $e);

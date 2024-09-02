@@ -13,7 +13,7 @@ $router->add('/dashboard', function () {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     } else {
-        $user = new UserHelper($event, $_COOKIE['token']);
+        $user = new UserHelper($_COOKIE['token']);
         global $renderer;
         exit($renderer->render('index.twig'));
     }

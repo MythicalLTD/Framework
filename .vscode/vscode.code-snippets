@@ -119,6 +119,15 @@
 		],
 		"description": "Get a specific value from the config file!"
 	},	
+	"Include Event": {
+		"prefix": "S_IncludeEvent",
+		"scope": "php",
+		"body": [
+			"global \\$event; // This is a global variable that is used to emit events."
+		],
+		"description": "Include an event file!"
+	},
+	
 	"AddRequirements": {
 		"prefix": "S_AddRequirements",
 		"scope": "php",

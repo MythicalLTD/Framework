@@ -11,10 +11,14 @@ class Example implements PluginBuilder
 
     public function Event(MythicalSystemsFramework\Plugins\PluginEvent $eventHandler)
     {
-        $eventHandler->on('app.onRoutesLoaded', function ($router) {
+        $eventHandler->on('app.onRoutesLoaded', function ($router,$renderer) {
             $router->add('/example', function () {
                 exit('das');
             });
+        });
+
+        $eventHandler->on('backup.onBackupTake', function ($path) {
+
         });
     }
 }

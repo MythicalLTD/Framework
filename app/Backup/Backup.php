@@ -16,6 +16,7 @@ class Backup extends Database implements Status
      */
     public static function take(): int
     {
+        global $event;
         try {
             $date = MySQL::getDateLikeMySQL();
             $date = str_replace(' ', '_', $date);
@@ -25,8 +26,12 @@ class Backup extends Database implements Status
 
             $dump = new IMysqldump\Mysqldump('mysql:host=' . cfg::get('database', 'host') . ';dbname=' . cfg::get('database', 'name'), cfg::get('database', 'username'), cfg::get('database', 'password'));
             $dump->start($path);
-
-            return self::registerBackup($path);
+            $id = self::registerBackup($path);
+            if (!$id == 0) {
+                $event->emit('backup.onBackupTaken', [$path, $id]);
+                return $id;
+            }
+            return 0;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::BACKUP, '(App/Backup/Backup.php) Failed to take MySQL backup: ' . $e->getMessage());
 
@@ -39,6 +44,7 @@ class Backup extends Database implements Status
      */
     public static function restore(int $backup_id): void
     {
+        global $event;
         try {
             if (!self::doesBackupExist($backup_id)) {
                 Logger::log(LoggerLevels::CRITICAL, LoggerTypes::BACKUP, '(App/Backup/Backup.php) Failed to restore MySQL backup: Backup does not exist.');
@@ -62,6 +68,7 @@ class Backup extends Database implements Status
             $db->exec($sql);
             $db->exec('SET FOREIGN_KEY_CHECKS = 1');
             unlink($path);
+            $event->emit('backup.onBackupRestore', [$path, $backup_id]);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::BACKUP, '(App/Backup/Backup.php) Failed to restore MySQL backup: ' . $e->getMessage());
         }
@@ -74,6 +81,7 @@ class Backup extends Database implements Status
      */
     public static function remove(int $backup_id)
     {
+        global $event;
         try {
             if (!self::doesBackupExist($backup_id)) {
                 Logger::log(LoggerLevels::CRITICAL, LoggerTypes::BACKUP, '(App/Backup/Backup.php) Failed to remove MySQL backup: Backup does not exist.');
@@ -83,6 +91,8 @@ class Backup extends Database implements Status
             $path = self::getBackupPath($backup_id);
             unlink($path);
             self::markAsDeleted($backup_id);
+            $event->emit('backup.onBackupDelete', [$path, $backup_id]);
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::BACKUP, '(App/Backup/Backup.php) Failed to remove MySQL backup: ' . $e->getMessage());
         }
