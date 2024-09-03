@@ -1,8 +1,8 @@
 <?php
 
 try {
-    if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-        require __DIR__ . '/../vendor/autoload.php';
+    if (file_exists(__DIR__ . '/../caches/vendor/autoload.php')) {
+        require __DIR__ . '/../caches/vendor/autoload.php';
     } else {
         exit('Hello, it looks like you did not run: "composer install --no-dev --optimize-autoloader". Please run that and refresh the page');
     }
@@ -11,9 +11,16 @@ try {
 }
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Cli\Colors as color;
+use MythicalSystemsFramework\Plugins\PluginEvent;
+use MythicalSystemsFramework\Plugins\PluginsManager;
+use MythicalSystemsFramework\Kernel\Debugger;
 
+Debugger::ShowAllErrors();
+
+
+$event = new PluginEvent();
+global $event;
 echo color::translateColorsCode('A new cron runner has &astarted&r.&o');
-
 /*
  * MythicalSystems Framework Cron File
  *
@@ -35,5 +42,6 @@ foreach ($files as $file) {
         require $jobsDirectory . '/' . $file;
     }
 }
+PluginsManager::initCron($event);
 
 echo color::translateColorsCode('Cron job has completed &asuccessfully&r!&o');
