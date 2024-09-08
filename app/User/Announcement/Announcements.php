@@ -1,15 +1,21 @@
 <?php
 
-namespace MythicalSystemsFramework\Handlers;
+namespace MythicalSystemsFramework\User\Announcement;
 
-use MythicalSystemsFramework\Kernel\Logger;
-use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
-use MythicalSystemsFramework\Handlers\interfaces\AnnouncementSocial;
-use MythicalSystemsFramework\Handlers\exception\AnnouncementNotFoundException;
+use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\Config;
+use MythicalSystemsFramework\Encryption\XChaCha20;
+use MythicalSystemsFramework\User\UserHelper;
+use MythicalSystemsFramework\Kernel\Debugger;
+use MythicalSystemsFramework\Mail\MailService;
+use MythicalSystemsFramework\Handlers\ActivityHandler;
+use MythicalSystemsFramework\Managers\Settings as settings;
+use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use MythicalSystemsFramework\Database\MySQL;
 
-class AnnouncementHandler implements AnnouncementSocial
+class Announcements
 {
     /**
      * Does an announcement exist?
@@ -49,6 +55,7 @@ class AnnouncementHandler implements AnnouncementSocial
      */
     public static function create(string $title, string $text): int
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
@@ -58,7 +65,7 @@ class AnnouncementHandler implements AnnouncementSocial
             $stmt->execute();
             $announcementID = $stmt->insert_id;
             $stmt->close();
-
+            $event->emit('announcements.Create', [$title, $text, $announcementID]);
             return $announcementID;
         } catch (\Exception $e) {
             /*
@@ -77,25 +84,25 @@ class AnnouncementHandler implements AnnouncementSocial
 
     /**
      * Edit an existing announcement by ID.
+     * 
+     * @param int $id the ID of the announcement to edit
+     * @param string $title the new announcement title
+     * @param string $text the new announcement text
+     * 
+     * @throws \Exception
+     * @return void
      */
     public static function edit(int $id, string $title, string $text): void
     {
+        global $event; // This is a global variable that is used to emit events.
         try {
             if (!self::exists($id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while editing an announcement: Announcement not found.');
-                throw new AnnouncementNotFoundException();
+                return;
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-
+            $event->emit('announcements.Edit', [$id, $title, $text]);
             $stmt = $conn->prepare('UPDATE framework_announcements SET title = ?, text = ? WHERE id = ?');
             $stmt->bind_param('ssi', $title, $text, $id);
             $stmt->execute();
@@ -119,6 +126,7 @@ class AnnouncementHandler implements AnnouncementSocial
      */
     public static function delete(int $id): void
     {
+        global $event;
         try {
             if (!self::exists($id)) {
                 /*
@@ -130,11 +138,11 @@ class AnnouncementHandler implements AnnouncementSocial
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while deleting an announcement: Announcement not found.');
-                throw new AnnouncementNotFoundException();
+                return;
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-
+            $event->emit('announcements.Delete', [$id]);    
             $stmt = $conn->prepare('DELETE FROM framework_announcements WHERE id = ?');
             $stmt->bind_param('i', $id);
             $stmt->execute();
@@ -158,10 +166,11 @@ class AnnouncementHandler implements AnnouncementSocial
      */
     public static function deleteAll(): void
     {
+        global $event;
         try {
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-
+            $event->emit('announcements.DeleteAll', []);
             $conn->query('TRUNCATE TABLE framework_announcements');
         } catch (\Exception $e) {
             /*
@@ -311,8 +320,9 @@ class AnnouncementHandler implements AnnouncementSocial
      *
      * @throws \Exception
      */
-    public static function addSocialInteraction(string $announcement_id, string $user_uuid, AnnouncementSocial $type): void
+    public static function addSocialInteraction(string $announcement_id, string $user_uuid, String $type): void
     {
+        global $event;
         try {
             if (!self::exists($announcement_id)) {
                 /*
@@ -324,8 +334,9 @@ class AnnouncementHandler implements AnnouncementSocial
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while adding a social interaction to an announcement: Announcement not found.');
-                throw new AnnouncementNotFoundException();
+                return;
             }
+            $event->emit('announcements.AddSocialInteraction', [$announcement_id, $user_uuid, $type]);
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
             $stmt = $conn->prepare('INSERT INTO framework_announcements_social (announcement_id, user_uuid, type) VALUES (?, ?, ?)');
@@ -351,8 +362,9 @@ class AnnouncementHandler implements AnnouncementSocial
      *
      * @throws \Exception
      */
-    public static function removeSocialInteraction(string $announcement_id, string $user_uuid, AnnouncementSocial $type): void
+    public static function removeSocialInteraction(string $announcement_id, string $user_uuid, String $type): void
     {
+        global $event;
         try {
             if (!self::exists($announcement_id)) {
                 /*
@@ -364,8 +376,9 @@ class AnnouncementHandler implements AnnouncementSocial
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while removing a social interaction from an announcement: Announcement not found.');
-                throw new AnnouncementNotFoundException();
+                return;
             }
+            $event->emit('announcements.RemoveSocialInteraction', [$announcement_id, $user_uuid, $type]);
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
             $stmt = $conn->prepare('DELETE FROM framework_announcements_social WHERE announcement_id = ? AND user_uuid = ? AND type = ?');

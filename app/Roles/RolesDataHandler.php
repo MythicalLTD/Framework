@@ -9,7 +9,7 @@ use MythicalSystemsFramework\Kernel\LoggerLevels;
 class RolesDataHandler
 {
     /**
-     * Create a user.
+     * Create a role.
      *
      * @param string $name The name of the role
      * @param int $weight The default is set to 1
@@ -20,6 +20,7 @@ class RolesDataHandler
      */
     public static function create(string $name, int $weight = 1): ?string
     {
+        global $event;
         try {
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
@@ -33,6 +34,7 @@ class RolesDataHandler
             $stmtRole->fetch();
             $stmtRole->close();
 
+
             if ($count > 0) {
                 return 'ERROR_ROLE_EXISTS';
             } else {
@@ -42,6 +44,7 @@ class RolesDataHandler
                 $stmtInsert->bind_param('si', $name, $weight);
                 $stmtInsert->execute();
                 $stmtInsert->close();
+                $event->emit('roles.Create', [$name, $weight]);
 
                 return $mysqli->insert_id;
             }
@@ -61,6 +64,7 @@ class RolesDataHandler
      */
     public static function delete(int $id): ?string
     {
+        global $event;
         try {
             if (self::roleExists($id) == 'ROLE_MISSING') {
                 return 'ROLE_MISSING';
@@ -68,7 +72,7 @@ class RolesDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
-
+            $event->emit('roles.Delete', [$id]);
             // Delete the role
             $stmtRole = $mysqli->prepare('DELETE FROM framework_roles WHERE id = ?');
             $stmtRole->bind_param('i', $id);
@@ -97,6 +101,7 @@ class RolesDataHandler
      */
     public static function update(int $id, string $name, int $weight = 1): ?string
     {
+        global $event;
         try {
             if (self::roleExists($id) == 'ROLE_MISSING') {
                 return 'ROLE_MISSING';
@@ -104,7 +109,7 @@ class RolesDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
-
+            $event->emit("roles.Update", [$id, $name, $weight]);
             // Update the role
             $stmtRole = $mysqli->prepare('UPDATE framework_roles SET name = ?, weight = ? WHERE id = ?');
             $stmtRole->bind_param('sii', $name, $weight, $id);

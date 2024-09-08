@@ -2,13 +2,13 @@
 
 namespace MythicalSystemsFramework\Web\Template;
 
-use Twig\Environment;
-use Twig\TwigFunction;
-use Twig\Loader\FilesystemLoader;
+use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use MythicalSystemsFramework\Managers\LanguageManager;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Web\Installer\Installer;
-use MythicalSystemsFramework\Managers\LanguageManager;
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 class Engine
 {
