@@ -40,6 +40,7 @@ PluginsManager::init($event);
  */
 $renderer = Engine::getRenderer();
 
+
 /*
  * Load the routes.
  */
