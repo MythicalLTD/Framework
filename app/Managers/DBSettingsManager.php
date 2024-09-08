@@ -89,10 +89,9 @@ class DBSettingsManager
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('UPDATE framework_settings SET `svalue` = ? WHERE `skey` = ? AND `scategory` = ?');
-            $stmt->bind_param('sss', $scategory, $value, $key);
+            $stmt->bind_param('sss', $value, $key, $category);
             $success = $stmt->execute();
             $stmt->close();
-
             return $success;
         } else {
             return false;

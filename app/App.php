@@ -151,5 +151,10 @@ class App extends \MythicalSystems\Main
         if (version_compare(PHP_VERSION, '8.1.0', '<')) {
             Installer::showError('This application requires at least PHP 8.1.0');
         }
+
+        $url = Settings::getSetting('app', 'url');
+        if ($url == "http://example.com") {
+            Settings::updateSetting('app', 'url', "https://".$_SERVER['SERVER_NAME'],true);
+        }
     }
 }
