@@ -10,7 +10,6 @@
 				<div class="px-26 py-17.5 text-center">
 					<p class="font-medium 2xl:px-20">
 						{{ lang('pages_register_description') }}
-						suspendisse.
 					</p>
 
 					<span class="mt-15 inline-block">
@@ -26,7 +25,7 @@
 						{{ setting('app','name') }}
 					</h2>
 
-					<form id="registerForm">
+					<form id="registerForm" method="POST">
 						<div class="mb-4">
 							<label class="mb-2.5 block font-medium text-black dark:text-white">{{ lang('pages_register_first_and_last_name') }}</label>
 							<div class="relative">
@@ -132,7 +131,7 @@
 		var username = document.getElementById('username').value;
 		var email = document.getElementById('email').value;
 		var password = document.getElementById('password').value;
-
+	
 		if (firstNameAndLastName === '' || username === '' || email === '' || password === '') {
 			Swal.fire({
 				icon: 'error',
@@ -141,38 +140,72 @@
 			});
 			return false;
 		}
-		
-		axios.post('/backend/auth/register', {
-			first_and_last_name: firstNameAndLastName,
-			username: username,
-			email: email,
-			password: password,
-		})
-		.then(function (response) {
-			if (response.data.status === 'success') {
-				Swal.fire({
-					icon: 'success',
-					title: 'Success',
-					text: response.data.message,
-				});
-				document.getElementById('registerForm').reset();
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					text: response.data.message,
-				});
-			}
-		})
-		.catch(function (error) {
+	
+		// Check if firstAndLastName contains two words
+		var nameArray = firstNameAndLastName.split(' ');
+		if (nameArray.length !== 2) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Oops...',
-				text: 'An error occurred while processing your request.',
+				text: 'Please enter your first and last name.',
 			});
-		});
-		
+			return false;
+		}
+	
+		// Check if firstAndLastName contains only letters and spaces
+		var nameRegex = /^[a-zA-Z\s]+$/;
+		if (!nameRegex.test(firstNameAndLastName)) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Please enter a valid first and last name.',
+			});
+			return false;
+		}
+	
+		// Check if username contains only letters, numbers, and underscores
+		var usernameRegex = /^[a-zA-Z0-9_]+$/;
+		if (!usernameRegex.test(username)) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Please enter a valid username.',
+			});
+			return false;
+		}
+	
+		// Check if email is valid
+		var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(email)) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Please enter a valid email address.',
+			});
+			return false;
+		}
+	
+		// Check if password is at least 8 characters long
+		if (password.length < 8) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Password must be at least 8 characters long.',
+			});
+			return false;
+		}
+	
+		// Check if password does not match with username or email
+		if (password === username || password === email) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Password cannot match with username or email.',
+			});
+			return false;
+		}
+	
+		event.target.submit();
 	});
-
 
 </script>{% endblock %}

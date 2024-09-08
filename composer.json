@@ -9,7 +9,8 @@
         "gravatarphp/gravatar": "^1.0",
         "twig/twig": "^3.10",
         "ifsnop/mysqldump-php": "^2.12",
-        "composer/composer": "^2.7"
+        "composer/composer": "^2.7",
+        "phpmailer/phpmailer": "^6.9"
     },
     "config": {
         "vendor-dir": "storage/caches/vendor"

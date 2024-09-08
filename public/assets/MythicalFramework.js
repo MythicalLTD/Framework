@@ -279,4 +279,3 @@ function showDialogWithInput(title, text, confirmButtonText, cancelButtonText) {
         }
     });
 }
-

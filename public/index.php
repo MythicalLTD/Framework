@@ -12,6 +12,7 @@ try {
 
 use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Api\Api as api;
+use MythicalSystemsFramework\Mail\Templates\Verification;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\Plugins\PluginsManager;
@@ -54,6 +55,7 @@ $router->add('/(.*)', function () {
     http_response_code(404);
     echo $renderer->render('/errors/404.twig');
 });
+
 
 try {
     $router->route();

@@ -4,7 +4,7 @@ namespace MythicalSystemsFramework\Cli\Commands;
 
 use MythicalSystemsFramework\Cli\CommandBuilder;
 use MythicalSystemsFramework\Database\MySQLCache;
-use MythicalSystemsFramework\Handlers\CacheHandler as CacheWorker;
+use MythicalSystemsFramework\Cache\Cache as CacheWorker;
 
 class Cache extends Command implements CommandBuilder
 {

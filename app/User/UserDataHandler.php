@@ -100,57 +100,37 @@ class UserDataHandler
     public static function create(string $username, string $password, string $email, string $first_name, string $last_name, string $ip): ?string
     {
         try {
-            $username = enc::encrypt($username);
-            $email = enc::encrypt($email);
-
             // Connect to the database
             $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
             // New gravatar instance for avatars!
             $gravatar = new Gravatar([], true);
             // Check if the username exists
-            $stmtUsername = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE username = ?');
-            $stmtUsername->bind_param('s', $username);
-            $stmtUsername->execute();
-            $stmtUsername->bind_result($count);
-            $stmtUsername->fetch();
-            $stmtUsername->close();
-
-            if ($count > 0) {
+            if (self::doesUsernameExist($username)) {
                 return 'ERROR_USERNAME_EXISTS';
-            } else {
-                // Check if the email exists
-                $stmtEmail = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE email = ?');
-                $stmtEmail->bind_param('s', $email);
-                $stmtEmail->execute();
-                $stmtEmail->bind_result($emailCount);
-
-                $stmtEmail->fetch();
-                $stmtEmail->close();
-                if ($emailCount > 0) {
-                    return 'ERROR_EMAIL_EXISTS';
-                } else {
-                    // Insert the user into the database
-                    $stmtInsert = $mysqli->prepare('INSERT INTO framework_users (username, first_name, last_name, email, password, avatar, uuid, token, first_ip, last_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-                    // Hash the password
-                    $password = enc::encrypt($password);
-                    // Generate a unic user id! UUID
-                    $uuid = SnowFlakeManager::getUniqueUserID();
-                    $account_token = 'mythicalframework_' . base64_encode($uuid . '_' . \DateTime::createFromFormat('U.u', microtime(true))->format('Y-m-d H:i:s.u') . mt_rand(1000, 9999) . $ip . enc::encrypt($email));
-                    $avatar_url = $gravatar->avatar(enc::decrypt($email));
-                    $first_name = enc::encrypt($first_name);
-                    $last_name = enc::encrypt($last_name);
-                    $ip = enc::encrypt($ip);
-                    $stmtInsert->bind_param('ssssssssss', $username, $first_name, $last_name, $email, $password, $avatar_url, $uuid, $account_token, $ip, $ip);
-                    $stmtInsert->execute();
-                    $stmtInsert->close();
-
-                    return $account_token;
-                }
             }
+            // Check if the email exists
+            if (self::doesEmailExist($email)) {
+                return 'ERROR_EMAIL_EXISTS';
+            }
+            // Insert the user into the database
+            $stmtInsert = $mysqli->prepare('INSERT INTO framework_users (username, first_name, last_name, email, password, avatar, uuid, token, first_ip, last_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            // Hash the password
+            $password = enc::encrypt($password);
+            // Generate a unic user id! UUID
+            $uuid = SnowFlakeManager::getUniqueUserID();
+            $account_token = 'mythicalframework_' . base64_encode($uuid . '_' . \DateTime::createFromFormat('U.u', microtime(true))->format('Y-m-d H:i:s.u') . mt_rand(1000, 9999) . $ip . enc::encrypt($email));
+            $avatar_url = $gravatar->avatar($email);
+            $first_name = enc::encrypt($first_name);
+            $last_name = enc::encrypt($last_name);
+            $ip = enc::encrypt($ip);
+            $stmtInsert->bind_param('ssssssssss', $username, $first_name, $last_name, $email, $password, $avatar_url, $uuid, $account_token, $ip, $ip);
+            $stmtInsert->execute();
+            $stmtInsert->close();
+
+            return $account_token;
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to create user: ' . $e->getMessage());
-
             return 'ERROR_DATABASE_INSERT_FAILED';
         }
     }
@@ -166,13 +146,10 @@ class UserDataHandler
      */
     public static function getSpecificUserData(string $account_token, string $data, bool $encrypted): ?string
     {
+        if (self::isUserValid($account_token) == false) {
+            return 'ERROR_ACCOUNT_NOT_VALID';
+        }
         try {
-            $user = new UserHelper($account_token);
-
-            $isAccountValid = $user->isSessionValid();
-            if (!$isAccountValid) {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
             // Connect to the database
             $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
@@ -211,14 +188,10 @@ class UserDataHandler
      */
     public static function updateSpecificUserData(string $account_token, string $data, string $value, bool $encrypted): string
     {
+        if (self::isUserValid($account_token) == false) {
+            return 'ERROR_ACCOUNT_NOT_VALID';
+        }
         try {
-            $user = new UserHelper($account_token);
-
-            $isAccountValid = $user->isSessionValid();
-            if (!$isAccountValid) {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-
             // Connect to the database
             $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
@@ -276,6 +249,96 @@ class UserDataHandler
             return null;
         }
     }
+    /**
+     * 
+     * Does the username exist?
+     * 
+     * @param string $username
+     * 
+     * @return bool
+     */
+    public static function doesUsernameExist(string $username)
+    {
+        try {
+            // Connect to the database
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            // Check if the user exists
+            $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE username = ?');
+            $stmt->bind_param('s', $username);
+            $stmt->execute();
+            $stmt->bind_result($count);
 
-    
+            $stmt->fetch();
+            $stmt->close();
+
+            return $count > 0;
+        } catch (\Exception $e) {
+            logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to check if username exists: ' . $e->getMessage());
+            return false;
+        }
+    }
+    /**
+     * 
+     * Does the email exist?
+     * 
+     * @param string $email
+     * 
+     * @return bool
+     */
+    public static function doesEmailExist(string $email)
+    {
+        try {
+            // Connect to the database
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            // Check if the user exists
+            $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE email = ?');
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $stmt->bind_result($count);
+
+            $stmt->fetch();
+            $stmt->close();
+
+            return $count > 0;
+        } catch (\Exception $e) {
+            logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to check if email exists: ' . $e->getMessage());
+            return false;
+        }
+    }
+    /**
+     * 
+     * Is the session valid?
+     * 
+     * @param string $token
+     * 
+     * @return bool
+     */
+    public static function isUserValid(string $token): bool
+    {
+        try {
+            // Connect to the database
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            // Check if the user exists
+            $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE token = ?');
+            $stmt->bind_param('s', $token);
+            $stmt->execute();
+            $stmt->bind_result($count);
+
+            $stmt->fetch();
+            $stmt->close();
+
+            if ($count == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to validate user: ' . $e->getMessage());
+
+            return false;
+        }
+    }
 }

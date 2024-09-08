@@ -27,6 +27,7 @@ return [
     'pages_register_description' => 'Create an account to access the platform.',
     'pages_register_description_above' => 'Start for free',
     'pages_register_register_to' => 'Register to',
+    'pages_register_alert_error' => 'An error occurred while creating your account.',
     // FILE /components/header.twig
     'components_header_search' => 'Type to search..',
     'components_header_notification' => 'Notification',
@@ -42,5 +43,8 @@ return [
 
     // ALERTS
     'alert_csrf_failed' => 'We could not validate your request. Please try again.',
+    'alert_captcha_failed' => 'The captcha verification failed. Please try again.',
     'alert_unknown_error' => 'An unknown error occurred. Please try again.',
+    'alert_username_exists' => 'The username you entered already exists. Please try again.',
+    'alert_email_exists' => 'The email you entered already exists. Please try again.',
 ];

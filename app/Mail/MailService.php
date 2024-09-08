@@ -3,16 +3,48 @@
 namespace MythicalSystemsFramework\Mail;
 
 use MythicalSystemsFramework\Managers\Settings as setting;
+use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\User\UserHelper;
 
 class MailService
 {
+
+    public static function send(string $to, string $subject, string $message) : bool
+    {
+        if (self::isEnabled()) {
+            $from = setting::getSetting('smtp', 'fromMail');
+            $from_name = setting::getSetting('app', 'name');
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host = setting::getSetting('smtp', 'host');
+                $mail->SMTPAuth = true;
+                $mail->Username = setting::getSetting('smtp', 'username');
+                $mail->Password = setting::getSetting('smtp', 'password');
+                $mail->SMTPSecure = setting::getSetting('smtp', 'secure');
+                $mail->Port = setting::getSetting('smtp', 'port');
+                $mail->setFrom($from, $from_name);
+                $mail->addReplyTo($from, $from_name);
+                $mail->isHTML(true);
+                $mail->Subject = $subject;
+                $mail->Body = $message;
+                $mail->send();
+                return true;
+            } catch (\Exception $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+    }
+
     /**
      * Is the mail server enabled?
      */
     public static function isEnabled(): bool
     {
-        if (setting::getSetting('mail', 'enabled') == 'true') {
+        if (setting::getSetting('smtp', 'enabled') == 'true') {
             return true;
         } else {
             return false;
@@ -25,11 +57,16 @@ class MailService
      * @return string
      */
     public static function processTemplateUserLevel(string $template,string $token) : string {
-        $user = new UserHelper($token);
-        $template = str_replace("{username}", $user->getInfo("username",false), $template);
-        $template = str_replace("{email}", $user->getInfo("email",false), $template);
-        $template = str_replace("{first_name}", $user->getInfo("first_name",true), $template);
-        $template = str_replace("{last_name}", $user->getInfo("last_name",true), $template);        
+        $username = UserDataHandler::getSpecificUserData($token, "username",false);
+        $email = UserDataHandler::getSpecificUserData($token, "email",false);
+        $first_name = UserDataHandler::getSpecificUserData($token, "first_name",true);
+        $last_name = UserDataHandler::getSpecificUserData($token, "last_name",true);
+
+        $template = str_replace("{username}", $username, $template);
+        $template = str_replace("{email}", $email, $template);
+        $template = str_replace("{first_name}", $first_name, $template);
+        $template = str_replace("{last_name}", $last_name, $template);  
+
         return $template;
     }
 
