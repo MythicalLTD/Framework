@@ -2,20 +2,20 @@
 
 namespace MythicalSystemsFramework\Web\Template;
 
-use Twig\Environment;
-use Twig\TwigFunction;
-use Twig\Loader\FilesystemLoader;
+use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use MythicalSystemsFramework\Managers\LanguageManager;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Web\Installer\Installer;
-use MythicalSystemsFramework\Managers\LanguageManager;
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 class Engine
 {
     /**
      * Add the requirements for the template engine.
      */
-    public static function getRenderer(?string $cache_dir = null, ?string $theme_dir = null): Environment
+    public static function getRenderer(?string $cache_dir = null, ?string $theme_dir = null, bool $debug = false): Environment
     {
         if ($cache_dir == null) {
             define('DIR_TEMPLATE', __DIR__ . '/../../../storage/themes/' . Settings::getSetting('app', 'theme'));
@@ -28,6 +28,13 @@ class Engine
         } else {
             define('DIR_CACHE', $cache_dir);
         }
+
+        if ($debug) {
+            define('DEBUG', true);
+        } else {
+            define('DEBUG', false);
+        }
+
         /*
          * Load the template engine
          */
@@ -44,7 +51,7 @@ class Engine
         $renderer = new Environment($loader, [
             'cache' => DIR_CACHE,
             'auto_reload' => true,
-            'debug' => true,
+            'debug' => DEBUG,
             'charset' => 'utf-8',
         ]);
 
@@ -53,8 +60,8 @@ class Engine
         self::registerLanguage($renderer);
         self::registerGlobals($renderer);
         self::registerIsUserValid($renderer);
-
-        return $renderer;
+        
+        return $renderer;   
     }
 
     /**

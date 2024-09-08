@@ -34,8 +34,6 @@ class Settings
 
         $settings = new \MythicalSystems\Helpers\ConfigHelper($settings_file);
         self::down();
-        global $event;
-        $event->emit('settings.get', [$category, $name, $settings]);
 
         return $settings->get($category, $name);
     }
@@ -52,14 +50,28 @@ class Settings
      */
     public static function updateSetting(string $category, string $name, string $value, bool $updateCache = true): void
     {
+        global $event; // This is a global variable that is used to emit events.
+        $event->emit('settings.update', [$category, $name, $value, $updateCache]);
         DBSettingsManager::update($category, $name, $value);
         if ($updateCache) {
             MySQLCache::saveCache('framework_settings');
         }
     }
-
+    /**
+     * 
+     * Get a setting from the database.
+     * 
+     * @param string $category The name of the category
+     * @param string $name The name of the setting
+     * @param string $value The value you want to set!
+     * @param bool $updateCache Update the cache after updating the setting
+     * 
+     * @return void
+     */
     public static function setSetting(string $category, string $name, string $value, bool $updateCache = true): void
     {
+        global $event; // This is a global variable that is used to emit events.
+        $event->emit('settings.set', [$category, $name, $value, $updateCache]);
         DBSettingsManager::set($category, $name, $value);
         if ($updateCache) {
             MySQLCache::saveCache('framework_settings');

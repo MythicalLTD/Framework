@@ -17,21 +17,26 @@ class Logger
      */
     public static function log(LoggerTypes|string $level, LoggerLevels|string $type, string $message): int
     {
-        $mysqli = new MySQL();
-        $conn = $mysqli->connectMYSQLI();
-        if (empty($level) || empty($type)) {
-            throw new \Exception('Both log level and type must be provided');
+        try {
+            global $event; // This is a global variable that is used to emit events.
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            if (empty($level) || empty($type)) {
+                throw new \Exception('Both log level and type must be provided');
+            }
+
+            $output = '[' . date('Y-m-d H:i:s') . '] (' . $type . '/' . $level . ') ' . $message . '';
+
+            $stmt = $conn->prepare('INSERT INTO framework_logs (l_type, levels, message, formatted) VALUES (?, ?, ?, ?)');
+            $stmt->bind_param('ssss', $type, $level, $message, $output);
+            $stmt->execute();
+            $logId = $stmt->insert_id;
+            $stmt->close();
+            $event->emit('logger.Log', [$level, $type, $message]);
+            return $logId;
+        } catch (\Exception $e) {
+            throw new \Exception('' . $e->getMessage());
         }
-
-        $output = '[' . date('Y-m-d H:i:s') . '] (' . $type . '/' . $level . ') ' . $message . '';
-
-        $stmt = $conn->prepare('INSERT INTO framework_logs (l_type, levels, message, formatted) VALUES (?, ?, ?, ?)');
-        $stmt->bind_param('ssss', $type, $level, $message, $output);
-        $stmt->execute();
-        $logId = $stmt->insert_id;
-        $stmt->close();
-
-        return $logId;
     }
 
     /**
@@ -39,12 +44,21 @@ class Logger
      */
     public static function delete(int $id): void
     {
-        $mysqli = new MySQL();
-        $conn = $mysqli->connectMYSQLI();
-        $stmt = $conn->prepare('DELETE FROM framework_logs WHERE id = ?');
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->close();
+        try {
+            global $event; // This is a global variable that is used to emit events.
+            if (!self::doesLogExist($id)) {
+                throw new \Exception('Log does not exist');
+            }
+            $event->emit('logger.Delete', [$id]);
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare('DELETE FROM framework_logs WHERE id = ?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $stmt->close();
+        } catch (\Exception $e) {
+            throw new \Exception('' . $e->getMessage());
+        }
     }
 
     /**
@@ -52,9 +66,15 @@ class Logger
      */
     public static function deleteAll(): void
     {
-        $mysqli = new MySQL();
-        $conn = $mysqli->connectMYSQLI();
-        $conn->query('TRUNCATE TABLE framework_logs');
+        global $event; // This is a global variable that is used to emit events.
+        try {
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $event->emit('logger.DeleteAll');
+            $conn->query('TRUNCATE TABLE framework_logs');
+        } catch (\Exception $e) {
+            throw new \Exception('' . $e->getMessage());
+        }
     }
 
     /**
@@ -122,5 +142,28 @@ class Logger
         $stmt->close();
 
         return $framework_logs;
+    }
+    /**
+     * Does this log exist?
+     * 
+     * @param int $id
+     * @return bool
+     */
+    public static function doesLogExist(int $id): bool
+    {
+        try {
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare('SELECT * FROM framework_logs WHERE id = ?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $log = $result->fetch_assoc();
+            $stmt->close();
+
+            return $log ? true : false;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

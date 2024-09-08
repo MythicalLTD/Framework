@@ -3,7 +3,14 @@
 namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystems\Helpers\ConfigHelper;
-
+/**
+ * 
+ * DEPRECATED: Use Settings class instead!!
+ * 
+ * DEPRECATED: This class is used for the settings.json file!
+ * 
+ * @deprecated message: This class is deprecated and will be removed in the future. Use the Settings class instead!
+ */
 class ConfigManager
 {
     private static string $configpath = __DIR__ . '/../../storage/settings.json';
@@ -61,60 +68,5 @@ class ConfigManager
         }
 
         return $config->set($category, $key, $value);
-    }
-
-    /**
-     * DEPRECATED: Use Settings class instead!!
-     * DEPRECATED: This class is used for the settings.json file!
-     *
-     * Add a value to the config file!
-     *
-     * @param string $category The category of the value you want to add in the config
-     * @param string $key The key of the value you want to add in the config file!
-     * @param string $value The value you want to add in the config file!
-     */
-    public static function add(string $category, string $key, string $value): bool
-    {
-        try {
-            if (!file_exists(self::$configpath)) {
-                exit('Config file not found!');
-            }
-            if (!is_writable(self::$configpath)) {
-                exit('We have no access to the config file!');
-            } else {
-                $config = new ConfigHelper(self::$configpath);
-            }
-        } catch (\Exception $e) {
-            exit("Failed to init the config class! \n" . $e->__toString());
-        }
-
-        return $config->add($category, $key, $value);
-    }
-
-    /**
-     * DEPRECATED: Use Settings class instead!!
-     * DEPRECATED: This class is used for the settings.json file!
-     *
-     * Remove a value from the config file!
-     *
-     * @param string $category The category of the value you want to remove from the config
-     * @param string $key The key of the value you want to remove from the config file!
-     */
-    public static function remove(string $category, string $key): bool
-    {
-        try {
-            if (!file_exists(self::$configpath)) {
-                exit('Config file not found!');
-            }
-            if (!is_writable(self::$configpath)) {
-                exit('We have no access to the config file!');
-            } else {
-                $config = new ConfigHelper(self::$configpath);
-            }
-        } catch (\Exception $e) {
-            exit("Failed to init the config class! \n" . $e->__toString());
-        }
-
-        return $config->remove($category, $key);
     }
 }

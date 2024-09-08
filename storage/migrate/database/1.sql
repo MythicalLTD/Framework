@@ -232,7 +232,6 @@ CREATE TABLE `framework_users` (
 CREATE TABLE `framework_users_activities` (
   `id` int(11) NOT NULL,
   `user_id` text NOT NULL,
-  `username` text NOT NULL,
   `description` text NOT NULL,
   `action` text NOT NULL,
   `ip_address` text NOT NULL,

@@ -18,6 +18,8 @@ class RolesPermissionDataHandler
      */
     public static function create(int $roleId, string $permission): ?string
     {
+        global $event;
+
         try {
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
@@ -28,7 +30,7 @@ class RolesPermissionDataHandler
             $stmtInsert->bind_param('is', $roleId, $permission);
             $stmtInsert->execute();
             $stmtInsert->close();
-
+            $event->emit('roles_permissions.Create', [$roleId, $permission]);
             return $mysqli->insert_id;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to create role permission: ' . $e->getMessage());
@@ -44,6 +46,8 @@ class RolesPermissionDataHandler
      */
     public static function delete(int $id): ?string
     {
+        global $event;
+
         try {
             if (self::rolePermissionExists($id) == 'ROLE_PERMISSION_MISSING') {
                 return 'ROLE_PERMISSION_MISSING';
@@ -51,7 +55,7 @@ class RolesPermissionDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
-
+            $event->emit('roles_permissions.Delete', [$id]);
             // Delete the role permission
             $stmtRole = $mysqli->prepare('DELETE FROM framework_roles_permissions WHERE id = ?');
             $stmtRole->bind_param('i', $id);
@@ -78,6 +82,8 @@ class RolesPermissionDataHandler
      */
     public static function update(int $id, string $permission): ?string
     {
+        global $event;
+
         try {
             if (self::rolePermissionExists($id) == 'ROLE_PERMISSION_MISSING') {
                 return 'ROLE_PERMISSION_MISSING';
@@ -87,12 +93,14 @@ class RolesPermissionDataHandler
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
 
+            $event->emit('roles_permissions.Update', [$id, $permission]);
+
             // Update the role permission
             $stmtRole = $mysqli->prepare('UPDATE framework_roles_permissions SET permission = ? WHERE id = ?');
             $stmtRole->bind_param('si', $permission, $id);
             $stmtRole->execute();
             $stmtRole->close();
-
+            
             if ($mysqli->affected_rows > 0) {
                 return 'ROLE_PERMISSION_UPDATED';
             } else {

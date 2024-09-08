@@ -1,10 +1,10 @@
 <?php
 
-namespace MythicalSystemsFramework\Handlers;
+namespace MythicalSystemsFramework\Cache;
 
 use MythicalSystems\Cache\Handler as MythicalCoreCache;
 
-class CacheHandler
+class Cache
 {
     public static $cache_file = __DIR__ . '/../../storage/caches/cache.json';
 
@@ -13,8 +13,10 @@ class CacheHandler
      */
     public static function createFile(): void
     {
+        global $event; // This is a global variable that is used to emit events.
         if (!file_exists(self::$cache_file)) {
             file_put_contents(self::$cache_file, '{}');
+            $event->emit('cacheFile.createFile');
         }
     }
 
@@ -27,9 +29,11 @@ class CacheHandler
      */
     public static function set(string $key, mixed $value, int $expirySeconds): void
     {
+        global $event; // This is a global variable that is used to emit events.
         self::createFile();
         $expiryTimestamp = time() + $expirySeconds;
         $core = new MythicalCoreCache(self::$cache_file);
+        $event->emit('cacheFile.set', [$key, $value, $expiryTimestamp]);
         $core->set($key, $value, $expiryTimestamp);
     }
 
@@ -57,8 +61,10 @@ class CacheHandler
      */
     public function update(string $key, mixed $value, int $expiryTimestamp): void
     {
+        global $event;
         self::createFile();
         $core = new MythicalCoreCache(self::$cache_file);
+        $event->emit('cacheFile.update', [$key, $value, $expiryTimestamp]);
         $core->update($key, $value, $expiryTimestamp);
     }
 
@@ -69,8 +75,10 @@ class CacheHandler
      */
     public function delete($key): void
     {
+        global $event;
         self::createFile();
         $core = new MythicalCoreCache(self::$cache_file);
+        $event->emit('cacheFile.delete', [$key]);
         $core->delete($key);
     }
 
@@ -79,18 +87,22 @@ class CacheHandler
      */
     public static function purge(): void
     {
+        global $event;
         self::createFile();
         $core = new MythicalCoreCache(self::$cache_file);
+        $event->emit('cacheFile.purge');
         $core->purge();
     }
 
     /**
-     * Purge the entire cache, removing all entries.
+     * Process all the cache to check for expired entries and remove them.
      */
     public static function process(): void
     {
+        global $event;
         self::createFile();
         $core = new MythicalCoreCache(self::$cache_file);
+        $event->emit('cacheFile.process');
         $core->process();
     }
 }

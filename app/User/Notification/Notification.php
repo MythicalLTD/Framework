@@ -1,10 +1,21 @@
 <?php
 
-namespace MythicalSystemsFramework\Handlers;
+namespace MythicalSystemsFramework\Notification;
 
+use MythicalSystemsFramework\Kernel\LoggerTypes;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\Config;
+use MythicalSystemsFramework\Encryption\XChaCha20;
+use MythicalSystemsFramework\User\UserHelper;
+use MythicalSystemsFramework\Kernel\Debugger;
+use MythicalSystemsFramework\Mail\MailService;
+use MythicalSystemsFramework\Handlers\ActivityHandler;
+use MythicalSystemsFramework\Managers\Settings as settings;
+use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 use MythicalSystemsFramework\Database\MySQL;
 
-class NotificationHandler
+class Notification
 {
     /**
      * Create a new notification.

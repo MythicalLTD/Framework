@@ -247,4 +247,35 @@ class UserDataHandler
             return 'ERROR_DATABASE_UPDATE_FAILED';
         }
     }
+    /**
+     * 
+     * Get the user data.
+     * 
+     * @param string $user_id
+     * @return mixed
+     */
+    public static function getTokenByUserID(string $user_id): ?string
+    {
+        try {
+            // Connect to the database
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            // Check if the user exists
+            $stmt = $mysqli->prepare('SELECT token FROM framework_users WHERE uuid = ?');
+            $stmt->bind_param('s', $user_id);
+            $stmt->execute();
+            $stmt->bind_result($token);
+
+            $stmt->fetch();
+            $stmt->close();
+
+            return $token;
+        } catch (\Exception $e) {
+            logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to get token by user id: ' . $e->getMessage());
+
+            return null;
+        }
+    }
+
+    
 }
