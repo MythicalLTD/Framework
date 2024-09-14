@@ -102,7 +102,6 @@ class App extends \MythicalSystems\Main
     {
         // Check if the app is healthy
         // If the app is not healthy, show a error page!
-
         if (!is_writable(__DIR__ . '/../')) {
             Installer::showError('We have no access to the framework directory!');
         }

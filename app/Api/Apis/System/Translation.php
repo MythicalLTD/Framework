@@ -15,7 +15,7 @@ namespace MythicalSystemsFramework\Api\Apis\System;
 
 use MythicalSystemsFramework\Api\Api;
 use MythicalSystemsFramework\Api\Apis\ApiBuilder;
-use MythicalSystemsFramework\Managers\LanguageManager;
+
 
 class Translation extends Api implements ApiBuilder
 {
@@ -36,7 +36,6 @@ class Translation extends Api implements ApiBuilder
                     $plain = false;
                 }
 
-                $translation = LanguageManager::getLang();
                 $translation = $translation[$key] ?? $orElse;
 
                 if ($translation == $orElse) {

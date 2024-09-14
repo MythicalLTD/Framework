@@ -11,8 +11,8 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
+use MythicalSystemsFramework\Web\Template\Engine;
 use PragmaRX\Google2FA\Google2FA;
-use MythicalSystemsFramework\Kernel\Debugger;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Mail\MailService;
 use MythicalSystemsFramework\Managers\Settings;
@@ -21,13 +21,63 @@ use MythicalSystemsFramework\Mail\Templates\Login;
 use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Mail\MailVerification;
-use MythicalSystemsFramework\Managers\LanguageManager;
 use MythicalSystemsFramework\User\TwoFactor\TwoFactor;
 use MythicalSystemsFramework\Mail\Templates\Verification;
 use MythicalSystemsFramework\Google\TwoFactorAuthentication;
-use Seld\JsonLint\Undefined;
 
 global $router;
+
+/**
+ * Forgot password
+ * 
+ * This route will handle the forgot password.
+ */
+$router->add('/auth/forgot', function (): void {
+    /*
+     * The requirement for each template
+     */
+
+    session_start();
+    $csrf = new MythicalSystems\Utils\CSRFHandler();
+    $template_name = 'auth/forgot.twig';
+    global $renderer;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $renderer->addGlobal('csrf_input', $csrf->input('forgot_form'));
+        $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+
+        Engine::registerAlerts($renderer, $template_name);
+
+        exit($renderer->render($template_name));
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!$csrf->validate('forgot_form')) {
+            header('Location: /auth/forgot?e=csrf');
+            exit;
+        }
+        if (!TurnStile::isEnabled()) {
+            $captcha_success = 1;
+        } else {
+            $captcha_success = TurnStile::validate($_POST['cf-turnstile-response'], CloudFlare::getUserIP(), Settings::getSetting('cloudflare_turnstile', 'sitesecret'));
+        }
+
+        if ($captcha_success) {
+            $email = $_POST['email'];
+
+            if (UserDataHandler::doesEmailExist($email)) {
+                
+            } else {
+                header('Location: /auth/forgot?e=user_not_found');
+                exit;
+            }
+        }
+        header('Location: /auth/forgot?e=captcha');
+        exit;
+    }
+});
+
+
 /*
  *
  * Verify Email
@@ -38,7 +88,7 @@ global $router;
  *
  */
 $router->add('/auth/verify-email', function (): void {
-    $lang = LanguageManager::getLang();
+
     global $renderer;
 
     if (isset($_GET['token']) && !$_GET['token'] == '') {
@@ -48,11 +98,11 @@ $router->add('/auth/verify-email', function (): void {
             $user->verifyUser();
             setcookie('token', $token, time() + 3600 * 24 * 365 * 5, '/');
             MailVerification::remove($_GET['token']);
-            exit($renderer->render('index.twig', ['alert_success_title' => $lang['alert_title_success'], 'alert_success_message' => $lang['alert_email_verified']]));
+            exit(header('Location: /auth/login?s=mail_verify'));
         }
-        exit($renderer->render('index.twig', ['alert_error_title' => $lang['alert_title_error'], 'alert_error_message' => $lang['alert_email_verification_code_does_not_exist']]));
+        exit(header('Location: /auth/login?e=code_invalid'));
     }
-    exit($renderer->render('index.twig', ['alert_error_title' => $lang['alert_title_error'], 'alert_error_message' => $lang['alert_email_verification_code_does_not_exist']]));
+    exit(header('Location: /auth/login?e=code_not_exist'));
 });
 
 /*
@@ -67,50 +117,19 @@ $router->add('/auth/login', function (): void {
     /*
      * The requirement for each template
      */
-    $lang = LanguageManager::getLang();
+
     session_start();
     $csrf = new MythicalSystems\Utils\CSRFHandler();
-
+    $template_name = 'auth/login.twig';
     global $renderer;
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $renderer->addGlobal('csrf_input', $csrf->input('login_form'));
         $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
 
-        if (isset($_GET['e']) && !$_GET['e'] == '') {
-            $e = $_GET['e'];
-            if ($e == 'csrf') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_alert_error'], 'alert_error_message' => $lang['alert_csrf_failed']]));
-            }
+        Engine::registerAlerts($renderer, $template_name);
 
-            if ($e == 'captcha') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_alert_error'], 'alert_error_message' => $lang['alert_captcha_failed']]));
-            }
-
-            if ($e == 'user_not_found') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_alert_error'], 'alert_error_message' => $lang['pages_login_user_not_found']]));
-            }
-
-            if ($e == 'unknown') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_alert_error'], 'alert_error_message' => $lang['alert_unknown_error']]));
-            }
-
-            if ($e == 'user_not_verified') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_user_not_verified'], 'alert_error_message' => $lang['pages_login_user_not_verified_description']]));
-            }
-
-            if ($e == 'user_banned') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_user_banned'], 'alert_error_message' => $lang['pages_login_user_banned_description']]));
-            }
-
-            if ($e == 'user_deleted') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_user_deleted'], 'alert_error_message' => $lang['pages_login_user_deleted_description']]));
-            }
-
-            if ($e == 'user_password_incorrect') {
-                exit($renderer->render('auth/login.twig', ['alert_error_title' => $lang['pages_login_user_password_incorrect'], 'alert_error_message' => $lang['pages_login_user_password_incorrect_description']]));
-            }
-        }
-        exit($renderer->render('auth/login.twig'));
+        exit($renderer->render($template_name));
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -150,7 +169,7 @@ $router->add('/auth/login', function (): void {
             }
 
             if ($user_check == 'ERROR_PASSWORD_INCORRECT') {
-                header('Location: /auth/login?e=user_password_incorrect');
+                header('Location: /auth/login?e=password_not_valid');
                 exit;
             }
 
@@ -161,21 +180,18 @@ $router->add('/auth/login', function (): void {
                 $userTwoFactor = new TwoFactor($user_check);
                 $userTwoFactor->block();
                 exit;
-            } else {
-                header('Location: /auth/login?e=unknown');
-                exit;
             }
-        } else {
-            header('Location: /auth/login?e=captcha');
+            header('Location: /auth/login?e=unknown');
             exit;
         }
+        header('Location: /auth/login?e=captcha');
+        exit;
     }
 });
 
-
 $router->add('/auth/2fa/login', function (): void {
     global $renderer;
-    $TEMPLATE_FILE = "auth/2fa_login.twig";
+    $template_name = 'auth/2fa/login.twig';
 
     $user = new UserHelper($_COOKIE['token']);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token'], true);
@@ -186,7 +202,6 @@ $router->add('/auth/2fa/login', function (): void {
         exit;
     }
 
-    $lang = LanguageManager::getLang();
     session_start();
     $csrf = new MythicalSystems\Utils\CSRFHandler();
     $google2fa = new Google2FA();
@@ -194,27 +209,10 @@ $router->add('/auth/2fa/login', function (): void {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $renderer->addGlobal('csrf_input', value: $csrf->input('2fa_setup_form'));
         $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+        Engine::registerAlerts($renderer, $template_name);
 
 
-        if (isset($_GET['e']) && !$_GET['e'] == '') {
-            $e = $_GET['e'];
-            if ($e == 'csrf') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_csrf_failed']]));
-            }
-
-            if ($e == 'captcha') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_captcha_failed']]));
-            }
-
-            if ($e == 'unknown') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_unknown_error']]));
-            }
-            if ($e == '2facodewrong') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['pages_2fa_setup_failed_key_wrong']]));
-            }
-        }
-
-        exit($renderer->render($TEMPLATE_FILE));
+        exit($renderer->render($template_name));
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$csrf->validate('2fa_setup_form')) {
@@ -234,10 +232,10 @@ $router->add('/auth/2fa/login', function (): void {
                 header('Location: /dashboard?s=2fa_setup_success');
                 exit;
             }
-            header('Location: /auth/2fa/setup?e=2facodewrong');
+            header('Location: /auth/2fa/login?e=2fa_failed');
             exit;
         }
-        header('Location: /auth/2fa/setup?e=captcha');
+        header('Location: /auth/2fa/login?e=captcha');
         exit;
     }
 });
@@ -252,7 +250,7 @@ $router->add('/auth/2fa/login', function (): void {
  */
 $router->add('/auth/2fa/setup', function (): void {
     global $renderer;
-    $TEMPLATE_FILE = "auth/2fa_setup.twig";
+    $template_name = 'auth/2fa/setup.twig';
 
     $user = new UserHelper($_COOKIE['token']);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
@@ -263,7 +261,7 @@ $router->add('/auth/2fa/setup', function (): void {
         exit;
     }
 
-    $lang = LanguageManager::getLang();
+
     session_start();
     $csrf = new MythicalSystems\Utils\CSRFHandler();
     $google2fa = new Google2FA();
@@ -276,24 +274,9 @@ $router->add('/auth/2fa/setup', function (): void {
         $renderer->addGlobal('qr_code', $qr);
         $renderer->addGlobal('secret_key', $secretKey);
 
-        if (isset($_GET['e']) && !$_GET['e'] == '') {
-            $e = $_GET['e'];
-            if ($e == 'csrf') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_csrf_failed']]));
-            }
+        Engine::registerAlerts($renderer, $template_name);
 
-            if ($e == 'captcha') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_captcha_failed']]));
-            }
-
-            if ($e == 'unknown') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_unknown_error']]));
-            }
-            if ($e == '2facodewrong') {
-                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['pages_2fa_setup_failed_key_wrong']]));
-            }
-        }
-        exit($renderer->render($TEMPLATE_FILE));
+        exit($renderer->render($template_name));
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -316,7 +299,7 @@ $router->add('/auth/2fa/setup', function (): void {
                 header('Location: /dashboard?s=2fa_setup_success');
                 exit;
             }
-            header('Location: /auth/2fa/setup?e=2facodewrong');
+            header('Location: /auth/2fa/setup?e=2fa_failed');
             exit;
         }
         header('Location: /auth/2fa/setup?e=captcha');
@@ -335,7 +318,7 @@ $router->add('/auth/register', function (): void {
     /*
      * The requirement for each template
      */
-    $lang = LanguageManager::getLang();
+    $template_name = 'auth/register.twig';
     session_start();
     $csrf = new MythicalSystems\Utils\CSRFHandler();
 
@@ -344,32 +327,9 @@ $router->add('/auth/register', function (): void {
         $renderer->addGlobal('csrf_input', $csrf->input('register_form'));
         $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
 
-        if (isset($_GET['e']) && !$_GET['e'] == '') {
-            $e = $_GET['e'];
-            if ($e == 'csrf') {
-                exit($renderer->render('auth/register.twig', ['alert_error_title' => $lang['pages_register_alert_error'], 'alert_error_message' => $lang['alert_csrf_failed']]));
-            }
+        Engine::registerAlerts($renderer, $template_name);
 
-            if ($e == 'captcha') {
-                exit($renderer->render('auth/register.twig', ['alert_error_title' => $lang['pages_register_alert_error'], 'alert_error_message' => $lang['alert_captcha_failed']]));
-            }
-
-            if ($e == 'username_exists') {
-                exit($renderer->render('auth/register.twig', ['alert_error_title' => $lang['pages_register_alert_error'], 'alert_error_message' => $lang['alert_username_exists']]));
-            }
-
-            if ($e == 'email_exists') {
-                exit($renderer->render('auth/register.twig', ['alert_error_title' => $lang['pages_register_alert_error'], 'alert_error_message' => $lang['alert_email_exists']]));
-            }
-
-            if ($e == 'unknown') {
-                exit($renderer->render('auth/register.twig', ['alert_error_title' => $lang['pages_register_alert_error'], 'alert_error_message' => $lang['alert_unknown_error']]));
-            }
-        }
-        if (isset($_GET['s']) && !$_GET['s'] == '') {
-        }
-
-        exit($renderer->render('auth/register.twig'));
+        exit($renderer->render($template_name));
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -385,9 +345,8 @@ $router->add('/auth/register', function (): void {
         }
 
         if ($captcha_success) {
-            $first_and_last_name = $_POST['first_and_last_name'];
-            $first_name = explode(' ', $first_and_last_name)[0];
-            $last_name = explode(' ', $first_and_last_name)[1];
+            $first_name = $_POST['firstname'];
+            $last_name = $_POST['lastname'];
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
@@ -411,12 +370,15 @@ $router->add('/auth/register', function (): void {
             if (strpos($user_check, 'mythicalframework_') === 0) {
                 if (MailService::isEnabled()) {
                     Verification::sendMail($user_check);
+                    header('Location: /auth/login?s=mail_verify');
+                    exit();
                 } else {
                     $user = new UserHelper($user_check);
                     $user->verifyUser();
                     setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
+                    header('Location: /auth/login?s=register');
+                    exit;
                 }
-                header('Location: /');
             } else {
                 header('Location: /auth/register?e=unknown');
                 exit;

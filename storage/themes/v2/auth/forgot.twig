@@ -1,0 +1,82 @@
+{% extends 'components/page.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+	<div class="container-xxl">
+		<div class="authentication-wrapper authentication-basic container-p-y">
+			<div class="authentication-inner py-6">
+				<div class="card">
+					<div class="card-body">
+						<div class="app-brand justify-content-center mb-6">
+							<a href="/" class="app-brand-link">
+								<span class="app-brand-text demo text-heading fw-bold">{{ setting('app', 'name') }}</span>
+							</a>
+						</div>
+						<h4 class="mb-1">{{ lang('Pages.Auth.ForgotPassword.Title') }}</h4>
+						<p class="mb-6">{{ lang('Pages.Auth.ForgotPassword.Description') }}</p>
+						<form id="forgotForm" class="mb-4" method="POST">
+							<div class="mb-6">
+								<label for="email" class="form-label">{{ lang('Pages.Auth.ForgotPassword.Form.Email.Label') }}</label>
+								<input type="email" class="form-control" id="email" name="email" placeholder="{{ lang('Pages.Auth.ForgotPassword.Form.Email.Placeholder') }}" autofocus/>
+							</div>
+							<!-- CSRF Token -->
+							{{ csrf_input | raw }}
+							<!-- Turnstile -->
+
+							{% if isTurnStileEnabled == true  %}
+								<center>
+									<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+								</center>
+								<br>
+							{% else %}
+								<br>
+							{% endif %}
+
+							<div class="mb-6">
+								<button class="btn btn-primary d-grid w-100" type="submit">{{lang('Pages.Auth.ForgotPassword.Form.Submit.Label')}}</button>
+							</div>
+						</form>
+						<div class="text-center">
+							<a href="/auth/login" class="d-flex justify-content-center">
+								<i class="ti ti-chevron-left scaleX-n1-rtl me-1_5"></i>
+								{{ lang('Pages.Auth.ForgotPassword.Form.Login.Label1') }}
+
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block footer %}
+
+
+	{% if isTurnStileEnabled == true %}
+		 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	{% endif %}
+
+	 <script src="/assets/js/pages-auth.js"></script>
+	 <script>
+		document.getElementById('forgotForm').addEventListener('submit', function(event) {
+			event.preventDefault();
+			
+			var email = document.getElementById('email').value;
+		
+			if ( email === '') {
+				Swal.fire({
+					icon: 'error',
+					title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",
+					text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}",
+				});
+				return false;
+			}
+		
+		
+			event.target.submit();
+		});
+    </script>
+{% endblock %}

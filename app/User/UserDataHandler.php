@@ -479,8 +479,6 @@ class UserDataHandler
             if ($twofauser->isBlocked()) {
                 exit(header('location: /auth/2fa/login'));
             }
-        } else {
-            
         }
 
     }

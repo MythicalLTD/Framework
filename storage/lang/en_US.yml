@@ -1,0 +1,202 @@
+# MythicalFramework
+
+# This is the default language file for the MythicalFramework. You can add your own language files in the 'lang' directory.
+# You can also use some prefixes that will get processed by the framework.
+
+# Prefixes:
+# %app_name% - The name of the application
+# %app_url% - The URL of the application
+# %app_timezone% - The timezone of the application
+# %app_logo% - The logo of the application
+# %seo_title% - The SEO title of the application
+# %seo_description% - The SEO description of the application
+# %seo_keywords% - The SEO keywords of the application
+
+Pages:
+  Auth:
+    Login:
+      Title: "Welcome back 👋!"
+      Description: "Please sign-in to your account and start the adventure"
+      Form:
+        Username:
+          Label: "Email or Username"
+          Placeholder: "Enter your email or username..."
+        Password:
+          Label: "Password"
+          Placeholder: "&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" # Raw input !!
+        RememberMe:
+          Label: "Remember me"
+        ForgotPassword:
+          Label: "Forgot password?"
+        Submit:
+          Label: "Sign in"
+        Register:
+          Label1: "Don't have an account?"
+          Label2: "Create an account"
+    Register:
+      Title: "Create an account 🚀"
+      Description: "Please create an account to start the adventure"
+      Form:
+        Email:
+          Label: "Email"
+          Placeholder: "Enter your email..."
+        Username:
+          Label: "Username"
+          Placeholder: "Enter your username..."
+        Password:
+          Label: "Password"
+          Placeholder: "&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" # Raw input !!
+        FirstName:
+          Label: "First name"
+          Placeholder: "Enter your first name..."
+        LastName:
+          Label: "Last name"
+          Placeholder: "Enter your last name..."
+        Submit:
+          Label: "Create account"
+        Login:
+          Label1: "Already have an account?"
+
+    TwoFactorSetup:
+      Title: "Two Step Verification 💬"
+      Description: "Please setup two factor authentication"
+      SecretKey: "Can't scan the QR code?"
+      Form:
+        Message: "Scan the QR code with your authenticator app"
+        Submit:
+          Label: "Setup"
+    TwoFactorVerify:
+      Title: "Two Step Verification 💬"
+      Description: "Please enter the code from your authenticator app"
+      Form:
+        Message: "Type your 6 digit security code"
+        Submit:
+          Label: "Verify"
+    ForgotPassword:
+      Title: "Forgot password 🤔"
+      Description: "Please enter your email to reset your password"
+      Form:
+        Email:
+          Label: "Email"
+          Placeholder: "Enter your email..."
+        Submit:
+          Label: "Reset password"
+        Login:
+          Label1: "Back to login"
+    ResetPassword:
+    VerifyEmail:
+
+Alerts:
+  Success:
+    Auth:
+      Login:
+        Title: "Login Successful"
+        Message: "You have successfully logged in."
+      Register:
+        Title: "Register Successful"
+        Message: "You have successfully registered."
+      Logout:
+        Title: "Logout Successful"
+        Message: "You have successfully logged out."
+      ForgotPassword:
+        Title: "Forgot Password Successful"
+        Message: "You have successfully requested a password reset."
+      ResetPassword:
+        Title: "Reset Password Successful"
+        Message: "You have successfully reset your password."
+      VerifyEmail:
+        Title: "Email Verification Successful"
+        Message: "You have successfully verified your email."
+      TwoFactorSetup:
+        Setup:
+          Title: "Two Factor Authentication Setup Successful"
+          Message: "You have successfully setup two factor authentication."
+        Disable:
+          Title: "Two Factor Authentication Disable Successful"
+          Message: "You have successfully disabled two factor authentication."
+        Verify:
+          Title: "Two Factor Authentication Verification Successful"
+          Message: "You have successfully verified two factor authentication."
+
+  Error:
+    CSRF:
+      Title: "CSRF Token Mismatch"
+      Message: "The CSRF token provided is invalid. Please try again."
+    Captcha:
+      Title: "Captcha Verification Failed"
+      Message: "The captcha verification failed. Please try again."
+    EmailExists:
+      Title: "Email Already Exists"
+      Message: "The email provided already exists. Please try again."
+    UsernameExists:
+      Title: "Username Already Exists"
+      Message: "The username provided already exists. Please try again."
+    PasswordCantBeSameAs:
+      Username:
+        Title: "Password Can't Be Same As Username"
+        Message: "The password can't be the same as the username. Please try again."
+      Email:
+        Title: "Password Can't Be Same As Email"
+        Message: "The password can't be the same as the email. Please try again."
+      FirstName:
+        Title: "Password Can't Be Same As Firstname"
+        Message: "The password can't be the same as the firstname. Please try again."
+      LastName:
+        Title: "Password Can't Be Same As Lastname"
+        Message: "The password can't be the same as the lastname. Please try again."
+    InfoNotValid:
+      Email:
+        Title: "Email Not Valid"
+        Message: "The email provided is not valid. Please try again."
+      Username:
+        Title: "Username Not Valid"
+        Message: "The username provided is not valid. Please try again."
+      Password:
+        Title: "Password Not Valid"
+        Message: "The password provided is not valid. Please try again."
+      FirstName:
+        Title: "Firstname Not Valid"
+        Message: "The firstname provided is not valid. Please try again."
+      LastName:
+        Title: "Lastname Not Valid"
+        Message: "The lastname provided is not valid. Please try again."
+    PasswordToWeek:
+      Title: "Password To Week"
+      Message: "The password provided is to week. Please try again."
+    PleaseFillAllFields:
+      Title: "You have to fill in all fields."
+      Message: "Please fill all fields and try again."
+    UserNotFound:
+      Title: "User Not Found"
+      Message: "The user was not found. Please try again."
+    UserNotVerified:
+      Title: "User Not Verified"
+      Message: "The user is not verified. Please try again."
+    UserBanned:
+      Title: "User Banned"
+      Message: "The user is banned. Please try again."
+    UserDeleted:
+      Title: "User Deleted"
+      Message: "The user is deleted. Please try again."
+    CodeDoesNotExist:
+      Title: "Code Does Not Exist"
+      Message: "The code provided does not exist. Please try again."
+    CodeExpired:
+      Title: "Code Expired"
+      Message: "The code provided has expired. Please try again."
+    CodeInvalid:
+      Title: "Code Invalid"
+      Message: "The code provided is invalid. Please try again."
+    TwoFactorSetup:
+      AlreadySetup:
+        Title: "Two Factor Authentication Already Setup"
+        Message: "Two factor authentication is already setup. Please try again."
+      NotSetup:
+        Title: "Two Factor Authentication Not Setup"
+        Message: "Two factor authentication is not setup. Please try again."
+      InvalidCode:
+        Title: "Two Factor Authentication Invalid Code"
+        Message: "The code provided is invalid. Please try again."
+    UnknownError:
+      Title: "Unkown Error"
+      Message: "An unkown error occurred. Please try again."

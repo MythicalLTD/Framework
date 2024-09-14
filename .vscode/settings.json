@@ -60,4 +60,8 @@
     "window.title": "${appName}",
     "window.autoDetectColorScheme": true,
     "editor.minimap.enabled": true,
+    "php.stubs": [
+        "*",
+        "yaml"
+    ],
 }

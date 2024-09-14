@@ -1,0 +1,103 @@
+{% extends 'components/page.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+	<div class="container-xxl">
+		<div class="authentication-wrapper authentication-basic container-p-y">
+			<div class="authentication-inner py-6">
+				<div class="card">
+					<div class="card-body">
+						<div class="app-brand justify-content-center mb-6">
+							<a href="/" class="app-brand-link">
+								<span class="app-brand-text demo text-heading fw-bold">{{ setting('app', 'name') }}</span>
+							</a>
+						</div>
+						<h4 class="mb-1">{{ lang('Pages.Auth.Register.Title') }}</h4>
+						<p class="mb-6">{{ lang('Pages.Auth.Register.Description') }}</p>
+						<form id="registerForm" class="mb-4" method="POST">
+							<div class="mb-6">
+								<label for="firstname" class="form-label">{{ lang('Pages.Auth.Register.Form.FirstName.Label') }}</label>
+								<input type="text" required class="form-control" id="firstname" name="firstname" placeholder="{{ lang('Pages.Auth.Register.Form.FirstName.Placeholder') }}" autofocus/>
+							</div>
+                            <div class="mb-6">
+								<label for="lastname" class="form-label">{{ lang('Pages.Auth.Register.Form.LastName.Label') }}</label>
+								<input type="text" required class="form-control" id="lastname" name="lastname" placeholder="{{ lang('Pages.Auth.Register.Form.LastName.Placeholder') }}"/>
+							</div>
+							<div class="mb-6">
+								<label for="username" class="form-label">{{ lang('Pages.Auth.Register.Form.Username.Label') }}</label>
+								<input type="text" required class="form-control" id="username" name="username" placeholder="{{ lang('Pages.Auth.Register.Form.Username.Placeholder') }}"/>
+							</div>
+                            <div class="mb-6">
+								<label for="email" class="form-label">{{ lang('Pages.Auth.Register.Form.Email.Label') }}</label>
+								<input type="email" required class="form-control" id="email" name="email" placeholder="{{ lang('Pages.Auth.Register.Form.Email.Placeholder') }}"/>
+							</div>
+							<div class="mb-6 form-password-toggle">
+								<label class="form-label" for="password">{{ lang('Pages.Auth.Register.Form.Password.Label')}}</label>
+								<div class="input-group input-group-merge">
+									<input type="password" required id="password" class="form-control" name="password" placeholder="{{ lang('Pages.Auth.Register.Form.Password.Placeholder') | raw }}" aria-describedby="password"/>
+									<span class="input-group-text cursor-pointer">
+										<i class="ti ti-eye-off"></i>
+									</span>
+								</div>
+							</div>
+							<div class="my-8">
+								<div class="d-flex justify-content-between">
+									<a href="/auth/login">
+										<p class="mb-0">{{lang('Pages.Auth.Register.Form.Login.Label1') }}</p>
+									</a>
+								</div>
+							</div>
+							<!-- CSRF Token -->
+							{{ csrf_input | raw }}
+							<!-- Turnstile -->
+
+							{% if isTurnStileEnabled == true  %}
+								<center>
+									<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+								</center>
+								<br>
+							{% else %}
+								<br>
+							{% endif %}
+
+							<div class="mb-6">
+								<button class="btn btn-primary d-grid w-100" type="submit">{{lang('Pages.Auth.Register.Form.Submit.Label')}}</button>
+							</div>
+						</form>
+						<p class="text-center">
+							<span>{{lang('Pages.Auth.Register.Form.Register.Label1')}}</span>
+							<a href="/auth/register">
+								<span>{{lang('Pages.Auth.Register.Form.Register.Label2')}}</span>
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block footer %}
+
+
+	{% if isTurnStileEnabled == true %}
+		 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	{% endif %}
+
+	 <script src="/assets/js/pages-auth.js"></script>
+	 <script>
+			
+				document.getElementById('registerForm').addEventListener('submit', function(event) {
+					event.preventDefault();
+					
+					var email = document.getElementById('email').value;
+					var password = document.getElementById('password').value;
+				
+				
+					event.target.submit();
+				});
+			
+			</script>
+{% endblock %}

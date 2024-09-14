@@ -1,0 +1,127 @@
+{% extends 'components/page.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+	<div class="authentication-wrapper authentication-basic px-6">
+		<div
+			class="authentication-inner py-6">
+			<!--  Two Steps Verification -->
+			<div class="card">
+				<div
+					class="card-body">
+					<!-- Logo -->
+					<div class="app-brand justify-content-center mb-6">
+						<a href="/" class="app-brand-link">
+							<span class="app-brand-text demo text-heading fw-bold">{{ setting('app', 'name') }}</span>
+						</a>
+					</div>
+					<!-- /Logo -->
+					<h4 class="mb-1">{{ lang('Pages.Auth.TwoFactorSetup.Title') }}</h4>
+					<p class="text-start mb-6">
+						{{ lang('Pages.Auth.TwoFactorSetup.Description') }}
+					</p>
+
+					<div class="text-center mb-6">
+						<img src="{{ qr_code }}" class="img-fluid" alt="2FA Setup QR Code">
+					</div>
+
+					<p class="text-start mb-6">
+						{{ lang('Pages.Auth.TwoFactorSetup.SecretKey') }}:
+						<strong>{{ secret_key }}</strong>
+					</p>
+
+					<p class="mb-0">{{ lang('Pages.Auth.TwoFactorSetup.Form.Message') }}</p>
+					<form method="POST">
+						<div class="mb-6 text-center">
+							<div class="auth-input-wrapper d-flex align-items-center justify-content-center numeral-mask-wrapper">
+								<input type="tel" id="pin_1" name="pin_1" class="form-control auth-input h-px-50 text-center numeral-mask mx-sm-1 my-2" maxlength="1" autofocus/>
+								<input type="tel" id="pin_2" name="pin_2" class="form-control auth-input h-px-50 text-center numeral-mask mx-sm-1 my-2" maxlength="1"/>
+								<input type="tel" id="pin_3" name="pin_3" class="form-control auth-input h-px-50 text-center numeral-mask mx-sm-1 my-2" maxlength="1"/>
+								<input type="tel" id="pin_4" name="pin_4" class="form-control auth-input h-px-50 text-center numeral-mask mx-sm-1 my-2" maxlength="1"/>
+								<input type="tel" id="pin_5" name="pin_5" class="form-control auth-input h-px-50 text-center numeral-mask mx-sm-1 my-2" maxlength="1"/>
+								<input type="tel" id="pin_6" name="pin_6" class="form-control auth-input h-px-50 text-center numeral-mask mx-sm-1 my-2" maxlength="1"/>
+							</div>
+							<input type="hidden" name="final_pin" id="final_pin">
+							<input type="hidden" name="secret_key" id="secret_key" value="{{ secret_key }}">
+
+							{{ csrf_input | raw }}
+							{% if isTurnStileEnabled == true  %}
+								<br>
+								<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+							{% endif %}
+						</div>
+						<button type="submit" id="submit" name="submit" class="btn btn-primary d-grid w-100 mb-6">{{ lang('Pages.Auth.TwoFactorSetup.Form.Submit.Label') }}</button>
+					</form>
+				</div>
+			</div>
+			<!-- / Two Steps Verification -->
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block footer %}
+
+
+	{% if isTurnStileEnabled == true %}
+		 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	{% endif %}
+
+	 <script>
+				// Set the focus to the first input field
+				document.getElementById('pin_1').focus();
+				document.getElementById('submit').style.display = 'none';
+				// Move to the next input field on typing
+				document.getElementById('pin_1').addEventListener('input', function() {
+					if (this.value.length >= this.maxLength) {
+						document.getElementById('pin_2').focus();
+					}
+				});
+				document.getElementById('pin_2').addEventListener('input', function() {
+					if (this.value.length >= this.maxLength) {
+						document.getElementById('pin_3').focus();
+					}
+				});
+				document.getElementById('pin_3').addEventListener('input', function() {
+					if (this.value.length >= this.maxLength) {
+						document.getElementById('pin_4').focus();
+					}
+				});
+				document.getElementById('pin_4').addEventListener('input', function() {
+					if (this.value.length >= this.maxLength) {
+						document.getElementById('pin_5').focus();
+					}
+				});
+				document.getElementById('pin_5').addEventListener('input', function() {
+					if (this.value.length >= this.maxLength) {
+						document.getElementById('pin_6').focus();
+					}
+				});
+				document.getElementById('pin_6').addEventListener('input', function() {
+					if (this.value.length >= this.maxLength) {
+						document.getElementById('pin_6').blur();
+						var pin1 = document.getElementById('pin_1').value;
+						var pin2 = document.getElementById('pin_2').value;
+						var pin3 = document.getElementById('pin_3').value;
+						var pin4 = document.getElementById('pin_4').value;
+						var pin5 = document.getElementById('pin_5').value;
+						var pin6 = this.value;
+						
+						if (pin1 && pin2 && pin3 && pin4 && pin5 && pin6) {
+							document.getElementById('final_pin').value = pin1 + pin2 + pin3 + pin4 + pin5 + pin6;
+							if (document.getElementById('final_pin').value.length == 6) {
+								document.getElementById('submit').click();
+							} else {
+								Swal.fire({
+									icon: 'error',
+									title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",
+									text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}",
+								});
+							}
+						}
+					}
+				});
+			
+				 </script>
+{% endblock %}

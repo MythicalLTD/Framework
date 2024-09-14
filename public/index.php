@@ -22,18 +22,18 @@ try {
 }
 
 use MythicalSystemsFramework\App;
-use PragmaRX\Google2FA\Google2FA;
 use MythicalSystemsFramework\Api\Api as api;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\Plugins\PluginsManager;
 use MythicalSystemsFramework\Web\Installer\Installer;
 
-$fa = new Google2FA();
+$languageManager = new MythicalSystemsFramework\Language\Manager();
 
 $router = new Router\Router();
 $event = new PluginEvent();
-global $event;
+
+global $event, $languageManager;
 
 /*
  * Check if the app is installed

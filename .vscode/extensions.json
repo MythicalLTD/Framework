@@ -7,7 +7,6 @@
         "devsense.phptools-vscode",
         "sophisticode.php-formatter",
         "eamodio.gitlens",
-        "abusaidm.html-snippets",
         "oderwat.indent-rainbow",
         "devsense.intelli-php-vscode",
         "xdebug.php-debug",
@@ -20,6 +19,7 @@
         "esbenp.prettier-vscode",
         "lkrms.pretty-php",
         "bradlc.vscode-tailwindcss",
-        "zarifprogrammer.tailwind-snippets"
+        "zarifprogrammer.tailwind-snippets",
+        "mythicalsystems.mythicalframework-utils"
     ]
 }

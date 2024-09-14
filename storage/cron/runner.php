@@ -20,7 +20,6 @@ try {
 } catch (Exception $e) {
     exit('Hello, it looks like you did not run: composer install --no-dev --optimize-autoloader Please run that and refresh');
 }
-use MythicalSystemsFramework\Kernel\Debugger;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Cli\Colors as color;
 use MythicalSystemsFramework\Plugins\PluginEvent;

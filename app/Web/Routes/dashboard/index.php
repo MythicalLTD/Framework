@@ -13,7 +13,7 @@
 
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\User\UserDataHandler;
-use MythicalSystemsFramework\Managers\LanguageManager;
+
 
 global $router, $event;
 
@@ -27,7 +27,6 @@ $router->add('/dashboard', function (): void {
         exit(header('location: /auth/login'));
     }
     $user = new UserHelper($_COOKIE['token']);
-    $lang = LanguageManager::getLang();
 
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 

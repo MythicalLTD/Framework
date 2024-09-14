@@ -39,37 +39,28 @@ return [
     'pages_register_description_above' => 'Start for free',
     'pages_register_register_to' => 'Register to',
     'pages_register_alert_error' => 'An error occurred while creating your account.',
-    'pages_register_please_fill_all_fields' => 'Please fill all fields.',
-    'pages_register_first_name_and_last_name_not_valid' => 'The first and last name you entered is not valid.',
-    'pages_register_username_not_valid' => 'The username you entered is not valid.',
-    'pages_register_email_not_valid' => 'The email you entered is not valid.',
-    'pages_register_password_to_small' => 'The password you entered is too small.',
-    'pages_register_password_cannot_match' => 'Password cannot match with username or email.',
 
     // FILE /auth/login.twig
-    'pages_login_alert_error' => 'An error occurred while login in your account.',
     'pages_login_title' => 'Login',
-    'pages_login_email' => 'Email',
+    'pages_login_description' => 'Login to access the platform.',
+
+    // Form
+    // Email or Username
+    'pages_login_email_or_username' => 'Email or Username',
+    'pages_login_email_placeholder' => 'Enter your email or username',
+    // Password
     'pages_login_password' => 'Password',
-    'pages_login_email_placeholder' => 'Enter your email',
-    'pages_login_password_placeholder' => 'Enter your password',
+    'pages_login_password_placeholder' => '&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;', // RAW FILED !!
+    // Button
     'pages_login_button' => 'Login',
+    // Remember me
+    'pages_login_remember_me' => 'Remember me',
+    // Forgot password
     'pages_login_forgot_password' => 'Forgot password?',
+    // Register
     'pages_login_no_account' => 'Don\'t have an account?',
     'pages_login_register' => 'Register',
-    'pages_login_description' => 'Login to access the platform.',
-    'pages_login_description_above' => 'Welcome back',
-    'pages_login_login_to' => 'Login to',
-    'pages_login_please_fill_all_fields' => 'Please fill all fields.',
-    'pages_login_user_not_found' => 'User not found.',
-    'pages_login_user_not_verified' => 'User not verified.',
-    'pages_login_user_not_verified_description' => 'Your account is not verified. Please check your email for the verification link.',
-    'pages_login_user_banned' => 'Your account has been banned.',
-    'pages_login_user_banned_description' => 'Your account has been banned. Please contact the support for more information.',
-    'pages_login_user_deleted' => 'Your account has been deleted.',
-    'pages_login_user_deleted_description' => 'Your account has been deleted. Please contact the support for more information.',
-    'pages_login_user_password_incorrect' => 'The password you entered is incorrect.',
-    'pages_login_user_password_incorrect_description' => 'The password you entered is incorrect. Please try again.',
+    // Errors:
 
     // FILE /auth/2fa_setup.twig
     'pages_2fa_setup_title' => '2FA Setup',
@@ -95,11 +86,8 @@ return [
     'alert_title_error' => 'Wooops, something went wrong!',
     'alert_title_success' => 'Huraaaa, everything is fine!',
     'alert_email_verified' => 'Your email has been verified.',
-    'alert_csrf_failed' => 'We could not validate your request. Please try again.',
-    'alert_captcha_failed' => 'The captcha verification failed. Please try again.',
+
     'alert_unknown_error' => 'An unknown error occurred. Please try again.',
-    'alert_username_exists' => 'The username you entered already exists. Please try again.',
-    'alert_email_exists' => 'The email you entered already exists. Please try again.',
     'alert_email_verification_code_does_not_exist' => 'The email verification code does not exist.',
     'alert_2fa_already_setup' => '2FA is already setup on your account.',
     ' ' => '2FA is not setup on your account.',

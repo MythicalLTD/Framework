@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-wide customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="/assets/" data-template="vertical-menu-template" data-style="light">
+	<head>
+		{% include 'requirements/head.twig' %}
+		{% block head %}{% endblock %}
+	</head>
+	<body>
+    	{% include 'components/preloader.twig' %}
+
+		{% block content %}{% endblock %}
+	</body>
+	{% include 'requirements/footer.twig' %}
+	{% block footer %}{% endblock %}
+</html>
