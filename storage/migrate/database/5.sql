@@ -1,0 +1,1 @@
+CREATE TABLE `framework_users_password_forgot` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `code` TEXT NOT NULL , `created` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;

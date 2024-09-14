@@ -337,7 +337,7 @@ class UserDataHandler
     }
 
     /**
-     * Is the user verified?
+     * Is the user banned?
      *
      * @param string $token The user token
      */
