@@ -22,11 +22,21 @@ use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Mail\MailVerification;
 use MythicalSystemsFramework\Managers\LanguageManager;
+use MythicalSystemsFramework\User\TwoFactor\TwoFactor;
 use MythicalSystemsFramework\Mail\Templates\Verification;
 use MythicalSystemsFramework\Google\TwoFactorAuthentication;
+use Seld\JsonLint\Undefined;
 
 global $router;
-
+/*
+ *
+ * Verify Email
+ *
+ * This route will handle the email verification.
+ *
+ * @return void
+ *
+ */
 $router->add('/auth/verify-email', function (): void {
     $lang = LanguageManager::getLang();
     global $renderer;
@@ -41,12 +51,18 @@ $router->add('/auth/verify-email', function (): void {
             exit($renderer->render('index.twig', ['alert_success_title' => $lang['alert_title_success'], 'alert_success_message' => $lang['alert_email_verified']]));
         }
         exit($renderer->render('index.twig', ['alert_error_title' => $lang['alert_title_error'], 'alert_error_message' => $lang['alert_email_verification_code_does_not_exist']]));
-
     }
     exit($renderer->render('index.twig', ['alert_error_title' => $lang['alert_title_error'], 'alert_error_message' => $lang['alert_email_verification_code_does_not_exist']]));
-
 });
 
+/*
+ *
+ * Login
+ *
+ * This route will handle the login.
+ *
+ * @return void
+ */
 $router->add('/auth/login', function (): void {
     /*
      * The requirement for each template
@@ -142,6 +158,9 @@ $router->add('/auth/login', function (): void {
                 Login::sendMail($user_check);
                 setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
                 header('Location: /');
+                $userTwoFactor = new TwoFactor($user_check);
+                $userTwoFactor->block();
+                exit;
             } else {
                 header('Location: /auth/login?e=unknown');
                 exit;
@@ -153,26 +172,128 @@ $router->add('/auth/login', function (): void {
     }
 });
 
+
+$router->add('/auth/2fa/login', function (): void {
+    global $renderer;
+    $TEMPLATE_FILE = "auth/2fa_login.twig";
+
+    $user = new UserHelper($_COOKIE['token']);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token'], true);
+
+    $user2fa = new TwoFactor($_COOKIE['token']);
+    if ($user2fa->isSetup() == false) {
+        header('Location: /dashboard=e=2fa_not_setup');
+        exit;
+    }
+
+    $lang = LanguageManager::getLang();
+    session_start();
+    $csrf = new MythicalSystems\Utils\CSRFHandler();
+    $google2fa = new Google2FA();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $renderer->addGlobal('csrf_input', value: $csrf->input('2fa_setup_form'));
+        $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+
+
+        if (isset($_GET['e']) && !$_GET['e'] == '') {
+            $e = $_GET['e'];
+            if ($e == 'csrf') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_csrf_failed']]));
+            }
+
+            if ($e == 'captcha') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_captcha_failed']]));
+            }
+
+            if ($e == 'unknown') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_unknown_error']]));
+            }
+            if ($e == '2facodewrong') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['pages_2fa_setup_failed_key_wrong']]));
+            }
+        }
+
+        exit($renderer->render($TEMPLATE_FILE));
+    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!$csrf->validate('2fa_setup_form')) {
+            header('Location: /auth/2fa/setup?e=csrf');
+            exit;
+        }
+        if (!TurnStile::isEnabled()) {
+            $captcha_success = 1;
+        } else {
+            $captcha_success = TurnStile::validate($_POST['cf-turnstile-response'], CloudFlare::getUserIP(), Settings::getSetting('cloudflare_turnstile', 'sitesecret'));
+        }
+
+        if ($captcha_success) {
+            $final_pin = $_POST['final_pin'];
+            if ($google2fa->verifyKey($user2fa->getKey(), $final_pin)) {
+                $user2fa->unblock();
+                header('Location: /dashboard?s=2fa_setup_success');
+                exit;
+            }
+            header('Location: /auth/2fa/setup?e=2facodewrong');
+            exit;
+        }
+        header('Location: /auth/2fa/setup?e=captcha');
+        exit;
+    }
+});
+
+/*
+ *
+ * 2FA Setup
+ * This route will handle the 2FA setup.
+ * The user will be able to setup 2FA for his account.
+ *
+ * @return void
+ */
 $router->add('/auth/2fa/setup', function (): void {
     global $renderer;
+    $TEMPLATE_FILE = "auth/2fa_setup.twig";
 
     $user = new UserHelper($_COOKIE['token']);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
-    -
+    $user2fa = new TwoFactor($_COOKIE['token']);
+    if ($user2fa->isSetup()) {
+        header('Location: /dashboard=e=2fa_already_setup');
+        exit;
+    }
+
     $lang = LanguageManager::getLang();
     session_start();
     $csrf = new MythicalSystems\Utils\CSRFHandler();
-
-    Debugger::ShowAllErrors();
     $google2fa = new Google2FA();
     $secretKey = $google2fa->generateSecretKey();
-
     $qr = TwoFactorAuthentication::buildQRCode($secretKey, 'NaysKutzu');
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $renderer->addGlobal('csrf_input', $csrf->input('2fa_setup_form'));
-        exit($renderer->render('auth/2fa_setup.twig', ['qrCode' => $qr, 'secret' => $secretKey]));
+        $renderer->addGlobal('csrf_input', value: $csrf->input('2fa_setup_form'));
+        $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+        $renderer->addGlobal('qr_code', $qr);
+        $renderer->addGlobal('secret_key', $secretKey);
+
+        if (isset($_GET['e']) && !$_GET['e'] == '') {
+            $e = $_GET['e'];
+            if ($e == 'csrf') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_csrf_failed']]));
+            }
+
+            if ($e == 'captcha') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_captcha_failed']]));
+            }
+
+            if ($e == 'unknown') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['alert_unknown_error']]));
+            }
+            if ($e == '2facodewrong') {
+                exit($renderer->render($TEMPLATE_FILE, ['alert_error_title' => $lang['pages_2fa_setup_failed_title'], 'alert_error_message' => $lang['pages_2fa_setup_failed_key_wrong']]));
+            }
+        }
+        exit($renderer->render($TEMPLATE_FILE));
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -180,9 +301,36 @@ $router->add('/auth/2fa/setup', function (): void {
             header('Location: /auth/2fa/setup?e=csrf');
             exit;
         }
+        if (!TurnStile::isEnabled()) {
+            $captcha_success = 1;
+        } else {
+            $captcha_success = TurnStile::validate($_POST['cf-turnstile-response'], CloudFlare::getUserIP(), Settings::getSetting('cloudflare_turnstile', 'sitesecret'));
+        }
+
+        if ($captcha_success) {
+            $final_pin = $_POST['final_pin'];
+            $secretKey = $_POST['secret_key'];
+
+            if ($google2fa->verifyKey($secretKey, $final_pin)) {
+                $user2fa->enable($secretKey);
+                header('Location: /dashboard?s=2fa_setup_success');
+                exit;
+            }
+            header('Location: /auth/2fa/setup?e=2facodewrong');
+            exit;
+        }
+        header('Location: /auth/2fa/setup?e=captcha');
+        exit;
     }
 });
-
+/*
+ *  Register
+ *
+ * This route will handle the registration of a new user.
+ *
+ * @return void
+ *
+ */
 $router->add('/auth/register', function (): void {
     /*
      * The requirement for each template
@@ -278,4 +426,19 @@ $router->add('/auth/register', function (): void {
             exit;
         }
     }
+});
+
+/*
+ *
+ * Logout
+ *
+ * This route will handle the logout.
+ *
+ * @return void
+ */
+$router->add('/auth/logout', function (): void {
+    $user = new UserHelper($_COOKIE['token']);
+    $user->killSession();
+    header('Location: /');
+    exit;
 });

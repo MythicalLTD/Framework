@@ -22,6 +22,7 @@ use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\Roles\RolesDataHandler;
 use MythicalSystemsFramework\Kernel\Logger as logger;
+use MythicalSystemsFramework\User\TwoFactor\TwoFactor;
 use MythicalSystemsFramework\Managers\SnowFlakeManager;
 use MythicalSystemsFramework\Encryption\XChaCha20 as enc;
 
@@ -89,7 +90,6 @@ class UserDataHandler
             }
 
             return 'ERROR_PASSWORD_INCORRECT';
-
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to login user: ' . $e->getMessage());
 
@@ -176,11 +176,9 @@ class UserDataHandler
                 }
 
                 return $user[$data];
-
             }
 
             return 'ERROR_FIELD_NOT_FOUND';
-
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to get user data: ' . $e->getMessage());
 
@@ -331,7 +329,6 @@ class UserDataHandler
             }
 
             return true;
-
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to validate user: ' . $e->getMessage());
 
@@ -366,7 +363,6 @@ class UserDataHandler
             }
 
             return true;
-
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to validate user: ' . $e->getMessage());
 
@@ -402,7 +398,6 @@ class UserDataHandler
             }
 
             return false;
-
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to validate user: ' . $e->getMessage());
 
@@ -459,7 +454,6 @@ class UserDataHandler
             }
 
             return false;
-
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to validate user: ' . $e->getMessage());
 
@@ -470,16 +464,24 @@ class UserDataHandler
     /**
      * Require authorization.
      */
-    public static function requireAuthorization(\Twig\Environment $renderer, string $token): void
+    public static function requireAuthorization(\Twig\Environment $renderer, string $token, bool $skiptwofactorcheck = false): void
     {
         if (self::isUserValid($token) == false) {
             exit(header('location: /auth/login'));
         }
-        $renderer->addGlobal('user_token', new UserHelper($_COOKIE['token']));
+        $renderer->addGlobal('user_token', $_COOKIE['token']);
         $renderer->addFunction(new TwigFunction('user', function ($info, $isEncrypted) {
             return self::getSpecificUserData($_COOKIE['token'], $info, $isEncrypted);
         }));
         $renderer->addGlobal('role_name', RolesHelper::getRoleName(self::getRoleIdByUser($token)));
+        if ($skiptwofactorcheck == false) {
+            $twofauser = new TwoFactor(account_token: $token);
+            if ($twofauser->isBlocked()) {
+                exit(header('location: /auth/2fa/login'));
+            }
+        } else {
+            
+        }
 
     }
 

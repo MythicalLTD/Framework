@@ -1,0 +1,2 @@
+ALTER TABLE `framework_users` ADD `2fa_enabled` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `verified`, ADD `2fa_key` TEXT NULL DEFAULT NULL AFTER `2fa_enabled`;
+ALTER TABLE `framework_users` ADD `2fa_blocked` ENUM('false','true') NOT NULL DEFAULT 'false' AFTER `2fa_key`;

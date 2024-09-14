@@ -71,6 +71,13 @@ return [
     'pages_login_user_password_incorrect' => 'The password you entered is incorrect.',
     'pages_login_user_password_incorrect_description' => 'The password you entered is incorrect. Please try again.',
 
+    // FILE /auth/2fa_setup.twig
+    'pages_2fa_setup_title' => '2FA Setup',
+    'pages_2fa_setup_description' => 'Setup 2FA to secure your account.',
+    'pages_2fa_setup_description_above' => 'Secure your account',
+    'pages_2fa_setup_failed_key_wrong' => 'The key you entered is wrong.',
+    'pages_2fa_setup_failed_title' => 'Failed to setup 2FA',
+
     // FILE /components/header.twig
     'components_header_search' => 'Type to search..',
     'components_header_notification' => 'Notification',
@@ -94,4 +101,7 @@ return [
     'alert_username_exists' => 'The username you entered already exists. Please try again.',
     'alert_email_exists' => 'The email you entered already exists. Please try again.',
     'alert_email_verification_code_does_not_exist' => 'The email verification code does not exist.',
+    'alert_2fa_already_setup' => '2FA is already setup on your account.',
+    ' ' => '2FA is not setup on your account.',
+    'alert_2fa_setup' => '2FA has been successfully setup on your account.',
 ];

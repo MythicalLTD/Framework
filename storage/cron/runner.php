@@ -26,8 +26,6 @@ use MythicalSystemsFramework\Cli\Colors as color;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Plugins\PluginsManager;
 
-Debugger::ShowAllErrors();
-
 $event = new PluginEvent();
 global $event;
 echo color::translateColorsCode('A new cron runner has &astarted&r.&o');
