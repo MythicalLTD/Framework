@@ -1,5 +1,5 @@
 {
-    "__last_updated": "2024-09-05 08:56:16",
+    "__last_updated": "2024-09-09 06:45:23",
     "framework": {
         "version": "1.0.1",
         "branch": "develop",
@@ -15,7 +15,7 @@
     },
     "encryption": {
         "method": "MythicalCore",
-        "key": "miMwMyVT\/Apo0w0FUg17xfTjUDjEO4YN2x1vXzDR7Y4="
+        "key": "xBxqW7S\/SrJcJIIqOm931VaUnphl6sxN\/CDhrXn2emg="
     },
     "app": {
         "maintenance": "true"

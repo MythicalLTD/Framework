@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Backup;
 
 use MythicalSystemsFramework\Kernel\Logger;
@@ -23,6 +34,7 @@ class Database implements Status
             $stmt->bind_param('s', $path);
             $stmt->execute();
             Logger::log(LoggerLevels::INFO, LoggerTypes::BACKUP, 'A new backup has been started.');
+
             return $stmt->insert_id;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to register backup: ' . $e->getMessage());
@@ -49,9 +61,10 @@ class Database implements Status
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 return true;
-            } else {
-                return false;
             }
+
+            return false;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to check if backup exists: ' . $e->getMessage());
 
@@ -103,9 +116,11 @@ class Database implements Status
             $stmt->execute();
             $result = $stmt->get_result();
             $status = $result->fetch_assoc();
+
             return $status['backup_status'];
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to get backup status: ' . $e->getMessage());
+
             return null;
         }
     }
@@ -121,15 +136,17 @@ class Database implements Status
             $result = $conn->query("SELECT * FROM framework_backups WHERE `deleted` = 'false'");
             if ($result->num_rows == 0) {
                 return [];
-            } else {
-                $backups = [];
-                while ($row = $result->fetch_assoc()) {
-                    $backups[] = $row;
-                }
-                return $backups;
             }
+            $backups = [];
+            while ($row = $result->fetch_assoc()) {
+                $backups[] = $row;
+            }
+
+            return $backups;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Backup/Database.php) Failed to get backups: ' . $e->getMessage());
+
             return [];
         }
     }
@@ -168,9 +185,10 @@ class Database implements Status
                 $row = $result->fetch_assoc();
 
                 return $row['backup_path'];
-            } else {
-                return null;
             }
+
+            return null;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, 'Failed to get the backup path' . $e->getMessage());
         }

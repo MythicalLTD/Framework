@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework;
 
 use MythicalSystemsFramework\Database\MySQL;
@@ -153,8 +164,38 @@ class App extends \MythicalSystems\Main
         }
 
         $url = Settings::getSetting('app', 'url');
-        if ($url == "http://example.com") {
-            Settings::updateSetting('app', 'url', "https://".$_SERVER['SERVER_NAME'],true);
+        if ($url == 'http://example.com') {
+            Settings::updateSetting('app', 'url', $_SERVER['SERVER_NAME'], true);
         }
+    }
+
+    public static function convertStringToInt(string $string): int
+    {
+        return (int) $string;
+    }
+
+    public static function convertStringToFloat(string $string): float
+    {
+        return (float) $string;
+    }
+
+    public static function convertStringToBool(string $string): bool
+    {
+        return (bool) $string;
+    }
+
+    public static function convertStringToArray(string $string): array
+    {
+        return (array) $string;
+    }
+
+    public static function convertStringToObject(string $string): object
+    {
+        return (object) $string;
+    }
+
+    public static function convertIntToString(int $int): string
+    {
+        return (string) $int;
     }
 }

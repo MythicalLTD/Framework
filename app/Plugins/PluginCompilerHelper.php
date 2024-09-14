@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Plugins;
 
 use MythicalSystemsFramework\Kernel\Logger;
@@ -12,8 +23,6 @@ class PluginCompilerHelper
 
     /**
      * Ensure the plugin path exists.
-     * 
-     * @return void
      */
     public static function ensurePluginPathExists(): void
     {
@@ -22,13 +31,8 @@ class PluginCompilerHelper
         }
     }
 
-
     /**
      * Check the requirements of a plugin.
-     *
-     * @param string $plugin
-     * @param array $plugin_info
-     * @return void
      */
     public static function checkPluginRequirements(string $plugin, array $plugin_info): void
     {
@@ -45,9 +49,9 @@ class PluginCompilerHelper
                     $composerVersion = substr($requirement, strlen('composer='));
                     if (\Composer\InstalledVersions::isInstalled($composerVersion, true)) {
                         continue;
-                    } else {
-                        Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires composer package $composerVersion to be installed.");
                     }
+                    Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires composer package $composerVersion to be installed.");
+
                 }
 
                 // Check if the requirement is a php version
@@ -74,18 +78,15 @@ class PluginCompilerHelper
                 $isInstalled = self::readPluginFile($requirement);
                 if ($isInstalled) {
                     continue;
-                } else {
-                    Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires $requirement to be installed.");
                 }
+                Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires $requirement to be installed.");
+
             }
         }
     }
 
     /**
      * Register a plugin if it is not already registered.
-     *
-     * @param array $plugin_info
-     * @return void
      */
     public static function registerPluginIfNotRegistered(array $plugin_info): void
     {
@@ -103,9 +104,6 @@ class PluginCompilerHelper
 
     /**
      * Update a plugin if it is outdated.
-     *
-     * @param array $plugin_info
-     * @return void
      */
     public static function updatePluginIfOutdated(array $plugin_info): void
     {
@@ -133,13 +131,6 @@ class PluginCompilerHelper
 
     /**
      * Enable a plugin.
-     *
-     * @param string $plugin
-     * @param array $plugin_info
-     * @param PluginEvent $eventHandler
-     * @param bool $skipEventEnable
-     * 
-     * @return void
      */
     public static function enablePlugin(string $plugin, array $plugin_info, PluginEvent $eventHandler, bool $skipEventEnable = false): void
     {
@@ -165,6 +156,7 @@ class PluginCompilerHelper
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "The main class for plugin '$plugin' does not exist.");
         }
     }
+
     /**
      * Get all plugins.
      */
@@ -237,36 +229,39 @@ class PluginCompilerHelper
             $json = json_decode(file_get_contents($json_file), true);
             if (isset($json['name']) && isset($json['description']) && isset($json['stability']) && isset($json['authors']) && isset($json['version']) && isset($json['require'])) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
+
             return false;
+
         }
+
+        return false;
+
     }
+
     /**
      * Does a plugin have a cron job folder?
-     * 
-     * @param string $plugin_name
-     * 
+     *
      * @return bool
      */
-    public static function doesPluginHaveCron(string $plugin_name) {
+    public static function doesPluginHaveCron(string $plugin_name)
+    {
         self::ensurePluginPathExists();
         if (!self::doesPluginExist($plugin_name)) {
             return false;
         }
         $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/crons';
+
         return file_exists($plugin_folder);
     }
+
     /**
-     * 
      * Get all cron files for a plugin.
-     * 
-     * @param string $plugin_name
+     *
      * @return array
      */
-    public static function getPluginCronFiles(string $plugin_name) {
+    public static function getPluginCronFiles(string $plugin_name)
+    {
         self::ensurePluginPathExists();
         if (!self::doesPluginExist($plugin_name)) {
             return [];
@@ -279,6 +274,7 @@ class PluginCompilerHelper
             }
             $files[] = $file;
         }
+
         return $files;
     }
 }

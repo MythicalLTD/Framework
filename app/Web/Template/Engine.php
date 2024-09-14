@@ -1,14 +1,25 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Web\Template;
 
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
-use MythicalSystemsFramework\Managers\LanguageManager;
+use Twig\Environment;
+use Twig\TwigFunction;
+use Twig\Loader\FilesystemLoader;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Web\Installer\Installer;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Twig\TwigFunction;
+use MythicalSystemsFramework\Managers\LanguageManager;
+use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
 class Engine
 {
@@ -59,9 +70,8 @@ class Engine
         self::registerConfig($renderer);
         self::registerLanguage($renderer);
         self::registerGlobals($renderer);
-        self::registerIsUserValid($renderer);
-        
-        return $renderer;   
+
+        return $renderer;
     }
 
     /**
@@ -107,21 +117,5 @@ class Engine
     {
         $renderer->addGlobal('php_version', phpversion());
         $renderer->addGlobal('page_name', 'Home');
-    }
-
-    /**
-     * Register the isUserSessionValid function.
-     *
-     * This is used so we know what should we display on the page.
-     */
-    public static function registerIsUserValid(Environment $renderer): void
-    {
-        $renderer->addFunction(new TwigFunction('isUserSessionValid', function (): bool {
-            if (isset($_COOKIE['token'])) {
-                return true;
-            } else {
-                return false;
-            }
-        }));
     }
 }

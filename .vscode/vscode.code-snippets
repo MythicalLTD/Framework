@@ -145,5 +145,19 @@
 			"use MythicalSystemsFramework\\Managers\\ConfigManager as cfg;",
 			"use MythicalSystemsFramework\\Database\\MySQL;"
 		]
+	},
+	"S_GetUserInfoEncrypted": {
+		"prefix": "S_GetUserInfoEncrypted",
+		"scope": "twig",
+		"body": [
+			"{{ user('$1',true) }}"
+		],
+	},
+	"S_GetUserInfoUnencrypted": {
+		"prefix": "S_GetUserInfoUnencrypted",
+		"scope": "twig",
+		"body": [
+			"{{ user('$1',false) }}"
+		],
 	}
 }

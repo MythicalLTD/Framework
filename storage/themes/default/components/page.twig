@@ -17,9 +17,7 @@
 		<meta name="author" content="MythicalSystems LTD"/>
 		<link href="/assets/style.css" rel="stylesheet">
 
-		<title>{{ setting('app','name') }}
-			-
-			{{ page_name }}</title>
+		<title>{{ setting('app','name') }} - {{ page_name }}</title>
 
 		{% block head %}{% endblock %}
 		 <script src="/assets/third_party/JQuery/jquery-3.7.1.min.js"></script>
@@ -85,20 +83,20 @@
 		 <script src="/assets/MythicalFramework.js"></script>
 			{% if alert_error_title is not null and alert_error_message is not null %}
 			 <script>
-							Swal.fire({
-								icon: 'error',
-								title: '{{ alert_error_title }}',
-								text: '{{ alert_error_message }}',
-							});
-						</script>
+										Swal.fire({
+											icon: 'error',
+											title: '{{ alert_error_title }}',
+											text: '{{ alert_error_message }}',
+										});
+									</script>
 			{% elseif alert_success_title is not null and alert_success_message is not null %}
 			 <script>
-							Swal.fire({
-								icon: 'success',
-								title: '{{ alert_success_title }}',
-								text: '{{ alert_success_message }}',
-							});
-						</script>
+										Swal.fire({
+											icon: 'success',
+											title: '{{ alert_success_title }}',
+											text: '{{ alert_success_message }}',
+										});
+									</script>
 		{% endif %}
 		{% block footer %}{% endblock %}
 	</body>

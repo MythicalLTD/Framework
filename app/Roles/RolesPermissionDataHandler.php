@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Roles;
 
 use MythicalSystemsFramework\Kernel\Logger;
@@ -31,6 +42,7 @@ class RolesPermissionDataHandler
             $stmtInsert->execute();
             $stmtInsert->close();
             $event->emit('roles_permissions.Create', [$roleId, $permission]);
+
             return $mysqli->insert_id;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to create role permission: ' . $e->getMessage());
@@ -64,9 +76,10 @@ class RolesPermissionDataHandler
 
             if ($mysqli->affected_rows > 0) {
                 return 'ROLE_PERMISSION_DELETED';
-            } else {
-                return 'ROLE_PERMISSION_DELETE_FAILED';
             }
+
+            return 'ROLE_PERMISSION_DELETE_FAILED';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to delete role permission: ' . $e->getMessage());
 
@@ -100,12 +113,13 @@ class RolesPermissionDataHandler
             $stmtRole->bind_param('si', $permission, $id);
             $stmtRole->execute();
             $stmtRole->close();
-            
+
             if ($mysqli->affected_rows > 0) {
                 return 'ROLE_PERMISSION_UPDATED';
-            } else {
-                return 'ROLE_PERMISSION_UPDATE_FAILED';
             }
+
+            return 'ROLE_PERMISSION_UPDATE_FAILED';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to update role permission: ' . $e->getMessage());
 
@@ -207,9 +221,10 @@ class RolesPermissionDataHandler
 
             if ($count > 0) {
                 return 'ROLE_PERMISSION_EXISTS';
-            } else {
-                return 'ROLE_PERMISSION_MISSING';
             }
+
+            return 'ROLE_PERMISSION_MISSING';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to check if role permission exists: ' . $e->getMessage());
 
@@ -240,9 +255,10 @@ class RolesPermissionDataHandler
 
             if ($count > 0) {
                 return 'ROLE_HAS_PERMISSION';
-            } else {
-                return 'ROLE_DOES_NOT_HAVE_PERMISSION';
             }
+
+            return 'ROLE_DOES_NOT_HAVE_PERMISSION';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to check role permission: ' . $e->getMessage());
 

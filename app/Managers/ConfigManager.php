@@ -1,14 +1,25 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystems\Helpers\ConfigHelper;
+
 /**
- * 
  * DEPRECATED: Use Settings class instead!!
- * 
+ *
  * DEPRECATED: This class is used for the settings.json file!
- * 
+ *
  * @deprecated message: This class is deprecated and will be removed in the future. Use the Settings class instead!
  */
 class ConfigManager
@@ -31,9 +42,9 @@ class ConfigManager
             }
             if (!is_writable(self::$configpath)) {
                 exit('We have no access to the config file!');
-            } else {
-                $config = new ConfigHelper(self::$configpath);
             }
+            $config = new ConfigHelper(self::$configpath);
+
         } catch (\Exception $e) {
             exit("Failed to init the config class! \n" . $e->__toString());
         }
@@ -60,9 +71,9 @@ class ConfigManager
             }
             if (!is_writable(self::$configpath)) {
                 exit('We have no access to the config file!');
-            } else {
-                $config = new ConfigHelper(self::$configpath);
             }
+            $config = new ConfigHelper(self::$configpath);
+
         } catch (\Exception $e) {
             exit("Failed to init the config class! \n" . $e->__toString());
         }

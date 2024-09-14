@@ -1,11 +1,84 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystemsFramework\Database\MySQL;
 
 class SnowFlakeManager
 {
+    /**
+     * Function to get a unique user ID.
+     *
+     * @return string The user id
+     */
+    public static function getUniqueUserID(): string
+    {
+        $newUserId = self::generateUserID();
+        $cachedUserIds = self::getCachedUserIDs();
+
+        while (self::isUserIDUsed($newUserId, $cachedUserIds)) {
+            $newUserId = self::generateUserID();
+        }
+
+        if (self::saveUserIDToDatabase($newUserId)) {
+            return $newUserId;
+        }
+
+        return '';
+
+    }
+
+    /**
+     * Function to delete a user ID from the database.
+     *
+     * @param string $userId The user ID to be deleted from the database
+     *
+     * @return bool True if the user ID was successfully deleted, false otherwise
+     */
+    public static function deleteUserFromDatabase(string $userId): bool
+    {
+        $mysql = new MySQL();
+        $conn = $mysql->connectMYSQLI();
+        $stmt = $conn->prepare('DELETE FROM framework_users_userids WHERE uid = ?');
+        $stmt->bind_param('s', $userId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Function to check if a user ID exists in the database.
+     *
+     * @param string $userId The user ID to check
+     *
+     * @return bool True if the user ID exists in the database, false otherwise
+     */
+    public static function doesUserExistInDatabase(string $userId): bool
+    {
+        $mysql = new MySQL();
+        $conn = $mysql->connectMYSQLI();
+        $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_users_userids WHERE uid = ?');
+        $stmt->bind_param('s', $userId);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        $stmt->close();
+
+        return $count > 0;
+    }
+
     /**
      * Function to generate a unique user ID.
      *
@@ -65,66 +138,5 @@ class SnowFlakeManager
     private static function isUserIDUsed(string $userId, array $cachedUserIds): bool
     {
         return in_array($userId, $cachedUserIds);
-    }
-
-    /**
-     * Function to get a unique user ID.
-     *
-     * @return string The user id
-     */
-    public static function getUniqueUserID(): string
-    {
-        $newUserId = self::generateUserID();
-        $cachedUserIds = self::getCachedUserIDs();
-
-        while (self::isUserIDUsed($newUserId, $cachedUserIds)) {
-            $newUserId = self::generateUserID();
-        }
-
-        if (self::saveUserIDToDatabase($newUserId)) {
-            return $newUserId;
-        } else {
-            return '';
-        }
-    }
-
-    /**
-     * Function to delete a user ID from the database.
-     *
-     * @param string $userId The user ID to be deleted from the database
-     *
-     * @return bool True if the user ID was successfully deleted, false otherwise
-     */
-    public static function deleteUserFromDatabase(string $userId): bool
-    {
-        $mysql = new MySQL();
-        $conn = $mysql->connectMYSQLI();
-        $stmt = $conn->prepare('DELETE FROM framework_users_userids WHERE uid = ?');
-        $stmt->bind_param('s', $userId);
-        $success = $stmt->execute();
-        $stmt->close();
-
-        return $success;
-    }
-
-    /**
-     * Function to check if a user ID exists in the database.
-     *
-     * @param string $userId The user ID to check
-     *
-     * @return bool True if the user ID exists in the database, false otherwise
-     */
-    public static function doesUserExistInDatabase(string $userId): bool
-    {
-        $mysql = new MySQL();
-        $conn = $mysql->connectMYSQLI();
-        $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_users_userids WHERE uid = ?');
-        $stmt->bind_param('s', $userId);
-        $stmt->execute();
-        $stmt->bind_result($count);
-        $stmt->fetch();
-        $stmt->close();
-
-        return $count > 0;
     }
 }

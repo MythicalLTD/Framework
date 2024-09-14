@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystemsFramework\Database\MySQL;
@@ -57,16 +68,14 @@ class Settings
             MySQLCache::saveCache('framework_settings');
         }
     }
+
     /**
-     * 
      * Get a setting from the database.
-     * 
+     *
      * @param string $category The name of the category
      * @param string $name The name of the setting
      * @param string $value The value you want to set!
      * @param bool $updateCache Update the cache after updating the setting
-     * 
-     * @return void
      */
     public static function setSetting(string $category, string $name, string $value, bool $updateCache = true): void
     {

@@ -1,19 +1,22 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\User\Announcement;
 
+use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
-use MythicalSystemsFramework\Kernel\Logger;
-use MythicalSystemsFramework\Kernel\Config;
-use MythicalSystemsFramework\Encryption\XChaCha20;
-use MythicalSystemsFramework\User\UserHelper;
-use MythicalSystemsFramework\Kernel\Debugger;
-use MythicalSystemsFramework\Mail\MailService;
-use MythicalSystemsFramework\Handlers\ActivityHandler;
-use MythicalSystemsFramework\Managers\Settings as settings;
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
-use MythicalSystemsFramework\Database\MySQL;
 
 class Announcements
 {
@@ -66,6 +69,7 @@ class Announcements
             $announcementID = $stmt->insert_id;
             $stmt->close();
             $event->emit('announcements.Create', [$title, $text, $announcementID]);
+
             return $announcementID;
         } catch (\Exception $e) {
             /*
@@ -84,13 +88,12 @@ class Announcements
 
     /**
      * Edit an existing announcement by ID.
-     * 
+     *
      * @param int $id the ID of the announcement to edit
      * @param string $title the new announcement title
      * @param string $text the new announcement text
-     * 
+     *
      * @throws \Exception
-     * @return void
      */
     public static function edit(int $id, string $title, string $text): void
     {
@@ -98,6 +101,7 @@ class Announcements
         try {
             if (!self::exists($id)) {
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while editing an announcement: Announcement not found.');
+
                 return;
             }
             $mysqli = new MySQL();
@@ -138,11 +142,12 @@ class Announcements
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while deleting an announcement: Announcement not found.');
+
                 return;
             }
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-            $event->emit('announcements.Delete', [$id]);    
+            $event->emit('announcements.Delete', [$id]);
             $stmt = $conn->prepare('DELETE FROM framework_announcements WHERE id = ?');
             $stmt->bind_param('i', $id);
             $stmt->execute();
@@ -320,7 +325,7 @@ class Announcements
      *
      * @throws \Exception
      */
-    public static function addSocialInteraction(string $announcement_id, string $user_uuid, String $type): void
+    public static function addSocialInteraction(string $announcement_id, string $user_uuid, string $type): void
     {
         global $event;
         try {
@@ -334,6 +339,7 @@ class Announcements
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while adding a social interaction to an announcement: Announcement not found.');
+
                 return;
             }
             $event->emit('announcements.AddSocialInteraction', [$announcement_id, $user_uuid, $type]);
@@ -362,7 +368,7 @@ class Announcements
      *
      * @throws \Exception
      */
-    public static function removeSocialInteraction(string $announcement_id, string $user_uuid, String $type): void
+    public static function removeSocialInteraction(string $announcement_id, string $user_uuid, string $type): void
     {
         global $event;
         try {
@@ -376,6 +382,7 @@ class Announcements
                  * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
                  */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while removing a social interaction from an announcement: Announcement not found.');
+
                 return;
             }
             $event->emit('announcements.RemoveSocialInteraction', [$announcement_id, $user_uuid, $type]);
@@ -428,9 +435,10 @@ class Announcements
 
             if ($stmt->num_rows > 0) {
                 return true;
-            } else {
-                return false;
             }
+
+            return false;
+
         } catch (\Exception $e) {
             /*
              * Logger
@@ -474,9 +482,10 @@ class Announcements
             $stmt->close();
             if ($stmt->num_rows > 0) {
                 return $stmt->num_rows;
-            } else {
-                return 0;
             }
+
+            return 0;
+
         } catch (\Exception $e) {
             /*
              * Logger

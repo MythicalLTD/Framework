@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 try {
     if (file_exists(__DIR__ . '/../caches/vendor/autoload.php')) {
         require __DIR__ . '/../caches/vendor/autoload.php';
@@ -9,14 +20,13 @@ try {
 } catch (Exception $e) {
     exit('Hello, it looks like you did not run: composer install --no-dev --optimize-autoloader Please run that and refresh');
 }
+use MythicalSystemsFramework\Kernel\Debugger;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Cli\Colors as color;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Plugins\PluginsManager;
-use MythicalSystemsFramework\Kernel\Debugger;
 
 Debugger::ShowAllErrors();
-
 
 $event = new PluginEvent();
 global $event;

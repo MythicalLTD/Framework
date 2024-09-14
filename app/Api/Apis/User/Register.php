@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Api\Apis\User;
 
 use MythicalSystemsFramework\Api\Api;
@@ -67,10 +78,10 @@ class Register extends Api implements ApiBuilder
                 $user_id = user::getSpecificUserData($user, 'uuid', true);
                 if (MailService::isEnabled() == true) {
                     // TODO: Add a verify system
-                } else {
-                    //ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User created an account!', \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_CREATED');
-                    //ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User verified his account!', \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_VERIFIED');
                 }
+                // ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User created an account!', \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_CREATED');
+                // ActivityHandler::addActivity($user_id, user::getSpecificUserData($user, 'username', true), 'User verified his account!', \MythicalSystems\CloudFlare\CloudFlare::getRealUserIP(), 'USER_VERIFIED');
+
                 Api::OK('The user has been created!', ['TOKEN' => $user]);
             }
         } catch (\Exception $e) {

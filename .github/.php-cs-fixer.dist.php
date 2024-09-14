@@ -13,6 +13,18 @@ try {
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
+$header = <<<'HEADER'
+This file is part of MythicalSystemsFramework.
+Please view the LICENSE file that was distributed with this source code.
+
+(c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+(c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+
+You should have received a copy of the MIT License
+along with this program. If not, see <https://opensource.org/licenses/MIT>.
+HEADER;
+
+
 $finder = (new Finder())
     ->in(__DIR__ . '/../')
     ->exclude([
@@ -23,17 +35,14 @@ $finder = (new Finder())
         '.git',
         'docs',
         'caches',
-        'devtools',
         'logs',
-        'themes',
-        'app/Handlers/interfaces'
     ])
     ->notName(['_ide_helper*']);
 
 return (new Config())
     ->setRiskyAllowed(true)
     ->setFinder($finder)
-    ->setUsingCache(false)
+    ->setUsingCache(true)
     ->setRules([
         '@Symfony' => true,
         '@PSR1' => true,
@@ -60,6 +69,7 @@ return (new Config())
                 'var',
             ],
         ],
+        'header_comment' => ['header' => $header],
         'random_api_migration' => true,
         'ternary_to_null_coalescing' => true,
         'yoda_style' => [
@@ -67,4 +77,10 @@ return (new Config())
             'identical' => false,
             'less_and_greater' => false,
         ],
+        'void_return'  => true,
+        'ordered_class_elements' => true,
+        'no_useless_else' => true,
+        'no_extra_blank_lines' => true,
+        'logical_operators' => true,
+        'no_unused_imports' => true,
     ]);

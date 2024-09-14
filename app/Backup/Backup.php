@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Backup;
 
 use Ifsnop\Mysqldump as IMysqldump;
@@ -29,8 +40,10 @@ class Backup extends Database implements Status
             $id = self::registerBackup($path);
             if (!$id == 0) {
                 $event->emit('backup.onBackupTaken', [$path, $id]);
+
                 return $id;
             }
+
             return 0;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::BACKUP, '(App/Backup/Backup.php) Failed to take MySQL backup: ' . $e->getMessage());
@@ -76,10 +89,8 @@ class Backup extends Database implements Status
 
     /**
      * Remove a backup from the database / storage.
-     *
-     * @return void
      */
-    public static function remove(int $backup_id)
+    public static function remove(int $backup_id): void
     {
         global $event;
         try {

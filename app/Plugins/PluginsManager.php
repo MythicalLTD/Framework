@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Plugins;
 
 use MythicalSystemsFramework\Kernel\Logger;
@@ -8,7 +19,6 @@ use MythicalSystemsFramework\Kernel\LoggerLevels;
 
 class PluginsManager extends PluginCompilerHelper
 {
-
     /**
      * Init the plugins.
      */
@@ -25,9 +35,8 @@ class PluginsManager extends PluginCompilerHelper
         }
     }
 
-    /** 
+    /**
      * Init the cron jobs.
-     * @return void
      */
     public static function initCron(PluginEvent $eventHandler): void
     {
@@ -42,11 +51,11 @@ class PluginsManager extends PluginCompilerHelper
             if (self::doesPluginHaveCron($plugin)) {
                 $crons = self::getPluginCronFiles($plugin);
                 foreach ($crons as $cron) {
-                    $cron = __DIR__.'/../../storage/addons/'.$plugin.'/crons/'.$cron;
+                    $cron = __DIR__ . '/../../storage/addons/' . $plugin . '/crons/' . $cron;
                     if (file_exists($cron)) {
                         require $cron;
                     } else {
-                        Logger::log('Cron file not found: '.$cron, LoggerTypes::PLUGIN, LoggerLevels::ERROR);
+                        Logger::log('Cron file not found: ' . $cron, LoggerTypes::PLUGIN, LoggerLevels::ERROR);
                     }
                 }
             }

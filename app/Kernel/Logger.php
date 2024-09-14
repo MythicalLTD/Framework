@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Kernel;
 
 use MythicalSystemsFramework\Database\MySQL;
@@ -33,6 +44,7 @@ class Logger
             $logId = $stmt->insert_id;
             $stmt->close();
             $event->emit('logger.Log', [$level, $type, $message]);
+
             return $logId;
         } catch (\Exception $e) {
             throw new \Exception('' . $e->getMessage());
@@ -143,11 +155,9 @@ class Logger
 
         return $framework_logs;
     }
+
     /**
      * Does this log exist?
-     * 
-     * @param int $id
-     * @return bool
      */
     public static function doesLogExist(int $id): bool
     {

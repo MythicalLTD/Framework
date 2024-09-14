@@ -1,7 +1,14 @@
 <?php
 
-/**
- * Those are some helpers so you can be fast at coding your app.
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
 namespace MythicalSystemsFramework\User;
@@ -21,88 +28,25 @@ class UserHelper extends UserDataHandler
     public function __construct(string $token)
     {
         $this->account_token = $token;
+        $isBanned = self::isUserBanned($token);
+        $isDeleted = self::isUserDeleted($token);
+        if ($isBanned == true) {
+            $this->killSession();
+            header('Location: /auth/login?e=user_banned');
+            exit;
+        }
+        if ($isDeleted == true) {
+            $this->killSession();
+            header('Location: /auth/login?e=user_deleted');
+            exit;
+        }
+
         global $event;
         $event->emit('user.onLoad');
         if ($this->isSessionValid()) {
-            $user_ip = CloudFlare::getUserIP();
-            $this->updateLastSeen($user_ip);
+            $this->updateLastSeen(CloudFlare::getUserIP());
         } else {
             $this->killSession();
-        }
-    }
-
-    /**
-     * This function will ban a user from the system.
-     *
-     * @return string the response of the ban
-     */
-    public function banUser(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'YES', false);
-                if ($update_user == 'SUCCESS') {
-                    return 'USER_BANNED';
-                } else {
-                    return $update_user;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to ban user: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_UPDATE_FAILED';
-        }
-    }
-
-    /**
-     * This function will unban a user from the system.
-     *     *
-     * @return string the response of the unban
-     */
-    public function unbanUser(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'banned', 'NO', false);
-                if ($update_user == 'SUCCESS') {
-                    return 'USER_UNBANNED';
-                } else {
-                    return $update_user;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to unban user: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_UPDATE_FAILED';
-        }
-    }
-
-    /**
-     * This function will check if the user is banned.
-     *     *
-     * @return string if the user is banned or not
-     */
-    public function isUserBanned(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $ban_state = $this->getSpecificUserData($this->account_token, 'banned', false);
-                if ($ban_state == 'NO') {
-                    return 'USER_NOT_BANNED';
-                } else {
-                    return 'USER_BANNED';
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to check if user is banned: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_SELECT_FAILED';
         }
     }
 
@@ -128,9 +72,10 @@ class UserHelper extends UserDataHandler
 
             if ($count == 0) {
                 return false;
-            } else {
-                return true;
             }
+
+            return true;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to validate user: ' . $e->getMessage());
 
@@ -146,108 +91,7 @@ class UserHelper extends UserDataHandler
     public function killSession(): void
     {
         // Kill the session
-        session_destroy();
         setcookie('token', '', time() - 3600 * 24 * 3600 * 2 * 2 * 9, '/');
-    }
-
-    /**
-     * This function will soft delete a user.
-     *     *
-     * @return string the response of the delete
-     */
-    public function deleteUser(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'true', false);
-                if ($update_user == 'SUCCESS') {
-                    return 'USER_DELETED';
-                } else {
-                    return $update_user;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to delete user: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_UPDATE_FAILED';
-        }
-    }
-
-    /**
-     * This function will restore a soft deleted user.
-     *     *
-     * @return string the response of the restore
-     */
-    public function restoreUser(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'deleted', 'false', false);
-                if ($update_user == 'SUCCESS') {
-                    return 'USER_RESTORED';
-                } else {
-                    return $update_user;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to restore user: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_UPDATE_FAILED';
-        }
-    }
-
-    /**
-     * This function will check if the user is soft deleted.
-     *     *
-     * @return string the response of the check
-     */
-    public function isUserDeleted(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $delete_state = $this->getSpecificUserData($this->account_token, 'deleted', false);
-                if ($delete_state == 'false') {
-                    return 'USER_NOT_DELETED';
-                } else {
-                    return $delete_state;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to check if user is deleted: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_SELECT_FAILED';
-        }
-    }
-
-    /**
-     * This function will check if the user is verified.
-     *
-     * @return string the response of the check
-     */
-    public function isUserVerified(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $verified_state = $this->getSpecificUserData($this->account_token, 'verified', false);
-                if ($verified_state == 'false') {
-                    return 'USER_NOT_VERIFIED';
-                } else {
-                    return $verified_state;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to check if user is verified: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_SELECT_FAILED';
-        }
     }
 
     /**
@@ -262,39 +106,16 @@ class UserHelper extends UserDataHandler
                 $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'true', false);
                 if ($update_user == 'SUCCESS') {
                     return 'USER_VERIFIED';
-                } else {
-                    return $update_user;
                 }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
+
+                return $update_user;
+
             }
+
+            return 'ERROR_ACCOUNT_NOT_VALID';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to verify user: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_UPDATE_FAILED';
-        }
-    }
-
-    /**
-     * This function will unverify a user.
-     *
-     * @return string the response of the unverification
-     */
-    public function unverifyUser(): string
-    {
-        try {
-            if ($this->isSessionValid()) {
-                $update_user = self::updateSpecificUserData($this->account_token, 'verified', 'false', false);
-                if ($update_user == 'SUCCESS') {
-                    return 'USER_UNVERIFIED';
-                } else {
-                    return $update_user;
-                }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
-            }
-        } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to unverify user: ' . $e->getMessage());
 
             return 'ERROR_DATABASE_UPDATE_FAILED';
         }
@@ -314,15 +135,18 @@ class UserHelper extends UserDataHandler
                     $update_user = self::updateSpecificUserData($this->account_token, 'last_ip', $ip, false);
                     if ($update_user == 'SUCCESS') {
                         return 'SUCCESS';
-                    } else {
-                        return $update_user;
                     }
-                } else {
+
                     return $update_user;
+
                 }
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
+
+                return $update_user;
+
             }
+
+            return 'ERROR_ACCOUNT_NOT_VALID';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to update last seen: ' . $e->getMessage());
 
@@ -342,9 +166,10 @@ class UserHelper extends UserDataHandler
                 $role_id = $this->getSpecificUserData($this->account_token, 'role', false);
 
                 return $role_id;
-            } else {
-                return 'ERROR_ACCOUNT_NOT_VALID';
             }
+
+            return 'ERROR_ACCOUNT_NOT_VALID';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to get user role id: ' . $e->getMessage());
 
@@ -366,12 +191,14 @@ class UserHelper extends UserDataHandler
                 $permission_check = RolesPermissionDataHandler::doesRoleHavePermission($role_id, $permission);
                 if ($permission_check == 'ROLE_HAS_PERMISSION') {
                     return 'USER_HAS_PERMISSION';
-                } else {
-                    return $permission_check;
                 }
-            } else {
-                return $role_check;
+
+                return $permission_check;
+
             }
+
+            return $role_check;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to get role info: ' . $e->getMessage());
 
@@ -403,9 +230,10 @@ class UserHelper extends UserDataHandler
 
             if ($count > 0) {
                 return 'INFO_EXISTS';
-            } else {
-                return 'INFO_NOT_FOUND';
             }
+
+            return 'INFO_NOT_FOUND';
+
         } catch (\Exception $exception) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to check if username exists: ' . $exception->getMessage());
 
@@ -442,22 +270,6 @@ class UserHelper extends UserDataHandler
     }
 
     /**
-     * Is this user sessions valid?
-     */
-    public function isUserSessionValid(): bool
-    {
-        if (!isset($_COOKIE['token'])) {
-            return false;
-        }
-        $token = $_COOKIE['token'];
-        if (!$this->isSessionValid()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Get info about the user.
      *
      * @param string $info The info you want to get!
@@ -467,8 +279,9 @@ class UserHelper extends UserDataHandler
     {
         if ($this->isSessionValid()) {
             return $this->getSpecificUserData($this->account_token, $info, $isEncrypted);
-        } else {
-            return 'ERROR_ACCOUNT_NOT_VALID';
         }
+
+        return 'ERROR_ACCOUNT_NOT_VALID';
+
     }
 }

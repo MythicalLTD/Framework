@@ -1,9 +1,19 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Api\Apis\User;
 
 use MythicalSystemsFramework\Api\Api;
-use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Api\Apis\ApiBuilder;
 use MythicalSystemsFramework\Encryption\XChaCha20;
 
@@ -35,9 +45,9 @@ class InfoAlreadyExists extends Api implements ApiBuilder
 
                     if ($isEncrypted == 'true') {
                         $value = XChaCha20::encrypt($value);
-                        $user = UserHelper::doesInfoAboutExist($info, $value);
+                        $user = 'NULL';
                     } else {
-                        $user = UserHelper::doesInfoAboutExist($info, $value);
+                        $user = 'NULL';
                     }
 
                     if ($user == 'INFO_EXISTS') {

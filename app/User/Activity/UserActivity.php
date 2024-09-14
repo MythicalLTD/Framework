@@ -1,20 +1,22 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\User\Activity;
 
+use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
-use MythicalSystemsFramework\Kernel\Logger;
-use MythicalSystemsFramework\Kernel\Config;
-use MythicalSystemsFramework\Encryption\XChaCha20;
-use MythicalSystemsFramework\User\UserHelper;
-use MythicalSystemsFramework\Kernel\Debugger;
-use MythicalSystemsFramework\Mail\MailService;
-use MythicalSystemsFramework\Handlers\ActivityHandler;
-use MythicalSystemsFramework\Managers\Settings as settings;
-use MythicalSystemsFramework\Managers\ConfigManager as cfg;
-use MythicalSystemsFramework\Database\MySQL;
-use MythicalSystemsFramework\User\UserDataHandler;
 
 class UserActivity
 {
@@ -39,7 +41,7 @@ class UserActivity
             $stmt->bind_param('ssssss', $userId, $description, $action, $ipv4, $time);
             $stmt->execute();
             $stmt->close();
-            $event->emit("useractivity.onAdd", [$userId, $description, $action, $ipv4, $time]);
+            $event->emit('useractivity.onAdd', [$userId, $description, $action, $ipv4, $time]);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while adding a new activity: ' . $e->getMessage());
         }
@@ -60,7 +62,7 @@ class UserActivity
             $stmt = $conn->prepare('DELETE FROM framework_users_activities WHERE user_id = ?');
             $stmt->bind_param('s', $userId);
             $stmt->execute();
-            $event->emit("useractivity.onRemoveUserAll", [$userId]);
+            $event->emit('useractivity.onRemoveUserAll', [$userId]);
             $stmt->close();
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while removing user activities: ' . $e->getMessage());
@@ -79,7 +81,7 @@ class UserActivity
             $conn = $mysqli->connectMYSQLI();
 
             $conn->query('TRUNCATE TABLE framework_users_activities');
-            $event->emit("useractivity.onRemoveAll", []);
+            $event->emit('useractivity.onRemoveAll', []);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while removing all activities: ' . $e->getMessage());
         }
@@ -108,6 +110,7 @@ class UserActivity
             return $activities;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while getting user activities: ' . $e->getMessage());
+
             return [];
         }
     }

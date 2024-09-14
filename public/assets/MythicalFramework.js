@@ -10,6 +10,8 @@ const isDebugMode = true;
 // This value will show a warning when debug mode is enabled.
 const showDebugWarning = false;
 
+
+
 if (isDebugMode == true && showDebugWarning == true) {
     console.warn(
         'Debug mode is enabled. This should only be enabled for development purposes. Do not enable this in production environments.'
@@ -21,10 +23,6 @@ if (isDebugMode == true && showDebugWarning == true) {
         confirmButtonText: 'OK',
     });
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    window.history.scrollRestoration = 'auto';
-});
 
 /**
  * Warn users about the danger of pasting something in the browser console.

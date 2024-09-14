@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Roles;
 
 use MythicalSystemsFramework\Kernel\Logger;
@@ -34,20 +45,19 @@ class RolesDataHandler
             $stmtRole->fetch();
             $stmtRole->close();
 
-
             if ($count > 0) {
                 return 'ERROR_ROLE_EXISTS';
-            } else {
-                // Insert the role into the database
-                $stmtInsert = $mysqli->prepare('INSERT INTO framework_roles (name, weight) VALUES (?, ?)');
-
-                $stmtInsert->bind_param('si', $name, $weight);
-                $stmtInsert->execute();
-                $stmtInsert->close();
-                $event->emit('roles.Create', [$name, $weight]);
-
-                return $mysqli->insert_id;
             }
+            // Insert the role into the database
+            $stmtInsert = $mysqli->prepare('INSERT INTO framework_roles (name, weight) VALUES (?, ?)');
+
+            $stmtInsert->bind_param('si', $name, $weight);
+            $stmtInsert->execute();
+            $stmtInsert->close();
+            $event->emit('roles.Create', [$name, $weight]);
+
+            return $mysqli->insert_id;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesDataHandler.php) Failed to create role: ' . $e->getMessage());
 
@@ -80,9 +90,10 @@ class RolesDataHandler
             $stmtRole->close();
             if ($mysqli->affected_rows > 0) {
                 return 'ROLE_DELETED';
-            } else {
-                return 'ROLE_DELETE_FAILED';
             }
+
+            return 'ROLE_DELETE_FAILED';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesDataHandler.php) Failed to delete role: ' . $e->getMessage());
 
@@ -109,7 +120,7 @@ class RolesDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
-            $event->emit("roles.Update", [$id, $name, $weight]);
+            $event->emit('roles.Update', [$id, $name, $weight]);
             // Update the role
             $stmtRole = $mysqli->prepare('UPDATE framework_roles SET name = ?, weight = ? WHERE id = ?');
             $stmtRole->bind_param('sii', $name, $weight, $id);
@@ -117,9 +128,10 @@ class RolesDataHandler
             $stmtRole->close();
             if ($mysqli->affected_rows > 0) {
                 return 'ROLE_UPDATED';
-            } else {
-                return 'ROLE_UPDATE_FAILED';
             }
+
+            return 'ROLE_UPDATE_FAILED';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesDataHandler.php) Failed to update role: ' . $e->getMessage());
 
@@ -219,9 +231,10 @@ class RolesDataHandler
 
             if ($count > 0) {
                 return 'ROLE_EXISTS';
-            } else {
-                return 'ROLE_MISSING';
             }
+
+            return 'ROLE_MISSING';
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesDataHandler.php) Failed to check if role exists: ' . $e->getMessage());
 

@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Api\Apis\System;
 
 use MythicalSystemsFramework\Api\Api;
@@ -36,9 +47,9 @@ class Translation extends Api implements ApiBuilder
 
                 if ($plain) {
                     exit($translation);
-                } else {
-                    Api::OK('The translation exists!', ['RESULT' => $translation, 'result' => $translation, 'text' => $translation, 'message' => $translation, 'error' => $error]);
                 }
+                Api::OK('The translation exists!', ['RESULT' => $translation, 'result' => $translation, 'text' => $translation, 'message' => $translation, 'error' => $error]);
+
             } else {
                 Api::BadRequest('You are missing the GET field for orElse!', []);
             }

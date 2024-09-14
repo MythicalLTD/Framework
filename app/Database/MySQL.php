@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Database;
 
 use PDO;
@@ -12,8 +23,8 @@ use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
 class MySQL
 {
-    private static $connection;
     public static int $migrated_files_count;
+    private static $connection;
 
     /**
      * Connects to the database server using PDO.
@@ -30,6 +41,7 @@ class MySQL
             $pdo = new \PDO($dsn, cfg::get('database', 'username'), cfg::get('database', 'password'));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $event->emit('database.onConnectPDO', [$pdo]);
+
             return $pdo;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to connect to the database!');
@@ -58,6 +70,7 @@ class MySQL
         }
         $connection = self::$connection;
         $event->emit('database.onConnectMYSQLI', [$connection]);
+
         return $connection;
     }
 
@@ -93,6 +106,7 @@ class MySQL
             $pdo = new \PDO($dsn, $username, $password);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $event->emit('database.ontryConnection');
+
             return true;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to execute PDO query: ' . $e);
@@ -179,6 +193,7 @@ class MySQL
             $stmt->close();
             $locked = $row['locked'] ?? false;
             $event->emit('database.onGetLockStatus', [$table, $id, $locked]);
+
             return $locked;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to get lock status: ' . $e);
@@ -200,10 +215,12 @@ class MySQL
             $conn = $mysqli->connectMYSQLI();
             $conn->query('SELECT * FROM ' . mysqli_real_escape_string($conn, $table));
             $event->emit('database.onCheckTableExistence', [$table, true]);
+
             return true;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to check if table exists: ' . $e);
             $event->emit('database.onCheckTableExistence', [$table, false]);
+
             return false;
         }
     }
@@ -228,7 +245,7 @@ class MySQL
             $stmt->bind_param('sss', $table, $search, $term);
             $stmt->execute();
             $stmt->close();
-            
+
             return true;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, 'Failed to check if record exists: ' . $e);

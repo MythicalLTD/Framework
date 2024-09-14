@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Web\Installer;
 
 use MythicalSystemsFramework\App;
@@ -16,29 +27,28 @@ class Installer
          * Check if the app is installed
          */
         if (file_exists(__DIR__ . '/../../../storage/FIRST_INSTALL')) {
-            $router->add('/', function () {
+            $router->add('/', function (): void {
                 include __DIR__ . '/index.php';
             });
 
-            $router->add('/mysql', function () {
+            $router->add('/mysql', function (): void {
                 include __DIR__ . '/mysql.php';
             });
 
-            $router->add('/install', function () {
+            $router->add('/install', function (): void {
                 include __DIR__ . '/install.php';
             });
 
-            $router->add('/(.*)', function () {
+            $router->add('/(.*)', function (): void {
                 header('location: /');
             });
             $router->route();
             exit;
-        } else {
-            return;
         }
+
     }
 
-    public static function showError(string $description)
+    public static function showError(string $description): void
     {
         exit("
         <html>

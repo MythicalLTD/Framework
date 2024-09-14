@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 namespace MythicalSystemsFramework\Kernel;
 
 class Debugger
@@ -13,7 +24,7 @@ class Debugger
     public static function display_info($input, $collapse = false): void
     {
         try {
-            $recursive = function ($data, $level = 0) use (&$recursive, $collapse) {
+            $recursive = function ($data, $level = 0) use (&$recursive, $collapse): void {
                 global $argv;
 
                 $isTerminal = isset($argv);
@@ -148,7 +159,7 @@ class Debugger
      *
      * @return void IT will die
      */
-    public static function throw_error($renderer, $error_text, $error_full_message, $error_database_id, $error_file_path)
+    public static function throw_error($renderer, $error_text, $error_full_message, $error_database_id, $error_file_path): void
     {
         try {
             $router = new \Router\Router();
@@ -157,7 +168,7 @@ class Debugger
             $renderer->addGlobal('error_id', $error_database_id);
             $renderer->addGlobal('error_path', $error_file_path);
 
-            $router->add('/(.*)', function () {
+            $router->add('/(.*)', function (): void {
                 global $renderer;
 
                 http_response_code(500);

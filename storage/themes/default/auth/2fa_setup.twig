@@ -1,0 +1,106 @@
+{% extends 'components/page.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+	<!-- ====== Forms Section Start -->
+	<div class="rounded-xl bg-white p-4 shadow-14 dark:bg-boxdark lg:p-7.5 xl:p-12.5">
+		<h1 class="text-center mb-2.5 text-3xl font-black leading-[48px] text-black dark:text-white">
+			Add 2FA to your account
+		</h1>
+
+		<p class="mb-7.5 font-medium text-center">
+			Please scan the QR code below with your authenticator app to enable 2FA.
+		</p>
+
+		<div class="flex justify-center">
+			<div class="w-40 h-40 bg-gray-200 dark:bg-gray-800">
+				<img src="{{ qrCode }}" alt="QR Code" class="w-full h-full object-cover">
+			</div>
+		</div>
+		<p class="mt-5 text-center font-medium">
+			Scan this QR code with your authenticator app
+		<br>
+
+		<p class="mt-5 text-center font-medium">
+			Or enter the code manually: <strong><code>{{ secret }}</code></strong>
+		</p>
+		<br>
+
+		<form id="2fasetup" method="POST">
+			<div class="flex items-center gap-4.5">
+				<input type="text" id="pin_1" name="pin_1" maxlength="1" class="w-full rounded-md border-[1.5px] border-stroke bg-transparent p-3 font-medium text-2xl text-center text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+				<input type="text" id="pin_2" name="pin_2" maxlength="1" class="w-full rounded-md border-[1.5px] border-stroke bg-transparent p-3 font-medium text-2xl text-center text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+				<input type="text" id="pin_3" name="pin_3" maxlength="1" class="w-full rounded-md border-[1.5px] border-stroke bg-transparent p-3 font-medium text-2xl text-center text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+				<input type="text" id="pin_4" name="pin_4" maxlength="1" class="w-full rounded-md border-[1.5px] border-stroke bg-transparent p-3 font-medium text-2xl text-center text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+				<input type="text" id="pin_5" name="pin_5" maxlength="1" class="w-full rounded-md border-[1.5px] border-stroke bg-transparent p-3 font-medium text-2xl text-center text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+				<input type="text" id="pin_6" name="pin_6" maxlength="1" class="w-full rounded-md border-[1.5px] border-stroke bg-transparent p-3 font-medium text-2xl text-center text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+			</div>
+			<br>
+
+			<button type="submit" name="submit" id="submit" class="flex w-full justify-center rounded-md bg-primary p-[13px] font-bold text-gray hover:bg-opacity-90">
+				Verify
+			</button>
+
+			<span class="mt-5 block text-red text-center">
+				Don’t share the verification code with anyone!
+			</span>
+		</form>
+	</div>
+	<!-- ====== Forms Section End -->
+</div>{% endblock %}{% block footer %}
+
+<script>
+	// Set the focus to the first input field
+	document.getElementById('pin_1').focus();
+
+	// Move to the next input field on typing
+	document.getElementById('pin_1').addEventListener('input', function() {
+		if (this.value.length >= this.maxLength) {
+			document.getElementById('pin_2').focus();
+		}
+	});
+	document.getElementById('pin_2').addEventListener('input', function() {
+		if (this.value.length >= this.maxLength) {
+			document.getElementById('pin_3').focus();
+		}
+	});
+	document.getElementById('pin_3').addEventListener('input', function() {
+		if (this.value.length >= this.maxLength) {
+			document.getElementById('pin_4').focus();
+		}
+	});
+	document.getElementById('pin_4').addEventListener('input', function() {
+		if (this.value.length >= this.maxLength) {
+			document.getElementById('pin_5').focus();
+		}
+	});
+	document.getElementById('pin_5').addEventListener('input', function() {
+		if (this.value.length >= this.maxLength) {
+			document.getElementById('pin_6').focus();
+		}
+	});
+	document.getElementById('pin_6').addEventListener('input', function() {
+		if (this.value.length >= this.maxLength) {
+			document.getElementById('pin_6').blur();
+			var pin1 = document.getElementById('pin_1').value;
+			var pin2 = document.getElementById('pin_2').value;
+			var pin3 = document.getElementById('pin_3').value;
+			var pin4 = document.getElementById('pin_4').value;
+			var pin5 = document.getElementById('pin_5').value;
+			var pin6 = this.value;
+			
+			if (pin1 && pin2 && pin3 && pin4 && pin5 && pin6) {
+				document.getElementById('submit').click();
+			}
+		}
+	});
+
+	
+</script>
+
+{% if isTurnStileEnabled == true %}
+	 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
+
+{% endblock %}

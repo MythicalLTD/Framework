@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(null);
@@ -32,18 +43,18 @@ if (
 
                 if ($conn->connect_error) {
                     exit($conn->connect_error);
-                } else {
-                    echo 'OK';
                 }
+                echo 'OK';
+
                 $conn->close();
             } else {
                 exit('Failed to ping: ' . $hostname . ':' . $port);
             }
 
             exit;
-        } else {
-            exit('Please provide an valid ipv4/ipv6!');
         }
+        exit('Please provide an valid ipv4/ipv6!');
+
     } catch (Exception $e) {
         exit($e->getMessage());
     }

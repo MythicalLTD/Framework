@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 try {
     if (file_exists('../storage/caches/vendor/autoload.php')) {
         require '../storage/caches/vendor/autoload.php';
@@ -11,12 +22,14 @@ try {
 }
 
 use MythicalSystemsFramework\App;
+use PragmaRX\Google2FA\Google2FA;
 use MythicalSystemsFramework\Api\Api as api;
-use MythicalSystemsFramework\Mail\Templates\Verification;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\Plugins\PluginsManager;
 use MythicalSystemsFramework\Web\Installer\Installer;
+
+$fa = new Google2FA();
 
 $router = new Router\Router();
 $event = new PluginEvent();
@@ -41,21 +54,19 @@ PluginsManager::init($event);
  */
 $renderer = Engine::getRenderer();
 
-
 /*
  * Load the routes.
  */
 api::registerApiRoutes($router);
 App::registerRoutes($renderer);
-$event->emit('app.onAppLoad', [$router,$renderer]);
+$event->emit('app.onAppLoad', [$router, $renderer]);
 
-$router->add('/(.*)', function () {
+$router->add('/(.*)', function (): void {
     global $renderer;
     $renderer->addGlobal('page_name', '404');
     http_response_code(404);
     echo $renderer->render('/errors/404.twig');
 });
-
 
 try {
     $router->route();

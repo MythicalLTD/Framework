@@ -77,56 +77,16 @@
 							<h5 class="text-sm font-medium text-bodydark2">{{ lang('components_header_notification') }}</h5>
 						</div>
 
-						<ul
-							class="flex h-auto flex-col overflow-y-auto"><!--<li>
-																																																<a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-																																																	<p class="text-sm">
-																																																		<span class="text-black dark:text-white">Edit your information in a swipe</span>
-																																																		Sint occaecat cupidatat non proident, sunt in culpa qui
-																																																																														                    officia deserunt mollit anim.
-																																																	</p>
-																																								
-																																																	<p class="text-xs">12 May, 2025</p>
-																																																</a>
-																																															</li>
-																																															<li>
-																																																<a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-																																																	<p class="text-sm">
-																																																		<span class="text-black dark:text-white">It is a long established fact</span>
-																																																		that a reader will be distracted by the readable.
-																																																	</p>
-																																								
-																																																	<p class="text-xs">24 Feb, 2025</p>
-																																																</a>
-																																															</li>
-																																															<li>
-																																																<a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-																																																	<p class="text-sm">
-																																																		<span class="text-black dark:text-white">There are many variations</span>
-																																																		of passages of Lorem Ipsum available, but the majority have
-																																																																														                    suffered
-																																																	</p>
-																																								
-																																																	<p class="text-xs">04 Jan, 2025</p>
-																																																</a>
-																																															</li>
-																																															<li>
-																																																<a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-																																																	<p class="text-sm">
-																																																		<span class="text-black dark:text-white">There are many variations</span>
-																																																		of passages of Lorem Ipsum available, but the majority have
-																																																																														                    suffered
-																																																	</p>
-																																								
-																																																	<p class="text-xs">01 Dec, 2024</p>
-																																																</a>
-																																															</li>-->
+						<ul class="flex h-auto flex-col overflow-y-auto">
+						<!--
+							Notification Area
+						-->
 						</ul>
 					</div>
 					<!-- Dropdown End -->
 				</li>
 			</ul>
-			{% if isUserSessionValid == false %}
+			{% if user_token == "" %}
 				<!-- User Area -->
 				<div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
 					<a class="flex items-center gap-4" href="#" @click.prevent="dropdownOpen = ! dropdownOpen">
@@ -147,12 +107,12 @@
 				<div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
 					<a class="flex items-center gap-4" href="#" @click.prevent="dropdownOpen = ! dropdownOpen">
 						<span class="hidden text-right lg:block">
-							<span class="block text-sm font-medium text-black dark:text-white">Some one</span>
-							<span class="block text-xs font-medium">Role</span>
+							<span class="block text-sm font-medium text-black dark:text-white">{{ user('username',false) }}</span>
+							<span class="block text-xs font-medium">{{ role_name }}</span>
 						</span>
 
 						<span class="h-12 w-12 rounded-full">
-							<img src="/assets/src/images/user/user-01.png" alt="User"/>
+							<img src="{{ user('avatar',false) }}" alt="User" class="rounded-full"/>
 						</span>
 
 						<svg :class="dropdownOpen && 'rotate-180'" class="hidden fill-current sm:block" width="12" height="8" viewbox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -10,13 +10,15 @@
         "twig/twig": "^3.10",
         "ifsnop/mysqldump-php": "^2.12",
         "composer/composer": "^2.7",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "pragmarx/google2fa": "^8.0"
     },
     "config": {
         "vendor-dir": "storage/caches/vendor"
     },
     "license": "MIT",
     "minimum-stability": "stable",
+    "prefer-stable": true,
     "keywords": [
         "mythicalsystems",
         "mythicalcore",
