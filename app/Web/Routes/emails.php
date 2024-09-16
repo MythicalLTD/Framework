@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -13,8 +14,8 @@
 
 global $router;
 
-$router->add('/emails/welcome', function (): void {
-    $file = file_get_contents(__DIR__ . '/../../../storage/mails/welcome.html');
+$router->add('/emails/verify', function (): void {
+    $file = file_get_contents(__DIR__ . '/../../../storage/mails/verify.html');
     echo exit($file);
 });
 

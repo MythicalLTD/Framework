@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -223,18 +224,43 @@ class UserDataHandler
     }
 
     /**
+     * Get the user data by email.
+     *
+     * @param string $email The email of the user
+     */
+    public static function getTokenEmail(string $email): ?string
+    {
+        try {
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            $stmt = $mysqli->prepare('SELECT token FROM framework_users WHERE email = ? LIMIT 1');
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $stmt->bind_result($token);
+            $stmt->fetch();
+            $stmt->close();
+
+            return $token;
+        } catch (\Exception $e) {
+            logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to get token by email: ' . $e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
      * Get the user data.
      *
      * @return mixed
      */
-    public static function getTokenByUserID(string $user_id): ?string
+    public static function getTokenUUID(string $user_id): ?string
     {
         try {
             // Connect to the database
             $database = new MySQL();
             $mysqli = $database->connectMYSQLI();
             // Check if the user exists
-            $stmt = $mysqli->prepare('SELECT token FROM framework_users WHERE uuid = ?');
+            $stmt = $mysqli->prepare('SELECT token FROM framework_users WHERE uuid = ? LIMIT 1');
             $stmt->bind_param('s', $user_id);
             $stmt->execute();
             $stmt->bind_result($token);

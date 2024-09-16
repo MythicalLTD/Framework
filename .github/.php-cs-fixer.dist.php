@@ -19,6 +19,7 @@ Please view the LICENSE file that was distributed with this source code.
 
 (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
 (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+(c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
 
 You should have received a copy of the MIT License
 along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -70,6 +71,22 @@ return (new Config())
             ],
         ],
         'header_comment' => ['header' => $header],
+        'phpdoc_order' => true,
+        'phpdoc_summary' => true,
+        'phpdoc_to_comment' => false,
+        'phpdoc_no_empty_return' => true,
+        'phpdoc_no_useless_inheritdoc' => true,
+        'phpdoc_no_package' => true,
+        'phpdoc_separation' => true,
+        'phpdoc_trim_consecutive_blank_line_separation' => true,
+        'phpdoc_types_order' => [
+            'null_adjustment' => 'always_last',
+            'sort_algorithm' => 'none',
+        ],
+        'phpdoc_var_annotation_correct_order' => true,
+        'return_assignment' => true,
+        'single_line_throw' => false,
+        'single_line_comment_style' => false,
         'random_api_migration' => true,
         'ternary_to_null_coalescing' => true,
         'yoda_style' => [

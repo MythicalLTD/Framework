@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -114,9 +115,8 @@ class Logger
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
         $result = $conn->query('SELECT * FROM framework_logs');
-        $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
 
-        return $framework_logs;
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
@@ -127,9 +127,8 @@ class Logger
         $mysqli = new MySQL();
         $conn = $mysqli->connectMYSQLI();
         $result = $conn->query('SELECT * FROM framework_logs ORDER BY id DESC');
-        $framework_logs = $result->fetch_all(MYSQLI_ASSOC);
 
-        return $framework_logs;
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     /**

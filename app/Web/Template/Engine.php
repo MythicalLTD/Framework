@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -13,10 +14,10 @@
 
 namespace MythicalSystemsFramework\Web\Template;
 
-use MythicalSystemsFramework\Language\Manager;
 use Twig\Environment;
 use Twig\TwigFunction;
 use Twig\Loader\FilesystemLoader;
+use MythicalSystemsFramework\Language\Manager;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Web\Installer\Installer;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
@@ -89,8 +90,9 @@ class Engine
      */
     public static function registerLanguage(Environment $renderer): void
     {
-        $renderer->addFunction(new TwigFunction('lang', function ($key): string|null {
+        $renderer->addFunction(new TwigFunction('lang', function ($key): ?string {
             $lang = new Manager();
+
             return $lang->get($key);
         }));
     }
@@ -123,7 +125,6 @@ class Engine
         $warnings = [];
         $errors = [];
         $success = [];
-
 
         if (isset($_GET['e']) && !$_GET['e'] == '') {
             $e = $_GET['e'];
@@ -301,21 +302,25 @@ class Engine
             }
         }
     }
-    private static function getError(string $key): string|null
+
+    private static function getError(string $key): ?string
     {
         $lang = new Manager();
+
         return $lang->get('Alerts.Error.' . $key);
     }
 
-    private static function getSuccess(string $key): string|null
+    private static function getSuccess(string $key): ?string
     {
         $lang = new Manager();
+
         return $lang->get('Alerts.Success.' . $key);
     }
 
-    private static function getWarnings(string $key): string|null
+    private static function getWarnings(string $key): ?string
     {
         $lang = new Manager();
+
         return $lang->get('Alerts.Warnings.' . $key);
     }
 }

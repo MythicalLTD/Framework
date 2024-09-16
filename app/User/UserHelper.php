@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -85,8 +86,6 @@ class UserHelper extends UserDataHandler
 
     /**
      * Log the user out of his account.
-     *
-     * @return void This functions removes the token header!
      */
     public function killSession(): void
     {
@@ -163,9 +162,7 @@ class UserHelper extends UserDataHandler
     {
         try {
             if ($this->isSessionValid()) {
-                $role_id = $this->getSpecificUserData($this->account_token, 'role', false);
-
-                return $role_id;
+                return $this->getSpecificUserData($this->account_token, 'role', false);
             }
 
             return 'ERROR_ACCOUNT_NOT_VALID';

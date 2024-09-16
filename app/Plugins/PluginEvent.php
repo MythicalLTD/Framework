@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -107,8 +108,6 @@ class PluginEvent
      * Removes all listeners for the specified event or all events if no event is specified.
      *
      * @param string|null $event the name of the event (optional)
-     *
-     * @return void
      */
     public function listeners(?string $event = null): array
     {

@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -91,8 +92,6 @@ class Manager
 
     /**
      * Replace placeholders in the language string.
-     *
-     * @return null
      */
     private function replacePlaceholders(?string $replacePlaceholders): ?string
     {
@@ -107,9 +106,8 @@ class Manager
 
         $replacePlaceholders = str_replace('%seo_title%', settings::getSetting('seo', 'title'), $replacePlaceholders);
         $replacePlaceholders = str_replace('%seo_description%', settings::getSetting('seo', 'description'), $replacePlaceholders);
-        $replacePlaceholders = str_replace('%seo_keywords%', settings::getSetting('seo', 'keywords'), $replacePlaceholders);
 
-        return $replacePlaceholders;
+        return str_replace('%seo_keywords%', settings::getSetting('seo', 'keywords'), $replacePlaceholders);
     }
 
     /**

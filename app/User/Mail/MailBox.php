@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -60,7 +61,7 @@ class MailBox
      */
     public static function getEmails(string $uuid): array
     {
-        if (UserDataHandler::isUserValid(UserDataHandler::getTokenByUserID($uuid))) {
+        if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('SELECT * FROM framework_user_mails WHERE uuid = ?');
@@ -88,7 +89,7 @@ class MailBox
      */
     public static function getEmail(string $uuid, string $id): array
     {
-        if (UserDataHandler::isUserValid(UserDataHandler::getTokenByUserID($uuid))) {
+        if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('SELECT * FROM framework_user_mails WHERE uuid = ? AND id = ?');
@@ -117,7 +118,7 @@ class MailBox
     public static function deleteEmail(string $uuid, string $id): void
     {
         global $event; // This is a global variable that is used to emit events.
-        if (UserDataHandler::isUserValid(UserDataHandler::getTokenByUserID($uuid))) {
+        if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $event->emit('userEmail.deleteEmail', [$uuid, $id]);
@@ -137,7 +138,7 @@ class MailBox
      */
     public static function deleteAllEmails(string $uuid): void
     {
-        if (UserDataHandler::isUserValid(UserDataHandler::getTokenByUserID($uuid))) {
+        if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('DELETE FROM framework_user_mails WHERE uuid = ?');
@@ -156,7 +157,7 @@ class MailBox
      */
     public static function getEmailCount(string $uuid): int
     {
-        if (UserDataHandler::isUserValid(UserDataHandler::getTokenByUserID($uuid))) {
+        if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_user_mails WHERE uuid = ?');
@@ -182,7 +183,7 @@ class MailBox
     public static function markMailAsRead(string $uuid, string $id): void
     {
         global $event; // This is a global variable that is used to emit events.
-        if (UserDataHandler::isUserValid(UserDataHandler::getTokenByUserID($uuid))) {
+        if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('UPDATE framework_user_mails SET read = 1 WHERE uuid = ? AND id = ?');

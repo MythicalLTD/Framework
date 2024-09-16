@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -79,9 +80,8 @@ class DBSettingsManager
     {
         $mysql = new MySQL();
         $conn = $mysql->connectMYSQLI();
-        $success = $conn->query('TRUNCATE TABLE framework_settings');
 
-        return $success;
+        return $conn->query('TRUNCATE TABLE framework_settings');
     }
 
     /**

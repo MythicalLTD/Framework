@@ -6,16 +6,17 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
-use MythicalSystemsFramework\Web\Template\Engine;
 use PragmaRX\Google2FA\Google2FA;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Mail\MailService;
 use MythicalSystemsFramework\Managers\Settings;
+use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\CloudFlare\TurnStile;
 use MythicalSystemsFramework\Mail\Templates\Login;
 use MythicalSystemsFramework\User\UserDataHandler;
@@ -27,9 +28,9 @@ use MythicalSystemsFramework\Google\TwoFactorAuthentication;
 
 global $router;
 
-/**
+/*
  * Forgot password
- * 
+ *
  * This route will handle the forgot password.
  */
 $router->add('/auth/forgot', function (): void {
@@ -66,7 +67,14 @@ $router->add('/auth/forgot', function (): void {
             $email = $_POST['email'];
 
             if (UserDataHandler::doesEmailExist($email)) {
-                
+                $token = UserDataHandler::getTokenEmail($email);
+                if (MailService::isEnabled() == true) {
+                    Login::sendMail($token);
+                    header('Location: /auth/login?s=forgot');
+                    exit;
+                } else {
+                    
+                }
             } else {
                 header('Location: /auth/forgot?e=user_not_found');
                 exit;
@@ -76,7 +84,6 @@ $router->add('/auth/forgot', function (): void {
         exit;
     }
 });
-
 
 /*
  *
@@ -93,7 +100,7 @@ $router->add('/auth/verify-email', function (): void {
 
     if (isset($_GET['token']) && !$_GET['token'] == '') {
         if (MailVerification::isValid($_GET['token'])) {
-            $token = UserDataHandler::getTokenByUserID(MailVerification::getUserUUID($_GET['token']));
+            $token = UserDataHandler::getTokenUUID(MailVerification::getUserUUID($_GET['token']));
             $user = new UserHelper($token);
             $user->verifyUser();
             setcookie('token', $token, time() + 3600 * 24 * 365 * 5, '/');
@@ -211,7 +218,6 @@ $router->add('/auth/2fa/login', function (): void {
         $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
         Engine::registerAlerts($renderer, $template_name);
 
-
         exit($renderer->render($template_name));
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -260,7 +266,6 @@ $router->add('/auth/2fa/setup', function (): void {
         header('Location: /dashboard=e=2fa_already_setup');
         exit;
     }
-
 
     session_start();
     $csrf = new MythicalSystems\Utils\CSRFHandler();
@@ -371,22 +376,22 @@ $router->add('/auth/register', function (): void {
                 if (MailService::isEnabled()) {
                     Verification::sendMail($user_check);
                     header('Location: /auth/login?s=mail_verify');
-                    exit();
-                } else {
-                    $user = new UserHelper($user_check);
-                    $user->verifyUser();
-                    setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
-                    header('Location: /auth/login?s=register');
                     exit;
                 }
-            } else {
-                header('Location: /auth/register?e=unknown');
+                $user = new UserHelper($user_check);
+                $user->verifyUser();
+                setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
+                header('Location: /auth/login?s=register');
                 exit;
+
             }
-        } else {
-            header('Location: /auth/register?e=captcha');
+            header('Location: /auth/register?e=unknown');
             exit;
+
         }
+        header('Location: /auth/register?e=captcha');
+        exit;
+
     }
 });
 

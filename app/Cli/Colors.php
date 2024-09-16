@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -123,11 +124,10 @@ class Colors
     public static function translateColorsCode(string $message): string
     {
         $pattern = '/&([0-9a-fklmnor])/i';
-        $message = preg_replace_callback($pattern, function ($matches) {
+
+        return preg_replace_callback($pattern, function ($matches) {
             return self::getColorCode($matches[1]);
         }, $message);
-
-        return $message;
     }
 
     private static function getColorCode(string $colorCode): string

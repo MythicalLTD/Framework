@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -246,9 +247,8 @@ class Announcements
             $conn = $mysqli->connectMYSQLI();
 
             $result = $conn->query('SELECT * FROM framework_announcements');
-            $framework_announcements = $result->fetch_all(MYSQLI_ASSOC);
 
-            return $framework_announcements;
+            return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
             /*
              * Logger
@@ -274,9 +274,8 @@ class Announcements
             $conn = $mysqli->connectMYSQLI();
 
             $result = $conn->query('SELECT * FROM framework_announcements ORDER BY id DESC');
-            $framework_announcements = $result->fetch_all(MYSQLI_ASSOC);
 
-            return $framework_announcements;
+            return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
             /*
              * Logger
@@ -302,9 +301,8 @@ class Announcements
             $conn = $mysqli->connectMYSQLI();
 
             $result = $conn->query('SELECT * FROM framework_announcements ORDER BY date DESC');
-            $framework_announcements = $result->fetch_all(MYSQLI_ASSOC);
 
-            return $framework_announcements;
+            return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
             /*
              * Logger

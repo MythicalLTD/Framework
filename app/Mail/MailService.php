@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -83,9 +84,8 @@ class MailService
         $template = str_replace('{username}', $username, $template);
         $template = str_replace('{email}', $email, $template);
         $template = str_replace('{first_name}', $first_name, $template);
-        $template = str_replace('{last_name}', $last_name, $template);
 
-        return $template;
+        return str_replace('{last_name}', $last_name, $template);
     }
 
     /**
@@ -96,9 +96,8 @@ class MailService
         $template = str_replace('{app_name}', setting::getSetting('app', 'name'), $template);
         $template = str_replace('{app_logo}', setting::getSetting('app', 'logo'), $template);
         $template = str_replace('{app_url}', setting::getSetting('app', 'url'), $template);
-        $template = str_replace('{support_mail}', setting::getSetting('smtp', 'fromMail'), $template);
 
-        return $template;
+        return str_replace('{support_mail}', setting::getSetting('smtp', 'fromMail'), $template);
     }
 
     /**

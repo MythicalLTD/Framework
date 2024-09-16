@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -156,8 +157,6 @@ class Debugger
      * @param string $error_full_message The full error message
      * @param int $error_database_id The error database id
      * @param string $error_file_path The error file path
-     *
-     * @return void IT will die
      */
     public static function throw_error($renderer, $error_text, $error_full_message, $error_database_id, $error_file_path): void
     {

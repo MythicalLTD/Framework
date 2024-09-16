@@ -6,6 +6,7 @@
  *
  * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
  * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
  *
  * You should have received a copy of the MIT License
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
@@ -29,9 +30,9 @@ class MySQL
     /**
      * Connects to the database server using PDO.
      *
-     * @return \PDO the PDO object representing the database connection
-     *
      * @throws \Exception if the connection to the database fails
+     *
+     * @return \PDO the PDO object representing the database connection
      */
     public function connectPDO(): \PDO
     {
@@ -94,9 +95,9 @@ class MySQL
      * @param string $password The password
      * @param string $database The database name
      *
-     * @return bool true if the connection is successful, false otherwise
-     *
      * @throws \Exception If the connection to the database fails.     *
+     *
+     * @return bool true if the connection is successful, false otherwise
      */
     public function tryConnection(string $host, string|int $port, string $username, string $password, string $database): bool
     {
