@@ -37,12 +37,11 @@ class UserActivity
 
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-            $time = date('Y-m-d H:i:s');
-            $stmt = $conn->prepare('INSERT INTO framework_users_activities (user_id, description, action, ip_address, date) VALUES (?, ?, ?, ?, ?, ?)');
-            $stmt->bind_param('ssssss', $userId, $description, $action, $ipv4, $time);
+            $stmt = $conn->prepare('INSERT INTO framework_users_activities (user_id, description, action, ip_address) VALUES (?, ?, ?, ?)');
+            $stmt->bind_param('ssss', $userId, $description, $action, $ipv4);
             $stmt->execute();
             $stmt->close();
-            $event->emit('useractivity.onAdd', [$userId, $description, $action, $ipv4, $time]);
+            $event->emit('useractivity.onAdd', [$userId, $description, $action, $ipv4]);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while adding a new activity: ' . $e->getMessage());
         }
@@ -111,7 +110,6 @@ class UserActivity
             return $activities;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while getting user activities: ' . $e->getMessage());
-
             return [];
         }
     }

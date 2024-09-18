@@ -1,0 +1,79 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="flex-grow-1 container-p-y container-fluid">
+		<div class="row fv-plugins-icon-container">
+			<div class="col-md-12">
+				{% include 'account/components/navbar.twig' %}
+
+				<div
+					class="card mb-6">
+					<!-- Account -->
+														{% include 'account/components/profile.twig' %}
+
+					<hr class="my-0">
+					<div class="card-body pt-4">
+						<form id="formAccountSettings" method="GET" onsubmit="return false" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
+							<div class="row">
+								<div class="mb-4 col-md-6 fv-plugins-icon-container">
+									<label for="firstName" class="form-label">First Name</label>
+									<input class="form-control" type="text" id="firstName" name="firstName" value="{{ user('first_name',true) }}" autofocus="">
+									<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+								</div>
+								<div class="mb-4 col-md-6 fv-plugins-icon-container">
+									<label for="lastName" class="form-label">Last Name</label>
+									<input class="form-control" type="text" name="lastName" id="lastName" value="{{ user('last_name',true) }}">
+									<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+								</div>
+								<div class="mb-4 col-md-6">
+									<label for="email" class="form-label">E-mail</label>
+									<input class="form-control" type="text" id="email" name="email" value="{{ user('email',false) }}" placeholder="{{ user('email',false) }}">
+								</div>
+								<div class="mb-4 col-md-6">
+									<label for="address" class="form-label">Avatar</label>
+									<input type="text" class="form-control" id="address" name="address" placeholder="{{ user('avatar',false) }}" value="{{ user('avatar',false) }}">
+								</div>
+								<div class="mb-4 col-md-6">
+									<label for="state" class="form-label">Background</label>
+									<input class="form-control" type="text" id="state" name="state" value="{{ user('background',false) }}" placeholder="{{ user('background',false) }}">
+								</div>
+
+							</div>
+							<div class="mt-2">
+								<button type="submit" class="btn btn-primary me-3 waves-effect waves-light">Save changes</button>
+								<button type="reset" class="btn btn-label-secondary waves-effect">Cancel</button>
+							</div>
+							<input type="hidden"></form>
+					</div>
+					<!-- /Account -->
+				</div>
+				<div class="card">
+					<h5 class="card-header">Delete Account</h5>
+					<div class="card-body">
+						<div class="mb-6 col-12">
+							<div class="alert alert-warning">
+								<h5 class="alert-heading mb-1">Are you sure you want to delete your account?</h5>
+								<p class="mb-0">Once you delete your account, there is no going back. Please be certain.</p>
+							</div>
+						</div>
+						<form id="formAccountDeactivation" onsubmit="return false" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
+							<div class="form-check my-8">
+								<input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation">
+								<label class="form-check-label" for="accountActivation">I confirm my account deactivation</label>
+								<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+							</div>
+							<button type="submit" class="btn btn-danger deactivate-account waves-effect waves-light" disabled="">
+								Deactivate Account
+							</button>
+							<input type="hidden"></form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br><br><br><br>
+{% endblock %}
+
+{% block footer %}{% endblock %}

@@ -131,21 +131,18 @@ class UserHelper extends UserDataHandler
             if ($this->isSessionValid()) {
                 $update_user = self::updateSpecificUserData($this->account_token, 'last_seen', date('Y-m-d H:i:s'), false);
                 if ($update_user == 'SUCCESS') {
-                    $update_user = self::updateSpecificUserData($this->account_token, 'last_ip', $ip, false);
+                    $update_user = self::updateSpecificUserData($this->account_token, 'last_ip', $ip, true);
                     if ($update_user == 'SUCCESS') {
                         return 'SUCCESS';
                     }
 
                     return $update_user;
-
                 }
 
                 return $update_user;
-
             }
 
             return 'ERROR_ACCOUNT_NOT_VALID';
-
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserHelper.php) Failed to update last seen: ' . $e->getMessage());
 

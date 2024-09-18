@@ -15,6 +15,7 @@
 namespace MythicalSystemsFramework\Mail\Templates;
 
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Mail\MailForgot;
 use MythicalSystemsFramework\Mail\MailService;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\User\Mail\MailBox;
@@ -27,12 +28,15 @@ class Forgot extends MailService
     public static function sendMail(string $token): bool
     {
 
-        if (self::doesTemplateExist('login')) {
-            $template = self::getTemplate('login');
+        if (self::doesTemplateExist('reset-password')) {
+            $template = self::getTemplate('reset-password');
             $template = self::processTemplateSystemLevel($template);
             $template = self::processTemplateUserLevel($template, $token);
-            MailBox::saveEmail('New login in your account', $template, Settings::getSetting('smtp', 'fromMail'), $token);
-            if (self::send(UserDataHandler::getSpecificUserData($token, 'email', false), 'New login in your account', $template)) {
+            $code = MailForgot::generateCode();
+            MailForgot::add($code, $token);
+            $template = str_replace('{token}', $code, $template);
+            MailBox::saveEmail('Your password reset link!', $template, Settings::getSetting('smtp', 'fromMail'), $token);
+            if (self::send(UserDataHandler::getSpecificUserData($token, 'email', false), 'Your password reset link!', $template)) {
                 return true;
             }
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, '(App/Mail/Templates/Login.php) Failed to send email. Email library failed.');

@@ -13,6 +13,7 @@
  */
 
 use PragmaRX\Google2FA\Google2FA;
+use MythicalSystemsFramework\Mail\MailForgot;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Mail\MailService;
 use MythicalSystemsFramework\Managers\Settings;
@@ -22,11 +23,77 @@ use MythicalSystemsFramework\Mail\Templates\Login;
 use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Mail\MailVerification;
+use MythicalSystemsFramework\Mail\Templates\Forgot;
 use MythicalSystemsFramework\User\TwoFactor\TwoFactor;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\Mail\Templates\Verification;
 use MythicalSystemsFramework\Google\TwoFactorAuthentication;
 
 global $router;
+
+/**
+ * Reset password.
+ *
+ * This route will handle the reset password.
+ */
+$router->add('/auth/reset-password', function (): void {
+    session_start();
+    $csrf = new MythicalSystems\Utils\CSRFHandler();
+    $template_name = 'auth/reset.twig';
+    global $renderer;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (isset($_GET['token']) && !$_GET['token'] == '') {
+            $token = $_GET['token'];
+            if (MailForgot::isValid($token)) {
+                $account_token = MailForgot::getAccountToken($token);
+                $renderer->addGlobal('csrf_input', $csrf->input('forgot_form'));
+                $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+                $renderer->addGlobal('skey', $token);
+                Engine::registerAlerts($renderer, $template_name);
+
+                exit($renderer->render($template_name));
+            }
+            header('Location: /auth/reset-password?token=' . $_GET['token'] . '&e=token_not_exist');
+            exit;
+
+        }
+        header('Location: /auth/reset-password?token=' . $_GET['token'] . '&e=token_not_exist');
+        exit;
+
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!$csrf->validate('forgot_form')) {
+            header('Location: /auth/forgot?e=csrf');
+            exit;
+        }
+        if (!TurnStile::isEnabled()) {
+            $captcha_success = 1;
+        } else {
+            $captcha_success = TurnStile::validate($_POST['cf-turnstile-response'], CloudFlare::getUserIP(), Settings::getSetting('cloudflare_turnstile', 'sitesecret'));
+        }
+
+        if ($captcha_success) {
+            $token = $_POST['skey'];
+            $password = $_POST['password'];
+
+            if (MailForgot::isValid($token)) {
+                $account_token = MailForgot::getAccountToken($token);
+                UserDataHandler::updateSpecificUserData($account_token, 'password', $password, true);
+                MailForgot::remove($token);
+                UserActivity::addActivity(UserDataHandler::getSpecificUserData($account_token, 'uuid', false), 'Email password reset', CloudFlare::getUserIP(), 'user:reset-password');
+                header('Location: /auth/login?s=password_reset');
+                exit;
+            }
+            header('Location: /auth/reset-password?token=' . $_GET['token'] . '&e=token_not_exist');
+            exit;
+
+        }
+        header('Location: /auth/forgot?e=captcha');
+        exit;
+    }
+});
 
 /*
  * Forgot password
@@ -69,16 +136,18 @@ $router->add('/auth/forgot', function (): void {
             if (UserDataHandler::doesEmailExist($email)) {
                 $token = UserDataHandler::getTokenEmail($email);
                 if (MailService::isEnabled() == true) {
-                    Login::sendMail($token);
-                    header('Location: /auth/login?s=forgot');
+                    Forgot::sendMail($token);
+                    UserActivity::addActivity(UserDataHandler::getSpecificUserData($token, 'uuid', false), 'Email password reset request sent!', CloudFlare::getUserIP(), 'user:forgot-password');
+                    header('Location: /auth/login?s=password_forgot');
                     exit;
-                } else {
-                    
                 }
-            } else {
-                header('Location: /auth/forgot?e=user_not_found');
+                header('Location: /auth/forgot?e=mailserver_misconfiguration');
                 exit;
+
             }
+            header('Location: /auth/forgot?e=user_not_found');
+            exit;
+
         }
         header('Location: /auth/forgot?e=captcha');
         exit;
@@ -105,6 +174,7 @@ $router->add('/auth/verify-email', function (): void {
             $user->verifyUser();
             setcookie('token', $token, time() + 3600 * 24 * 365 * 5, '/');
             MailVerification::remove($_GET['token']);
+            UserActivity::addActivity(UserDataHandler::getSpecificUserData($token, 'uuid', false), 'Email verification success!', CloudFlare::getUserIP(), 'user:email-verified');
             exit(header('Location: /auth/login?s=mail_verify'));
         }
         exit(header('Location: /auth/login?e=code_invalid'));
@@ -184,6 +254,7 @@ $router->add('/auth/login', function (): void {
                 Login::sendMail($user_check);
                 setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
                 header('Location: /');
+                UserActivity::addActivity(UserDataHandler::getSpecificUserData($user_check, 'uuid', false), 'User logged in!', CloudFlare::getUserIP(), 'user:login');
                 $userTwoFactor = new TwoFactor($user_check);
                 $userTwoFactor->block();
                 exit;
@@ -196,6 +267,28 @@ $router->add('/auth/login', function (): void {
     }
 });
 
+$router->add('/auth/2fa/disable', function () : void {
+    global $renderer;
+
+    $user = new UserHelper($_COOKIE['token']);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token'], true);
+
+    $user2fa = new TwoFactor($_COOKIE['token']);
+    if ($user2fa->isSetup() == false) {
+        header('Location: /dashboard?e=2fa_not_setup');
+        exit;
+    }
+
+    $user2fa->unblock();
+    $user2fa->disable();
+    exit(header('Location: /account/security?s=2fa_setup_disabled'));
+});
+
+/**
+ * 2FA Login.
+ *
+ * This route will handle the 2FA login.
+ */
 $router->add('/auth/2fa/login', function (): void {
     global $renderer;
     $template_name = 'auth/2fa/login.twig';
@@ -205,7 +298,7 @@ $router->add('/auth/2fa/login', function (): void {
 
     $user2fa = new TwoFactor($_COOKIE['token']);
     if ($user2fa->isSetup() == false) {
-        header('Location: /dashboard=e=2fa_not_setup');
+        header('Location: /dashboard?e=2fa_not_setup');
         exit;
     }
 
@@ -235,7 +328,8 @@ $router->add('/auth/2fa/login', function (): void {
             $final_pin = $_POST['final_pin'];
             if ($google2fa->verifyKey($user2fa->getKey(), $final_pin)) {
                 $user2fa->unblock();
-                header('Location: /dashboard?s=2fa_setup_success');
+                UserActivity::addActivity(UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false), '2FA login success!', CloudFlare::getUserIP(), 'user:2fa-login');
+                header('Location: /account/security?s=2fa_setup_success');
                 exit;
             }
             header('Location: /auth/2fa/login?e=2fa_failed');
@@ -263,7 +357,7 @@ $router->add('/auth/2fa/setup', function (): void {
 
     $user2fa = new TwoFactor($_COOKIE['token']);
     if ($user2fa->isSetup()) {
-        header('Location: /dashboard=e=2fa_already_setup');
+        header('Location: /dashboard?e=2fa_already_setup');
         exit;
     }
 
@@ -301,6 +395,7 @@ $router->add('/auth/2fa/setup', function (): void {
 
             if ($google2fa->verifyKey($secretKey, $final_pin)) {
                 $user2fa->enable($secretKey);
+                UserActivity::addActivity(UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false), '2FA setup success!', CloudFlare::getUserIP(), 'user:2fa-setup');
                 header('Location: /dashboard?s=2fa_setup_success');
                 exit;
             }
@@ -383,15 +478,12 @@ $router->add('/auth/register', function (): void {
                 setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
                 header('Location: /auth/login?s=register');
                 exit;
-
             }
             header('Location: /auth/register?e=unknown');
             exit;
-
         }
         header('Location: /auth/register?e=captcha');
         exit;
-
     }
 });
 

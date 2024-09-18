@@ -1,0 +1,1 @@
+ALTER TABLE `framework_users` ADD `background` TEXT NOT NULL DEFAULT 'https://cdn.mythicalsystems.xyz/background.gif' AFTER `avatar`;

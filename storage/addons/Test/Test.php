@@ -23,6 +23,6 @@ class Test implements PluginBuilder
 
     public function Event(MythicalSystemsFramework\Plugins\PluginEvent $eventHandler): void
     {
-        
+
     }
 }

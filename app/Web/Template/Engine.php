@@ -41,11 +41,12 @@ class Engine
             define('DIR_CACHE', $cache_dir);
         }
 
-        if ($debug) {
-            define('DEBUG', true);
-        } else {
-            define('DEBUG', false);
-        }
+        // if ($debug) {
+        //    define('DEBUG', true);
+        // } else {
+        //    define('DEBUG', false);
+        // }
+        define('DEBUG', true);
 
         /*
          * Load the template engine
@@ -61,10 +62,12 @@ class Engine
 
         $loader = new FilesystemLoader(DIR_TEMPLATE);
         $renderer = new Environment($loader, [
-            'cache' => DIR_CACHE,
+            //'cache' => DIR_CACHE,
             'auto_reload' => true,
             'debug' => DEBUG,
             'charset' => 'utf-8',
+            'no_cache' => true,
+            'cache' => false,
         ]);
 
         self::registerSettings($renderer);
@@ -235,6 +238,18 @@ class Engine
                     $error_title = self::getError('UnknownError.Title');
                     $error_message = self::getError('UnknownError.Message');
                     break;
+                case 'mailserver_misconfiguration':
+                    $error_title = self::getError('EmailServerNotConfigured.Title');
+                    $error_message = self::getError('EmailServerNotConfigured.Message');
+                    break;
+                case 'already_liked':
+                    $error_title = self::getError('Social.AlreadyLiked.Title');
+                    $error_message = self::getError('Social.AlreadyLiked.Message');
+                    break;
+                case 'like_yourself':
+                    $error_title = self::getError('Social.CannotLikeYourSelf.Title');
+                    $error_message = self::getError('Social.CannotLikeYourSelf.Message');
+                    break;
                 default:
                     $error_title = self::getError('UnknownError.Title');
                     $error_message = self::getError('UnknownError.Message');
@@ -256,7 +271,7 @@ class Engine
                     $success_title = self::getSuccess('Auth.TwoFactorSetup.Setup.Title');
                     $success_message = self::getSuccess('Auth.TwoFactorSetup.Setup.Message');
                     break;
-                case '2fa_setup_disable':
+                case '2fa_setup_disabled    ':
                     $success_title = self::getSuccess('Auth.TwoFactorSetup.Disable.Title');
                     $success_message = self::getSuccess('Auth.TwoFactorSetup.Disable.Message');
                     break;
@@ -287,6 +302,14 @@ class Engine
                 case 'mail_verify':
                     $success_title = self::getSuccess('Auth.VerifyEmail.Title');
                     $success_message = self::getSuccess('Auth.VerifyEmail.Message');
+                    break;
+                case 'liked':
+                    $success_title = self::getSuccess('Social.Liked.Title');
+                    $success_message = self::getSuccess('Social.Liked.Message');
+                    break;
+                case 'disliked':
+                    $success_title = self::getSuccess('Social.UnLiked.Title');
+                    $success_message = self::getSuccess('Social.UnLiked.Message');
                     break;
                 default:
                     break;

@@ -21,7 +21,7 @@ use MythicalSystemsFramework\Kernel\LoggerLevels;
 
 class MailVerification
 {
-    public const table_name = 'framework_user_email_verification';
+    public const table_name = 'framework_users_email_verification';
 
     /**
      * Add a verification code.

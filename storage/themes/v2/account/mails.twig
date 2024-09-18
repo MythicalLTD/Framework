@@ -1,0 +1,62 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="flex-grow-1 container-p-y container-fluid">
+		<div class="row fv-plugins-icon-container">
+			<div class="col-md-12">
+				{% include 'account/components/navbar.twig' %}
+				<div
+					class="card mb-6">
+					<!-- Account -->
+					{% include 'account/components/profile.twig' %}
+
+					<hr
+					class="my-0">
+					<!-- /Account -->
+					<div class="card-datatable table-responsive pt-0">
+						<table class="datatables-basic table">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Subject</th>
+									<th>From</th>
+									<th>Date</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for email in emails %}
+									<tr>
+										<td>{{ email.id }}</td>
+										<td>{{ email.subject }}</td>
+										<td>{{ email.from }}</td>
+										<td>{{ email.date }}</td>
+										<td>
+											<a href="/account/mails/{{ email.id }}/view" class="btn btn-sm btn-primary">View</a>
+											<a href="/account/mails/{{ email.id }}/delete" class="btn btn-sm btn-danger">Delete</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br><br><br><br>
+{% endblock %}
+
+{% block footer %}
+	 <script>
+				$(document).ready(function() {
+					$('.datatables-basic').DataTable({
+						responsive: true,
+						pageLength: 10,
+						lengthMenu: [5, 10, 25, 50, 75, 100]
+					});
+				});
+			</script>
+{% endblock %}

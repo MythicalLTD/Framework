@@ -45,8 +45,9 @@ class MailForgot
             $stmt = $conn->prepare('INSERT INTO ' . self::table_name . ' (code, uuid) VALUES (?, ?)');
             $stmt->bind_param('ss', $code, $uuid);
             $stmt->execute();
+            $id = $stmt->insert_id;
             $stmt->close();
-            $event->emit('mail.forgot.add', [$stmt->insert_id]);
+            $event->emit('mail.forgot.add', [$id]);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Mail/MailForgot.php) Failed to add verification code. ' . $e->getMessage());
         }
@@ -125,5 +126,35 @@ class MailForgot
     public static function generateCode(): string
     {
         return bin2hex(random_bytes(32));
+    }
+
+    /**
+     * Get the account token.
+     *
+     * @param string $code The verification code
+     *
+     * @return string The account token
+     */
+    public static function getAccountToken(string $code): string
+    {
+        try {
+            $mysql = new MySQL();
+            $conn = $mysql->connectMYSQLI();
+            $stmt = $conn->prepare('SELECT * FROM ' . self::table_name . ' WHERE code = ?');
+            $stmt->bind_param('s', $code);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+
+                return UserDataHandler::getTokenUUID($row['uuid']);
+            }
+
+            return '';
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/Mail/MailForgot.php) Failed to check if verification code is valid. ' . $e->getMessage());
+
+            return '';
+        }
     }
 }

@@ -1,0 +1,113 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}
+{% endblock %}
+
+{% block dashboard %}
+	<div class="flex-grow-1 container-p-y container-fluid">
+		<div class="row fv-plugins-icon-container">
+			<div class="col-md-12">
+				{% include 'account/components/navbar.twig' %}
+				<div
+					class="card mb-6">
+					<!-- Account -->
+					{% include 'account/components/profile.twig' %}
+
+					<hr
+					class="my-0">
+				<!-- /Account -->
+
+				</div>
+			</div>
+			<div class="card mb-6">
+				<h5 class="card-header">Create an API key</h5>
+				<div class="row">
+					<div class="col-md-5 order-md-0 order-1">
+						<div class="card-body">
+							<form id="formAccountSettingsApiKey" method="GET" onsubmit="return false">
+								<div class="row">
+									<div class="mb-5 col-12">
+										<label for="apiAccess" class="form-label">Choose the Api key type you want to create</label>
+										<select id="apiAccess" class="select2 form-select form-select-lg">
+											<option value="">Choose Key Type</option>
+											<option value="rw">Read / Write</option>
+											<option value="r">Read Only</option>
+										</select>
+									</div>
+									<div class="mb-5 col-12">
+										<label for="apiKey" class="form-label">Name the API key</label>
+										<input type="text" class="form-control" id="apiKey" name="apiKey" placeholder="Server Key 1"/>
+									</div>
+									<div class="col-12">
+										<button type="submit" class="btn btn-primary me-2 d-grid w-100">Create Key</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="col-md-7 order-md-1 order-0">
+						<div class="text-center mt-4 mx-3 mx-md-0">
+							<img src="../../assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Api Key Image" width="202"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card mb-6">
+				<div class="card-body">
+					<h5>API Key List & Access</h5>
+					<p class="mb-6">
+						An API key is a simple encrypted string that identifies an application without any principal.
+						                        They are useful for accessing public data anonymously, and are used to associate API requests
+						                        with your project for quota and billing.
+					</p>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="bg-lighter rounded p-4 mb-6 position-relative">
+								<div class="d-flex align-items-center mb-2">
+									<h5 class="mb-0 me-3">Server Key 1</h5>
+									<span class="badge bg-label-primary">Full Access</span>
+								</div>
+								<div class="d-flex align-items-center mb-2">
+									<p class="me-3 mb-0 fw-medium">23eaf7f0-f4f7-495e-8b86-fad3261282ac</p>
+									<span class="cursor-pointer">
+										<i class="ti ti-copy"></i>
+									</span>
+								</div>
+								<span class="text-muted">Created on 28 Apr 2021, 18:20 GTM+4:10</span>
+							</div>
+							<div class="bg-lighter rounded p-4 position-relative mb-6">
+								<div class="d-flex align-items-center mb-2">
+									<h5 class="mb-0 me-3">Server Key 2</h5>
+									<span class="badge bg-label-primary">Read Only</span>
+								</div>
+								<div class="d-flex align-items-center mb-2">
+									<p class="me-3 mb-0 fw-medium">bb98e571-a2e2-4de8-90a9-2e231b5e99</p>
+									<span class="cursor-pointer">
+										<i class="ti ti-copy"></i>
+									</span>
+								</div>
+								<span class="text-muted">Created on 12 Feb 2021, 10:30 GTM+2:30</span>
+							</div>
+							<div class="bg-lighter rounded p-4 position-relative">
+								<div class="d-flex align-items-center mb-2">
+									<h5 class="mb-0 me-3">Server Key 3</h5>
+									<span class="badge bg-label-primary">Full Access</span>
+								</div>
+								<div class="d-flex align-items-center mb-2">
+									<p class="me-3 mb-0 fw-medium">2e915e59-3105-47f2-8838-6e46bf83b711</p>
+									<span class="cursor-pointer">
+										<i class="ti ti-copy"></i>
+									</span>
+								</div>
+								<span class="text-muted">Created on 28 Dec 2020, 12:21 GTM+4:10</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br><br><br><br>
+{% endblock %}
+
+{% block footer %}{% endblock %}

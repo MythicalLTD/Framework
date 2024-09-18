@@ -13,13 +13,14 @@
  */
 
 use MythicalSystemsFramework\User\UserHelper;
+use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
 
 global $router, $event;
 
 $router->add('/dashboard', function (): void {
     global $router, $event, $renderer;
-    define('TEMPLATE_NAME', 'index.twig');
+    $template = 'index.twig';
     /*
      * The requirement for each template
      */
@@ -29,7 +30,8 @@ $router->add('/dashboard', function (): void {
     $user = new UserHelper($_COOKIE['token']);
 
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+    Engine::registerAlerts($renderer, $template);
 
-    exit($renderer->render(TEMPLATE_NAME));
+    exit($renderer->render($template));
 
 });

@@ -38,7 +38,7 @@ class MailBox
             if (UserDataHandler::isUserValid($token)) {
                 $mysql = new MySQL();
                 $conn = $mysql->connectMYSQLI();
-                $stmt = $conn->prepare('INSERT INTO framework_user_mails (`subject`, `body`, `from`, `uuid`) VALUES (?, ?, ?, ?)');
+                $stmt = $conn->prepare('INSERT INTO framework_users_mails (`subject`, `body`, `from`, `uuid`) VALUES (?, ?, ?, ?)');
                 $uuid = UserDataHandler::getSpecificUserData($token, 'uuid', false);
                 $stmt->bind_param('ssss', $subject, $body, $from, $uuid);
                 $stmt->execute();
@@ -64,7 +64,7 @@ class MailBox
         if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_user_mails WHERE uuid = ?');
+            $stmt = $conn->prepare('SELECT * FROM framework_users_mails WHERE uuid = ?');
             $stmt->bind_param('s', $uuid);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -92,7 +92,7 @@ class MailBox
         if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_user_mails WHERE uuid = ? AND id = ?');
+            $stmt = $conn->prepare('SELECT * FROM framework_users_mails WHERE uuid = ? AND id = ?');
             $stmt->bind_param('ss', $uuid, $id);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -122,7 +122,7 @@ class MailBox
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
             $event->emit('userEmail.deleteEmail', [$uuid, $id]);
-            $stmt = $conn->prepare('DELETE FROM framework_user_mails WHERE uuid = ? AND id = ?');
+            $stmt = $conn->prepare('DELETE FROM framework_users_mails WHERE uuid = ? AND id = ?');
             $stmt->bind_param('ss', $uuid, $id);
             $stmt->execute();
             $stmt->close();
@@ -141,7 +141,7 @@ class MailBox
         if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare('DELETE FROM framework_user_mails WHERE uuid = ?');
+            $stmt = $conn->prepare('DELETE FROM framework_users_mails WHERE uuid = ?');
             $stmt->bind_param('s', $uuid);
             $stmt->execute();
             $stmt->close();
@@ -160,7 +160,7 @@ class MailBox
         if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_user_mails WHERE uuid = ?');
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_users_mails WHERE uuid = ?');
             $stmt->bind_param('s', $uuid);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -186,7 +186,7 @@ class MailBox
         if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-            $stmt = $conn->prepare('UPDATE framework_user_mails SET read = 1 WHERE uuid = ? AND id = ?');
+            $stmt = $conn->prepare('UPDATE framework_users_mails SET read = 1 WHERE uuid = ? AND id = ?');
             $stmt->bind_param('ss', $uuid, $id);
             $stmt->execute();
             $stmt->close();

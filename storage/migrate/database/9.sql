@@ -1,0 +1,1 @@
+ALTER TABLE `framework_users_social_likes` DROP `interaction`;

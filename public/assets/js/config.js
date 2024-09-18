@@ -96,11 +96,11 @@ if (typeof TemplateCustomizer !== 'undefined') {
     defaultTheme: 1,
     defaultStyle: 'dark',
     // defaultTextDir: 'rtl',
-    // defaultContentLayout: 'wide',
-    // defaultHeaderType: 'static',
-    // defaultMenuCollapsed: true,
-    // defaultNavbarType: 'sticky',
-    // defaultFooterFixed: false,
+    defaultContentLayout: 'wide',
+    defaultHeaderType: 'static',
+    defaultMenuCollapsed: false,
+    defaultNavbarType: 'sticky',
+    defaultFooterFixed: true,
     // defaultShowDropdownOnHover: false,
     controls: ['rtl', 'style', 'headerType', 'contentLayout', 'layoutCollapsed', 'layoutNavbarOptions', 'themes']
   });

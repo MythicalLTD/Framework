@@ -13,6 +13,24 @@
 # %seo_keywords% - The SEO keywords of the application
 
 Pages:
+  Errors:
+    NotFound:
+      Title: "Page not found"
+      Description: "The page you are looking for does not exist."
+      Button: "Go back home"
+    AccessDenied:
+      Title: "Access denied"
+      Description: "You are not allowed to access this page."
+      Button: "Go back home"
+    InternalServerError:
+      Title: "Internal server error"
+      Description: "An internal server error occurred."
+      Button: "Go back home"
+    InvalidCredentials:
+      Title: "Invalid credentials"
+      Description: "The credentials you provided are invalid."
+      Button: "Go back home"
+
   Auth:
     Login:
       Title: "Welcome back 👋!"
@@ -84,10 +102,32 @@ Pages:
         Login:
           Label1: "Back to login"
     ResetPassword:
-    VerifyEmail:
+      Title: "Reset password 🔒"
+      Description: "Please enter your new password"
+      Form:
+        Password:
+          Label: "Password"
+          Placeholder: "&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" # Raw input !!
+        Submit:
+          Label: "Reset password"
+        Login:
+          Label1: "Back to login"
 
 Alerts:
   Success:
+    Social:
+      Liked:
+        Title: "Liked"
+        Message: "You have liked this."
+      Follow:
+        Title: "Followed"
+        Message: "You have followed this."
+      Unfollow:
+        Title: "Unfollowed"
+        Message: "You have unfollowed this."
+      UnLiked:
+        Title: "Unliked"
+        Message: "You have unliked this."
     Auth:
       Login:
         Title: "Login Successful"
@@ -119,6 +159,32 @@ Alerts:
           Message: "You have successfully verified two factor authentication."
 
   Error:
+    Social:
+      CannotLikeYourSelf:
+        Title: "Cannot Like Yourself"
+        Message: "You cannot like yourself. Please try again."
+      CannotFollowYourSelf:
+        Title: "Cannot Follow Yourself"
+        Message: "You cannot follow yourself. Please try again."
+      CannotUnfollowYourSelf:
+        Title: "Cannot Unfollow Yourself"
+        Message: "You cannot unfollow yourself. Please try again."
+      CannotMessageYourSelf:
+        Title: "Cannot Message Yourself"
+        Message: "You cannot message yourself. Please try again."
+      AlreadyLiked:
+        Title: "Already Liked"
+        Message: "You have already liked this. Please try again."
+      AlreadyFollowed:
+        Title: "Already Followed"
+        Message: "You have already followed this. Please try again."
+      AlreadyUnfollowed:
+        Title: "Already Unfollowed"
+        Message: "You have already unfollowed this. Please try again."
+      
+    EmailServerNotConfigured:
+      Title: "Email Server Not Configured"
+      Message: "The email server is not configured. Please try again."
     CSRF:
       Title: "CSRF Token Mismatch"
       Message: "The CSRF token provided is invalid. Please try again."

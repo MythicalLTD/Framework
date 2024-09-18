@@ -27,6 +27,7 @@ class TurnStile extends \MythicalSystems\CloudFlare\Turnstile
             if (setting::getSetting('cloudflare_turnstile', 'enabled') == 'true') {
                 return true;
             }
+
             return false;
 
         } catch (\Exception $e) {

@@ -441,7 +441,7 @@ class UserDataHandler
     {
         try {
             $update_user_1 = self::updateSpecificUserData($token, 'last_seen', date('Y-m-d H:i:s'), false);
-            $update_user_2 = self::updateSpecificUserData($token, 'last_ip', $ip, false);
+            $update_user_2 = self::updateSpecificUserData($token, 'last_ip', $ip, true);
 
             if ($update_user_1 == 'ERROR_DATABASE_UPDATE_FAILED' || $update_user_2 == 'ERROR_DATABASE_UPDATE_FAILED') {
                 logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to update last seen because of a database error!');
