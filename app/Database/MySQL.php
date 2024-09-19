@@ -37,15 +37,15 @@ class MySQL
      *
      * @throws \Exception if the connection to the database fails
      *
-     * @return \PDO the PDO object representing the database connection
+     * @return PDO the PDO object representing the database connection
      */
-    public function connectPDO(): \PDO
+    public function connectPDO(): PDO
     {
         global $event; // This is a global variable that is used to emit events.
         $dsn = 'mysql:host=' . cfg::get('database', 'host') . ';dbname=' . cfg::get('database', 'name') . ';port=' . cfg::get('database', 'port') . ';charset=utf8mb4';
         try {
-            $pdo = new \PDO($dsn, cfg::get('database', 'username'), cfg::get('database', 'password'));
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $pdo = new PDO($dsn, cfg::get('database', 'username'), cfg::get('database', 'password'));
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $event->emit('database.onConnectPDO', [$pdo]);
 
             return $pdo;
@@ -58,11 +58,11 @@ class MySQL
     /**
      * Connects to the database server using MYSQLI.
      */
-    public function connectMYSQLI(): \mysqli
+    public function connectMYSQLI(): mysqli
     {
         global $event; // This is a global variable that is used to emit events.
         if (!isset(self::$connection)) {
-            self::$connection = new \mysqli(
+            self::$connection = new mysqli(
                 cfg::get('database', 'host'),
                 cfg::get('database', 'username'),
                 cfg::get('database', 'password'),
@@ -109,8 +109,8 @@ class MySQL
         global $event; // This is a global variable that is used to emit events.
         try {
             $dsn = 'mysql:host=' . $host . ';dbname=' . $database . ';port=' . $port . ';charset=utf8mb4';
-            $pdo = new \PDO($dsn, $username, $password);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $pdo = new PDO($dsn, $username, $password);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $event->emit('database.ontryConnection');
 
             return true;

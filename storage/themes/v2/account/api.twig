@@ -96,11 +96,12 @@
 									<span class="text-muted">Created on
 										{{ api_key.date}}</span>
 									<div class="position-absolute top-50 end-0 translate-middle-y me-3">
-										<a href="/account/api/{{api_key.id }}/delete" class="btn btn-sm btn-danger">
+										<button class="btn btn-sm btn-danger" onclick="requireConfirmation('/account/api/{{ api_key.id }}/delete')">
 											Delete
-										</a>
+										</button>
 									</div>
 								</div>
+								<br>
 							{% endfor %}
 						</div>
 					</div>
@@ -109,9 +110,12 @@
 		</div>
 	</div>
 	<br><br><br><br>
+
 {% endblock %}
 
 {% block footer %}
+		{% include 'requirements/datatables.twig' %}
+
 	 <script>
 		document.getElementById('formAccountSettingsApiKey').addEventListener('submit', function(event) {		
 			const apiKey = document.getElementById('apiKey').value;

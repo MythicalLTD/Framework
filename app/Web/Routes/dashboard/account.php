@@ -24,8 +24,7 @@ use MythicalSystemsFramework\User\Api\UserApi;
 
 global $router, $event;
 
-
-$router->add('/account/api/(.*)/delete', function (int $key_id): void {
+$router->add('/account/mails/(.*)/view', function ($mail_id): void {
     global $router, $event, $renderer;
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
@@ -34,15 +33,39 @@ $router->add('/account/api/(.*)/delete', function (int $key_id): void {
     $user = new UserHelper($_COOKIE['token']);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
-    if ($key_id =="") {
+    if ($mail_id == "") {
+        exit(header('location: /account/mails'));
+    }
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
+
+    if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
+        $mail = MailBox::getMailContent($uuid, $mail_id);
+        die($mail);
+    } else {
+        header('location: /account/mails?e=user_not_own_object');
+        exit();
+    }
+});
+
+$router->add('/account/api/(.*)/delete', function ($key_id): void {
+    global $router, $event, $renderer;
+    if (isset($_COOKIE['token']) === false) {
+        exit(header('location: /auth/login'));
+    }
+
+    $user = new UserHelper($_COOKIE['token']);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+
+    if ($key_id == "") {
         exit(header('location: /account/api'));
     }
 
-    if (UserApi::doesUserOwnKey($_COOKIE['token'], $key_id)) {
 
+    if (UserApi::doesUserOwnKey($_COOKIE['token'], $key_id)) {
+        UserApi::remove($key_id);
         header('location: /account/api?s=deleted');
     } else {
-        header('location: /account/api?e=not_owner');
+        header('location: /account/api?e=user_not_own_object');
     }
 });
 
@@ -204,6 +227,29 @@ $router->add('/account/activities', function (): void {
     }
 });
 
+$router->add('/account/mails/(.*)/delete', function ($mail_id): void {
+    global $router, $event, $renderer;
+    if (isset($_COOKIE['token']) === false) {
+        exit(header('location: /auth/login'));
+    }
+
+    $user = new UserHelper($_COOKIE['token']);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+
+    if ($mail_id == "") {
+        exit(header('location: /account/mails'));
+    }
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
+
+    if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
+        MailBox::deleteEmail($uuid, $mail_id);
+        exit(header('location: /account/mails?s=deleted'));
+    } else {
+        header('location: /account/mails?e=user_not_own_object');
+        exit();
+    }
+});
+
 $router->add('/account/mails', function (): void {
 
     session_start();
@@ -220,9 +266,9 @@ $router->add('/account/mails', function (): void {
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        Engine::registerAlerts($renderer, $template_name);
         $emails = MailBox::getEmails(UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false));
         $renderer->addGlobal('emails', $emails);
+        Engine::registerAlerts($renderer, $template_name);
         exit($renderer->render($template_name, $template_array));
     }
 });

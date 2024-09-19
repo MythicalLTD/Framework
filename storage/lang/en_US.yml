@@ -12,7 +12,15 @@
 # %seo_description% - The SEO description of the application
 # %seo_keywords% - The SEO keywords of the application
 
+
+
 Pages:
+  Utils:
+    ConfirmAction:
+      Title: "Confirm action"
+      Description: "Are you sure you want to perform this action?"
+      Confirm: "Yes"
+      Cancel: "No"
   Errors:
     NotFound:
       Title: "Page not found"
@@ -269,5 +277,5 @@ Alerts:
         Title: "Two Factor Authentication Invalid Code"
         Message: "The code provided is invalid. Please try again."
     UnknownError:
-      Title: "Unkown Error"
-      Message: "An unkown error occurred. Please try again."
+      Title: "Unknown Error"
+      Message: "An unknown error occurred. Please try again."

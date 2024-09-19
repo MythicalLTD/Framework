@@ -63,12 +63,10 @@ class Engine
 
         $loader = new FilesystemLoader(DIR_TEMPLATE);
         $renderer = new Environment($loader, [
-            // 'cache' => DIR_CACHE,
+            'cache' => DIR_CACHE,
             'auto_reload' => true,
             'debug' => DEBUG,
             'charset' => 'utf-8',
-            'no_cache' => true,
-            'cache' => false,
         ]);
 
         self::registerSettings($renderer);

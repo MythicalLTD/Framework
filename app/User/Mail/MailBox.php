@@ -78,7 +78,6 @@ class MailBox
         }
 
         return [];
-
     }
 
     /**
@@ -106,7 +105,44 @@ class MailBox
         }
 
         return [];
+    }
+    /**
+     * 
+     * Get the mail content.
+     * 
+     * @param string $uuid The user uuid
+     * @param string $id The id of the mail
+     * 
+     * @return string
+     */
+    public static function getMailContent(string $uuid, string $id): string
+    {
+        try {
+            if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
+                $mysql = new MySQL();
+                $conn = $mysql->connectMYSQLI();
+                $stmt = $conn->prepare('SELECT * FROM framework_users_mails WHERE uuid = ? AND id = ?');
+                $stmt->bind_param('ss', $uuid, $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $stmt->close();
+                $emails = [];
+                while ($row = $result->fetch_assoc()) {
+                    $emails[] = $row;
+                }
 
+                if (count($emails) > 0) {
+                    return $emails[0]['body'];
+                } else {
+                    return '';
+                }
+            }
+
+            return '';
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/User/Mail/MailBox.php) Failed to get mail content.' . $e->getMessage());
+            return '';
+        }
     }
 
     /**
@@ -171,7 +207,6 @@ class MailBox
         }
 
         return 0;
-
     }
 
     /**
@@ -193,6 +228,38 @@ class MailBox
             $event->emit('userEmail.markMailAsRead', [$uuid, $id]);
         } else {
             return;
+        }
+    }
+
+    public static function doesUserOwnThisEmail(string $uuid, string $id): bool
+    {
+        global $event;
+
+        try {
+            if (UserDataHandler::isUserValid(UserDataHandler::getTokenUUID($uuid))) {
+                $mysql = new MySQL();
+                $conn = $mysql->connectMYSQLI();
+                $stmt = $conn->prepare('SELECT * FROM framework_users_mails WHERE uuid = ? AND id = ?');
+                $stmt->bind_param('ss', $uuid, $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $stmt->close();
+                $emails = [];
+                while ($row = $result->fetch_assoc()) {
+                    $emails[] = $row;
+                }
+
+                if (count($emails) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/User/Mail/MailBox.php) Failed to check if user owns email.' . $e->getMessage());
+            return false;
         }
     }
 }

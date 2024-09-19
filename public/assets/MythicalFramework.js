@@ -245,6 +245,35 @@ function showDialogAction(title, text, confirmButtonText, cancelButtonText) {
 }
 
 /**
+ * 
+ * Show a confirm dialog and redirect the user to a specific URL.
+ * 
+ * @param {string} title 
+ * @param {string} text 
+ * @param {string} icon_name
+ * @param {string} confirmButtonText 
+ * @param {string} cancelButtonText 
+ * @param {string} redirectUrl 
+ */
+function showConfirmDialogAndRedirect(title, text, icon_name, confirmButtonText, cancelButtonText, redirectUrl) {
+    const validIcons = ['success', 'error', 'warning', 'info', 'question'];
+    const icon = validIcons.includes(icon_name) ? icon_name : 'info';
+    
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: cancelButtonText,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = redirectUrl;
+        }
+    });
+}
+
+/**
  * Show a confirm action with a text input!
  * 
  * @param {string} title 

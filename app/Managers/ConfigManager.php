@@ -16,13 +16,6 @@ namespace MythicalSystemsFramework\Managers;
 
 use MythicalSystems\Helpers\ConfigHelper;
 
-/**
- * DEPRECATED: Use Settings class instead!!
- *
- * DEPRECATED: This class is used for the settings.json file!
- *
- * @deprecated message: This class is deprecated and will be removed in the future. Use the Settings class instead!
- */
 class ConfigManager
 {
     private static string $configpath = __DIR__ . '/../../storage/settings.json';
@@ -44,6 +37,8 @@ class ConfigManager
             if (!is_writable(self::$configpath)) {
                 exit('We have no access to the config file!');
             }
+
+            
             $config = new ConfigHelper(self::$configpath);
 
         } catch (\Exception $e) {

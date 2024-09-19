@@ -248,14 +248,13 @@ class UserApi
                 return false;
             }
             $stmt = $conn->prepare('SELECT * FROM ' . self::TABLE_NAME . ' WHERE uuid = ? AND id = ?');
-            $stmt->bind_param('si', $id, $uuid);
+            $stmt->bind_param('si', $uuid, $id);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
             if ($result->num_rows > 0) {
                 return true;
-            }
-
+            } 
             return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to check if user owns key: ' . $e->getMessage());

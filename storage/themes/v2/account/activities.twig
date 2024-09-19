@@ -23,19 +23,19 @@
 									<th>Action</th>
 									<th>Description</th>
 									<th>Ip Address</th>
-                                    <th>Date</th>
+									<th>Date</th>
 								</tr>
 							</thead>
 							<tbody>
-                                {% for activity in activities %}
-                                    <tr>
-                                        <td>{{ activity.id }}</td>
-                                        <td>{{ activity.action }}</td>
-                                        <td>{{ activity.description }}</td>
-                                        <td>{{ activity.ip_address }}</td>
-                                        <td>{{ activity.date }}</td>
-                                    </tr>
-                                {% endfor %}
+								{% for activity in activities %}
+									<tr>
+										<td>{{ activity.id }}</td>
+										<td>{{ activity.action }}</td>
+										<td>{{ activity.description }}</td>
+										<td>{{ activity.ip_address }}</td>
+										<td>{{ activity.date }}</td>
+									</tr>
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>
@@ -44,16 +44,19 @@
 		</div>
 	</div>
 	<br><br><br><br>
+
 {% endblock %}
 
 {% block footer %}
+	{% include 'requirements/datatables.twig' %}
+
 	 <script>
-				$(document).ready(function() {
-					$('.datatables-basic').DataTable({
-						responsive: true,
-						pageLength: 10,
-						lengthMenu: [5, 10, 25, 50, 75, 100]
-					});
-				});
-			</script>
+						$(document).ready(function() {
+							$('.datatables-basic').DataTable({
+								responsive: true,
+								pageLength: 10,
+								lengthMenu: [5, 10, 25, 50, 75, 100]
+							});
+						});
+					</script>
 {% endblock %}

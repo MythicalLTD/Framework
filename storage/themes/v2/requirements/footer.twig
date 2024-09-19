@@ -11,7 +11,6 @@
  <script src="/assets/vendor/libs/@form-validation/bootstrap5.js"></script>
  <script src="/assets/vendor/libs/@form-validation/auto-focus.js"></script>
  <script src="/assets/vendor/js/template-customizer.js"></script>
- <script src="/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
  <script src="/assets/vendor/libs/cleavejs/cleave-phone.js"></script>
  <script src="/assets/vendor/libs/cleavejs/cleave.js"></script>
  <script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
@@ -28,3 +27,9 @@
 	{% elseif alert_success_title is not null and alert_success_message is not null %}
 	 <script>Swal.fire({icon: 'success',title: '{{ alert_success_title }}',	text: '{{ alert_success_message }}',});</script>
 {% endif %}
+
+<script>
+	function requireConfirmation(reddirect) {
+		showConfirmDialogAndRedirect("{{ lang('Pages.Utils.ConfirmAction.Title') }}","{{ lang('Pages.Utils.ConfirmAction.Description') }}",'question',"{{ lang('Pages.Utils.ConfirmAction.Confirm') }}","{{ lang('Pages.Utils.ConfirmAction.Cancel') }}",reddirect);
+	}
+</script>

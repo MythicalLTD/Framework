@@ -34,8 +34,8 @@
 										<td>{{ email.from }}</td>
 										<td>{{ email.date }}</td>
 										<td>
-											<a href="/account/mails/{{ email.id }}/view" class="btn btn-sm btn-primary">View</a>
-											<a href="/account/mails/{{ email.id }}/delete" class="btn btn-sm btn-danger">Delete</a>
+											<a href="/account/mails/{{ email.id }}/view" target="_new" class="btn btn-sm btn-primary">View</a>
+											<button onclick="requireConfirmation('/account/mails/{{ email.id }}/delete')" class="btn btn-sm btn-danger">Delete</button>
 										</td>
 									</tr>
 								{% endfor %}
@@ -47,9 +47,12 @@
 		</div>
 	</div>
 	<br><br><br><br>
+
 {% endblock %}
 
 {% block footer %}
+		{% include 'requirements/datatables.twig' %}
+
 	 <script>
 				$(document).ready(function() {
 					$('.datatables-basic').DataTable({
