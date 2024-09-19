@@ -115,6 +115,9 @@ Pages:
 
 Alerts:
   Success:
+    ActionSuccessful:
+      Title: "Action Successful"
+      Message: "The action was successful."
     Social:
       Liked:
         Title: "Liked"
@@ -181,7 +184,9 @@ Alerts:
       AlreadyUnfollowed:
         Title: "Already Unfollowed"
         Message: "You have already unfollowed this. Please try again."
-      
+    UserDoesNotOwnTarget:
+      Title: "Sorry, you can't do that"
+      Message: "You do not own that object."
     EmailServerNotConfigured:
       Title: "Email Server Not Configured"
       Message: "The email server is not configured. Please try again."

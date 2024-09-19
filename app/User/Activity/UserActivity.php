@@ -110,6 +110,7 @@ class UserActivity
             return $activities;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::CORE, 'An error occurred while getting user activities: ' . $e->getMessage());
+
             return [];
         }
     }

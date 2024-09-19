@@ -1,0 +1,1 @@
+ALTER TABLE `framework_users_apikeys` ADD `value` TEXT NOT NULL AFTER `type`;

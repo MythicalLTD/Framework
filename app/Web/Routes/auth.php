@@ -267,7 +267,7 @@ $router->add('/auth/login', function (): void {
     }
 });
 
-$router->add('/auth/2fa/disable', function () : void {
+$router->add('/auth/2fa/disable', function (): void {
     global $renderer;
 
     $user = new UserHelper($_COOKIE['token']);
@@ -307,8 +307,8 @@ $router->add('/auth/2fa/login', function (): void {
     $google2fa = new Google2FA();
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $renderer->addGlobal('csrf_input', value: $csrf->input('2fa_setup_form'));
-        $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+        $renderer->addGlobal('csrf_input', $csrf->input('2fa_setup_form'));
+
         Engine::registerAlerts($renderer, $template_name);
 
         exit($renderer->render($template_name));

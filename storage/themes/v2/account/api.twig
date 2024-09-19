@@ -1,7 +1,6 @@
 {% extends 'components/dashboard.twig' %}
 
-{% block head %}
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block dashboard %}
 	<div class="flex-grow-1 container-p-y container-fluid">
@@ -24,20 +23,33 @@
 				<div class="row">
 					<div class="col-md-5 order-md-0 order-1">
 						<div class="card-body">
-							<form id="formAccountSettingsApiKey" method="GET" onsubmit="return false">
+							<form id="formAccountSettingsApiKey" method="POST">
 								<div class="row">
 									<div class="mb-5 col-12">
+										<label for="apiKey" class="form-label">Name the API key</label>
+										<input type="text" class="form-control" id="apiKey" name="apiKey" placeholder="Server Key 1"/>
+									</div>
+									<div class="mb-5 col-12">
 										<label for="apiAccess" class="form-label">Choose the Api key type you want to create</label>
-										<select id="apiAccess" class="select2 form-select form-select-lg">
+										<select id="apiAccess" name="apiAccess" class="select2 form-select form-select-lg">
 											<option value="">Choose Key Type</option>
 											<option value="rw">Read / Write</option>
 											<option value="r">Read Only</option>
 										</select>
 									</div>
-									<div class="mb-5 col-12">
-										<label for="apiKey" class="form-label">Name the API key</label>
-										<input type="text" class="form-control" id="apiKey" name="apiKey" placeholder="Server Key 1"/>
-									</div>
+									{{ csrf_input | raw }}
+									<!-- Turnstile -->
+									{% if isTurnStileEnabled == true  %}
+										<center>
+											<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+										</center>
+										<br>
+										<br>
+										</br>
+										<br/>
+									{% else %}
+										<br>
+									{% endif %}
 									<div class="col-12">
 										<button type="submit" class="btn btn-primary me-2 d-grid w-100">Create Key</button>
 									</div>
@@ -47,7 +59,7 @@
 					</div>
 					<div class="col-md-7 order-md-1 order-0">
 						<div class="text-center mt-4 mx-3 mx-md-0">
-							<img src="../../assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Api Key Image" width="202"/>
+							<img src="/assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Api Key Image" width="202"/>
 						</div>
 					</div>
 				</div>
@@ -56,51 +68,40 @@
 				<div class="card-body">
 					<h5>API Key List & Access</h5>
 					<p class="mb-6">
-						An API key is a simple encrypted string that identifies an application without any principal.
-						                        They are useful for accessing public data anonymously, and are used to associate API requests
-						                        with your project for quota and billing.
+						An API key is a simple encrypted string that identifies an application without any principal. They are useful for accessing public data anonymously, and are used to associate API requests with your project for quota and billing.
 					</p>
 					<div class="row">
 						<div class="col-md-12">
-							<div class="bg-lighter rounded p-4 mb-6 position-relative">
-								<div class="d-flex align-items-center mb-2">
-									<h5 class="mb-0 me-3">Server Key 1</h5>
-									<span class="badge bg-label-primary">Full Access</span>
+							{% for api_key in api_keys %}
+								<div class="bg-lighter rounded p-4 position-relative">
+									<div class="d-flex align-items-center mb-2">
+										<h5 class="mb-0 me-3">{{ api_key.name}}
+											({{api_key.id}})</h5>
+										<span class="badge bg-label-primary">
+											{% if api_key.type == 'rw' %}
+												Read & Write
+											{% elseif api_key.type == 'r' %}
+												Read
+											{% else %}
+												Unknown
+											{% endif %}
+										</span>
+									</div>
+									<div class="d-flex align-items-center mb-2">
+										<p class="me-3 mb-0 fw-medium">{{ api_key.value}}</p>
+										<span class="cursor-pointer">
+											<i class="ti ti-copy"></i>
+										</span>
+									</div>
+									<span class="text-muted">Created on
+										{{ api_key.date}}</span>
+									<div class="position-absolute top-50 end-0 translate-middle-y me-3">
+										<a href="/account/api/{{api_key.id }}/delete" class="btn btn-sm btn-danger">
+											Delete
+										</a>
+									</div>
 								</div>
-								<div class="d-flex align-items-center mb-2">
-									<p class="me-3 mb-0 fw-medium">23eaf7f0-f4f7-495e-8b86-fad3261282ac</p>
-									<span class="cursor-pointer">
-										<i class="ti ti-copy"></i>
-									</span>
-								</div>
-								<span class="text-muted">Created on 28 Apr 2021, 18:20 GTM+4:10</span>
-							</div>
-							<div class="bg-lighter rounded p-4 position-relative mb-6">
-								<div class="d-flex align-items-center mb-2">
-									<h5 class="mb-0 me-3">Server Key 2</h5>
-									<span class="badge bg-label-primary">Read Only</span>
-								</div>
-								<div class="d-flex align-items-center mb-2">
-									<p class="me-3 mb-0 fw-medium">bb98e571-a2e2-4de8-90a9-2e231b5e99</p>
-									<span class="cursor-pointer">
-										<i class="ti ti-copy"></i>
-									</span>
-								</div>
-								<span class="text-muted">Created on 12 Feb 2021, 10:30 GTM+2:30</span>
-							</div>
-							<div class="bg-lighter rounded p-4 position-relative">
-								<div class="d-flex align-items-center mb-2">
-									<h5 class="mb-0 me-3">Server Key 3</h5>
-									<span class="badge bg-label-primary">Full Access</span>
-								</div>
-								<div class="d-flex align-items-center mb-2">
-									<p class="me-3 mb-0 fw-medium">2e915e59-3105-47f2-8838-6e46bf83b711</p>
-									<span class="cursor-pointer">
-										<i class="ti ti-copy"></i>
-									</span>
-								</div>
-								<span class="text-muted">Created on 28 Dec 2020, 12:21 GTM+4:10</span>
-							</div>
+							{% endfor %}
 						</div>
 					</div>
 				</div>
@@ -110,4 +111,17 @@
 	<br><br><br><br>
 {% endblock %}
 
-{% block footer %}{% endblock %}
+{% block footer %}
+	 <script>
+		document.getElementById('formAccountSettingsApiKey').addEventListener('submit', function(event) {		
+			const apiKey = document.getElementById('apiKey').value;
+			const apiAccess = document.getElementById('apiAccess').value;
+	
+			if (apiKey === '' || apiAccess === '') {
+				Swal.fire({icon: 'error',title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}"});
+				event.preventDefault();
+				return;
+			}
+		});
+	</script>
+{% endblock %}

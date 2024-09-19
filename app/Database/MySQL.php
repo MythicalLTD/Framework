@@ -24,6 +24,11 @@ use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 
 class MySQL
 {
+    public const TABLES_PREFIX = 'framework_';
+    public const TABLES_REQUIRED_COLUMNS = [
+        'locked',
+        'deleted',
+    ];
     public static int $migrated_files_count;
     private static $connection;
 

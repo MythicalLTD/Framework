@@ -14,6 +14,7 @@
 
 namespace MythicalSystemsFramework\Web\Template;
 
+use MythicalSystemsFramework\CloudFlare\TurnStile;
 use Twig\Environment;
 use Twig\TwigFunction;
 use Twig\Loader\FilesystemLoader;
@@ -62,7 +63,7 @@ class Engine
 
         $loader = new FilesystemLoader(DIR_TEMPLATE);
         $renderer = new Environment($loader, [
-            //'cache' => DIR_CACHE,
+            // 'cache' => DIR_CACHE,
             'auto_reload' => true,
             'debug' => DEBUG,
             'charset' => 'utf-8',
@@ -121,6 +122,7 @@ class Engine
     {
         $renderer->addGlobal('php_version', phpversion());
         $renderer->addGlobal('page_name', 'Home');
+        $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
     }
 
     public static function registerAlerts(Environment $renderer, string $template_name): void
@@ -250,6 +252,10 @@ class Engine
                     $error_title = self::getError('Social.CannotLikeYourSelf.Title');
                     $error_message = self::getError('Social.CannotLikeYourSelf.Message');
                     break;
+                case 'user_not_own_object':
+                    $error_title = self::getError('UserDoesNotOwnTarget.Title');
+                    $error_message = self::getError('UserDoesNotOwnTarget.Message');
+                    break;
                 default:
                     $error_title = self::getError('UnknownError.Title');
                     $error_message = self::getError('UnknownError.Message');
@@ -264,14 +270,14 @@ class Engine
 
         if (isset($_GET['s']) && !$_GET['s'] == '') {
             $s = $_GET['s'];
-            $success_title = self::getError('UnknownError.Title');
-            $success_message = self::getError('UnknownError.Message');
+            $success_title = self::getSuccess('ActionSuccessful.Title');
+            $success_message = self::getSuccess('ActionSuccessful.Message');
             switch ($s) {
                 case '2fa_setup_success':
                     $success_title = self::getSuccess('Auth.TwoFactorSetup.Setup.Title');
                     $success_message = self::getSuccess('Auth.TwoFactorSetup.Setup.Message');
                     break;
-                case '2fa_setup_disabled    ':
+                case '2fa_setup_disabled':
                     $success_title = self::getSuccess('Auth.TwoFactorSetup.Disable.Title');
                     $success_message = self::getSuccess('Auth.TwoFactorSetup.Disable.Message');
                     break;
