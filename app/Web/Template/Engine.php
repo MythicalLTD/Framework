@@ -254,6 +254,10 @@ class Engine
                     $error_title = self::getError('UserDoesNotOwnTarget.Title');
                     $error_message = self::getError('UserDoesNotOwnTarget.Message');
                     break;
+                case 'password_mismatch':
+                    $error_title = self::getError('PasswordsNotTheSame.Title');
+                    $error_message = self::getError('PasswordsNotTheSame.Message');
+                    break;
                 default:
                     $error_title = self::getError('UnknownError.Title');
                     $error_message = self::getError('UnknownError.Message');

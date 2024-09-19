@@ -11,12 +11,12 @@
 				<div
 					class="card mb-6">
 					<!-- Account -->
-									{% include 'account/components/profile.twig' %}
+					{% include 'account/components/profile.twig' %}
 
 					<hr class="my-0">
 					<div class="card-body pt-4">
 						<div class="card-body pt-1">
-							<form id="formAccountSettings" method="GET" onsubmit="return false" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
+							<form id="formAccountSettings" method="POST" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
 								<div class="row">
 									<div class="mb-6 col-md-6 form-password-toggle fv-plugins-icon-container">
 										<label class="form-label" for="currentPassword">Current Password</label>
@@ -58,6 +58,14 @@
 									<li class="mb-4">At least one lowercase character</li>
 									<li>At least one number, symbol, or whitespace character</li>
 								</ul>
+								{{ csrf_input | raw }}
+								<!-- Turnstile -->
+
+								{% if isTurnStileEnabled == true  %}
+									<br>
+									<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+									{% else %}
+								{% endif %}
 								<div class="mt-6">
 									<button type="submit" class="btn btn-primary me-3 waves-effect waves-light">Save changes</button>
 									<button type="reset" class="btn btn-label-secondary waves-effect">Reset</button>
@@ -76,7 +84,7 @@
 							<h5 class="mb-4 text-body">Two factor authentication is not enabled yet.</h5>
 							<p class="w-75">
 								Two-factor authentication adds an additional layer of security to your account by requiring more
-																																							                        than just a password to log in.
+																																																							                        than just a password to log in.
 								<a target="_blank" href="https://en.wikipedia.org/wiki/Multi-factor_authentication">Learn more.</a>
 							</p>
 							<a class="btn btn-primary mt-2 waves-effect waves-light" href="/auth/2fa/setup">
@@ -100,4 +108,33 @@
 	<br><br><br><br>
 {% endblock %}
 
-{% block footer %}{% endblock %}
+{% block footer %}
+	 <script>
+		document.getElementById('formAccountSettings').addEventListener('submit', function(event) {
+			event.preventDefault();
+			
+			var firstPassword = document.getElementById('currentPassword').value;
+			var newPassword = document.getElementById('newPassword').value;
+			var confirmPassword = document.getElementById('confirmPassword').value;
+		
+			if ( firstPassword === '' ||  newPassword === '' ||  confirmPassword === '') {
+				Swal.fire({
+					icon: 'error',
+					title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",
+					text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}",
+				});
+				return false;
+			}
+		
+			if (newPassword !== confirmPassword) {
+				Swal.fire({
+					icon: 'error',
+					title: "{{ lang('Alerts.Error.PasswordsNotTheSame.Title') }}",
+					text: "{{ lang('Alerts.Error.PasswordsNotTheSame.Message') }}",
+				});
+				return false;
+			}
+			event.target.submit();
+		});
+		</script>
+{% endblock %}

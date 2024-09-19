@@ -12,8 +12,6 @@
 # %seo_description% - The SEO description of the application
 # %seo_keywords% - The SEO keywords of the application
 
-
-
 Pages:
   Utils:
     ConfirmAction:
@@ -266,6 +264,9 @@ Alerts:
     CodeInvalid:
       Title: "Code Invalid"
       Message: "The code provided is invalid. Please try again."
+    PasswordsNotTheSame: 
+      Title: "Passwords Not The Same"
+      Message: "The passwords provided are not the same. Please try again."
     TwoFactorSetup:
       AlreadySetup:
         Title: "Two Factor Authentication Already Setup"

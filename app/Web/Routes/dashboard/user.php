@@ -31,7 +31,7 @@ $router->add('/user/(.*)/like', function ($uuid): void {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
-    $user = new UserHelper($_COOKIE['token']);
+    $user = new UserHelper($_COOKIE['token'],$renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     Engine::registerAlerts($renderer, $template);
     $uuid_current_user = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
@@ -67,7 +67,7 @@ $router->add('/user/(.*)/dislike', function ($uuid): void {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
-    $user = new UserHelper($_COOKIE['token']);
+    $user = new UserHelper($_COOKIE['token'],$renderer);
 
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     Engine::registerAlerts($renderer, $template);
@@ -101,7 +101,7 @@ $router->add('/user/(.*)/profile', function ($uuid): void {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
-    $user = new UserHelper($_COOKIE['token']);
+    $user = new UserHelper($_COOKIE['token'],$renderer);
 
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     $uuid_current_user = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);

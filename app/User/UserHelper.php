@@ -21,12 +21,13 @@ use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Roles\RolesDataHandler;
 use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
+use MythicalSystemsFramework\User\Notification\Notifications;
 
 class UserHelper extends UserDataHandler
 {
     private string $account_token;
 
-    public function __construct(string $token)
+    public function __construct(string $token,\Twig\Environment $renderer)
     {
         $this->account_token = $token;
         $isBanned = self::isUserBanned($token);
@@ -49,6 +50,11 @@ class UserHelper extends UserDataHandler
         } else {
             $this->killSession();
         }
+        $uuid = UserDataHandler::getSpecificUserData($token, 'uuid', false);
+
+        $notifications = Notifications::getByUserId($uuid);
+        $renderer->addGlobal('notifications', $notifications);
+
     }
 
     /**

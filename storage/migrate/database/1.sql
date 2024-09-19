@@ -256,20 +256,6 @@ CREATE TABLE `framework_users_notifications` (
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `framework_users_notifications_reads`
---
-
-CREATE TABLE `framework_users_notifications_reads` (
-  `id` int(11) NOT NULL,
-  `user_uuid` text NOT NULL,
-  `notification_id` int(11) NOT NULL,
-  `deleted` enum('false','true') NOT NULL DEFAULT 'false',
-  `locked` enum('false','true') NOT NULL DEFAULT 'false',
-  `date` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -368,12 +354,6 @@ ALTER TABLE `framework_users_notifications`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `framework_users_notifications_reads`
---
-ALTER TABLE `framework_users_notifications_reads`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `framework_users_userids`
 --
 ALTER TABLE `framework_users_userids`
@@ -459,12 +439,6 @@ ALTER TABLE `framework_users_activities`
 -- AUTO_INCREMENT for table `framework_users_notifications`
 --
 ALTER TABLE `framework_users_notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `framework_users_notifications_reads`
---
-ALTER TABLE `framework_users_notifications_reads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

@@ -11,36 +11,47 @@
 				<div
 					class="card mb-6">
 					<!-- Account -->
-														{% include 'account/components/profile.twig' %}
+					{% include 'account/components/profile.twig' %}
 
 					<hr class="my-0">
 					<div class="card-body pt-4">
-						<form id="formAccountSettings" method="GET" onsubmit="return false" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
+						<form id="formAccountSettings" method="POST" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
 							<div class="row">
 								<div class="mb-4 col-md-6 fv-plugins-icon-container">
 									<label for="firstName" class="form-label">First Name</label>
-									<input class="form-control" type="text" id="firstName" name="firstName" value="{{ user('first_name',true) }}" autofocus="">
+									<input class="form-control" type="text" id="firstName" required name="firstName" value="{{ user('first_name',true) }}" autofocus="">
 									<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
 								</div>
 								<div class="mb-4 col-md-6 fv-plugins-icon-container">
 									<label for="lastName" class="form-label">Last Name</label>
-									<input class="form-control" type="text" name="lastName" id="lastName" value="{{ user('last_name',true) }}">
+									<input class="form-control" type="text" name="lastName" required id="lastName" value="{{ user('last_name',true) }}">
 									<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
 								</div>
 								<div class="mb-4 col-md-6">
 									<label for="email" class="form-label">E-mail</label>
-									<input class="form-control" type="text" id="email" name="email" value="{{ user('email',false) }}" placeholder="{{ user('email',false) }}">
+									<input class="form-control" type="text" id="email" name="email" required value="{{ user('email',false) }}" placeholder="{{ user('email',false) }}">
 								</div>
 								<div class="mb-4 col-md-6">
-									<label for="address" class="form-label">Avatar</label>
-									<input type="text" class="form-control" id="address" name="address" placeholder="{{ user('avatar',false) }}" value="{{ user('avatar',false) }}">
+									<label for="avatar" class="form-label">Avatar</label>
+									<input type="text" class="form-control" id="avatar" name="avatar" required placeholder="{{ user('avatar',false) }}" value="{{ user('avatar',false) }}">
 								</div>
 								<div class="mb-4 col-md-6">
-									<label for="state" class="form-label">Background</label>
-									<input class="form-control" type="text" id="state" name="state" value="{{ user('background',false) }}" placeholder="{{ user('background',false) }}">
+									<label for="background" class="form-label">Background</label>
+									<input class="form-control" type="text" id="background" name="background" required value="{{ user('background',false) }}" placeholder="{{ user('background',false) }}">
 								</div>
 
 							</div>
+							{{ csrf_input | raw }}
+							<!-- Turnstile -->
+
+							{% if isTurnStileEnabled == true  %}
+								<center>
+									<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+								</center>
+								<br>
+							{% else %}
+								<br>
+							{% endif %}
 							<div class="mt-2">
 								<button type="submit" class="btn btn-primary me-3 waves-effect waves-light">Save changes</button>
 								<button type="reset" class="btn btn-label-secondary waves-effect">Cancel</button>
@@ -76,4 +87,28 @@
 	<br><br><br><br>
 {% endblock %}
 
-{% block footer %}{% endblock %}
+{% block footer %}
+	 <script>
+	document.getElementById('formAccountSettings').addEventListener('submit', function(event) {
+		event.preventDefault();
+		var firstName = document.getElementById('firstName').value;
+		var lastName = document.getElementById('lastName').value;
+		var email = document.getElementById('email').value;
+		var avatar = document.getElementById('avatar').value;
+		var background = document.getElementById('background').value;
+	
+		if ( firstName === '' ||  lastName === '' ||  lastName === '' ||  email === '' ||  avatar === '' ||  background === '' ) {
+			Swal.fire({
+				icon: 'error',
+				title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",
+				text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}",
+			});
+			return false;
+		}
+	
+	
+		event.target.submit();
+	});
+	</script>
+
+{% endblock %}

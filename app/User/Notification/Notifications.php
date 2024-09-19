@@ -12,11 +12,14 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
-namespace MythicalSystemsFramework\Notification;
+namespace MythicalSystemsFramework\User\Notification;
 
 use MythicalSystemsFramework\Database\MySQL;
+use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Kernel\LoggerTypes;
 
-class Notification
+class Notifications
 {
     /**
      * Create a new notification.
@@ -99,100 +102,6 @@ class Notification
     }
 
     /**
-     * Get a single notification by ID.
-     *
-     * @param int $id the id of the notification to retrieve
-     *
-     * @return array|null the notification data or null if not found
-     */
-    public static function getOne(int $id): ?array
-    {
-        try {
-            if (!self::exists($id)) {
-                return [];
-            }
-            $mysqli = new MySQL();
-            $conn = $mysqli->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_users_notifications WHERE id = ?');
-            $stmt->bind_param('i', $id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $notification = $result->fetch_assoc();
-            $stmt->close();
-
-            return $notification;
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    /**
-     * Get all framework_users_notifications.
-     *
-     * @return array all framework_users_notifications
-     */
-    public static function getAll(): array
-    {
-        try {
-            $mysqli = new MySQL();
-            $conn = $mysqli->connectMYSQLI();
-            $result = $conn->query('SELECT * FROM framework_users_notifications');
-            $framework_users_notifications = [];
-            while ($notification = $result->fetch_assoc()) {
-                $framework_users_notifications[] = $notification;
-            }
-
-            return $framework_users_notifications;
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    /**
-     * Get all framework_users_notifications sorted by ID in descending order.
-     *
-     * @return array sorted framework_users_notifications
-     */
-    public static function getAllSortedById(): array
-    {
-        try {
-            $mysqli = new MySQL();
-            $conn = $mysqli->connectMYSQLI();
-            $result = $conn->query('SELECT * FROM framework_users_notifications ORDER BY id DESC');
-            $framework_users_notifications = [];
-            while ($notification = $result->fetch_assoc()) {
-                $framework_users_notifications[] = $notification;
-            }
-
-            return $framework_users_notifications;
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    /**
-     * Get all framework_users_notifications sorted by date in descending order.
-     *
-     * @return array sorted framework_users_notifications
-     */
-    public static function getAllSortedByDate(): array
-    {
-        try {
-            $mysqli = new MySQL();
-            $conn = $mysqli->connectMYSQLI();
-            $result = $conn->query('SELECT * FROM framework_users_notifications ORDER BY date DESC');
-            $framework_users_notifications = [];
-            while ($notification = $result->fetch_assoc()) {
-                $framework_users_notifications[] = $notification;
-            }
-
-            return $framework_users_notifications;
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    /**
      * Get framework_users_notifications filtered by user ID.
      *
      * @param string $user_id the user id to filter by
@@ -243,6 +152,34 @@ class Notification
             return false;
         }
     }
+    /**
+     * 
+     * Check if a user owns a notification.
+     * 
+     * @param string $user_uuid The user uuid
+     * @param int $notification_id The notification id
+     * 
+     * @return bool
+     */
+    public static function doesUserOwnThisNotification(string $user_uuid, int $notification_id): bool
+    {
+        try {
+            if (!self::exists($notification_id)) {
+                return false;
+            }
+            $mysqli = new MySQL();
+            $conn = $mysqli->connectMYSQLI();
+            $stmt = $conn->prepare('SELECT * FROM framework_users_notifications WHERE user_id = ? AND id = ?');
+            $stmt->bind_param('si', $user_uuid, $notification_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+            return $result->num_rows > 0;
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/Notification/Notifications.php) Failed to check if user owns notification: ' . $e->getMessage());
+            return false;
+        }
+    }
 
     /**
      * Mark a notification as read.
@@ -255,39 +192,9 @@ class Notification
     public static function markAsRead(string $notification_id, string $user_uuid): void
     {
         try {
-            $mysqli = new MySQL();
-            $conn = $mysqli->connectMYSQLI();
-            $stmt = $conn->prepare('INSERT INTO framework_users_notifications_read (notification_id, user_uuid, date) VALUES (?, ?, NOW())');
-            $stmt->bind_param('ss', $notification_id, $user_uuid);
-            $stmt->execute();
-            $stmt->close();
+            self::delete($notification_id);
         } catch (\Exception $e) {
-            throw new \Exception('' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Check if a notification was already read!
-     *
-     * @param string $notification_id The id of the notification
-     * @param string $user_uuid The uuid of the user
-     *
-     * @throws \Exception
-     */
-    public static function hasAlreadyRead(string $notification_id, string $user_uuid): bool
-    {
-        try {
-            $mysqli = new MySQL();
-            $conn = $mysqli->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_users_notifications_read WHERE notification_id = ? AND user_uuid = ?');
-            $stmt->bind_param('ss', $notification_id, $user_uuid);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
-
-            return $result->num_rows > 0;
-        } catch (\Exception $e) {
-            throw new \Exception('' . $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE,''. $e->getMessage());
         }
     }
 }
