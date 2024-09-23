@@ -87,6 +87,30 @@ class Settings
             MySQLCache::saveCache('framework_settings');
         }
     }
+    /**
+     * Delete a setting from the database.
+     * @param string $category The name of the category
+     * @param string $name The name of the setting
+     * 
+     * @return void
+     */
+    public static function deleteSetting(string $category, string $name): void
+    {
+        global $event; // This is a global variable that is used to emit events.
+        $event->emit('settings.delete', [$category, $name]);
+        DBSettingsManager::delete($category, $name);
+        MySQLCache::saveCache('framework_settings');
+    }
+
+    /**
+     * Update the cache.
+     *
+     * @return void
+     */
+    public static function updateCache() : void {
+        MySQLCache::saveCache('framework_settings');
+    }
+
 
     /**
      * Migrate the settings table :).

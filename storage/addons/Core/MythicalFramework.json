@@ -1,0 +1,20 @@
+{
+    "name": "Core",
+    "description": "The core plugin for MythicalFramework",
+    "version": "1.0.1",
+    "homepage": "https://mythicalsystems.xyz",
+    "require": [
+        "MythicalSystemsFramework",
+        "php=8.2.0",
+        "php-ext=mysqli",
+        "composer=mythicalsystems/core"
+    ],
+    "license": "MIT",
+    "stability": "stable",
+    "authors": [
+        "NaysKutzu",
+        "MythicalDoggo"
+    ],
+    "support": "https://discord.mythicalsystems.xyz",
+    "funding": "https://github.com/sponsors/nayskutzu"
+}

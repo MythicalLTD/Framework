@@ -357,15 +357,10 @@ $router->add('/account/mails/(.*)/delete', function ($mail_id): void {
 });
 
 $router->add('/account/mails', function (): void {
-
-    session_start();
-    $csrf = new MythicalSystems\Utils\CSRFHandler();
-
+    global $router, $event, $renderer;
     $template_name = 'account/mails.twig';
     $template_array = ['sidebar_account_mails' => true];
-
-    global $renderer;
-    if (isset($_COOKIE['token']) === false) {
+    if (isset($_COOKIE['token']) === false) {   
         exit(header('location: /auth/login'));
     }
     $user = new UserHelper($_COOKIE['token'], $renderer);

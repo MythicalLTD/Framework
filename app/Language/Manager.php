@@ -16,6 +16,7 @@ namespace MythicalSystemsFramework\Language;
 
 use Symfony\Component\Yaml\Yaml;
 use MythicalSystemsFramework\Managers\Settings as settings;
+use MythicalSystemsFramework\Plugins\PluginCompilerHelper;
 
 class Manager
 {
@@ -50,6 +51,7 @@ class Manager
      */
     public function get(string $key): ?string
     {
+        $lang_files[] = PluginCompilerHelper::getLanguagePaths();
         $file = $this->lang_dir . '/' . $this->language . '.yml';
         $yaml = Yaml::parseFile($file);
         $keys = explode('.', $key);
@@ -59,12 +61,32 @@ class Manager
             if (isset($value[$part])) {
                 $value = $value[$part];
             } else {
-                return null;
+                if ($lang_files != null) {
+                    foreach ($lang_files as $plugin) {
+                        if (isset($plugin[0])) {
+                            $file_name = $plugin[0];
+                            if (file_exists($file_name)) {
+                                $yaml = Yaml::parseFile($file_name);
+                                $keys = explode('.', $key);
+                                $value = $yaml;
+                                foreach ($keys as $part) {
+                                    if (isset($value[$part])) {
+                                        $value = $value[$part];
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
         return is_string($value) ? $this->replacePlaceholders($value) : null;
     }
+
+
 
     /**
      * Set a language string.

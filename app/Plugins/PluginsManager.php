@@ -33,6 +33,7 @@ class PluginsManager extends PluginCompilerHelper
             self::registerPluginIfNotRegistered($plugin_info);
             self::updatePluginIfOutdated($plugin_info);
             self::enablePlugin($plugin, $plugin_info, $eventHandler);
+            self::runPluginsInstallCheck();
         }
     }
 
@@ -44,6 +45,7 @@ class PluginsManager extends PluginCompilerHelper
         self::ensurePluginPathExists();
         $plugins = self::getAllPlugins();
         foreach ($plugins as $plugin) {
+            self::runPluginsInstallCheck();
             $plugin_info = self::readPluginFile($plugin);
             self::checkPluginRequirements($plugin, $plugin_info);
             self::registerPluginIfNotRegistered($plugin_info);

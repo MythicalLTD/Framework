@@ -31,4 +31,18 @@ interface PluginBuilder
      * @param PluginEvent $eventHandler This is the event handler!
      */
     public function Event(PluginEvent $eventHandler);
+    /*
+    * The install function of the plugin.
+    */
+    public function onInstall(): void;
+
+    /**
+     * The uninstall function of the plugin.
+     */
+    public function onUninstall(): void;
+
+    /**
+     * The update function of the plugin.
+     */
+    public function onUpdate(): void;
 }

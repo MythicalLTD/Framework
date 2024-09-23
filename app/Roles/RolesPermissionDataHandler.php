@@ -238,8 +238,10 @@ class RolesPermissionDataHandler
      *
      * @param int $roleId The role id
      * @param string $permission The permission
+     * 
+     * @return bool
      */
-    public static function doesRoleHavePermission(int $roleId, string $permission): ?string
+    public static function doesRoleHavePermission(int $roleId, string $permission): bool
     {
         try {
             // Connect to the database
@@ -247,23 +249,22 @@ class RolesPermissionDataHandler
             $mysqli = $database->connectMYSQLI();
 
             // Check if the role has the permission
-            $stmtRole = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND permission = ?');
-            $stmtRole->bind_param('is', $roleId, $permission);
+            $permissionWildcard = str_replace('*', '%', $permission);
+            // Check if the role has the wildcard or specific permission
+            $stmtRole = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND (permission = "*" OR permission LIKE ?) AND status = "true"');
+            $stmtRole->bind_param('is', $roleId, $permissionWildcard);
             $stmtRole->execute();
             $stmtRole->bind_result($count);
             $stmtRole->fetch();
             $stmtRole->close();
 
             if ($count > 0) {
-                return 'ROLE_HAS_PERMISSION';
+                return true;
             }
-
-            return 'ROLE_DOES_NOT_HAVE_PERMISSION';
-
+            return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to check role permission: ' . $e->getMessage());
-
-            return 'ERROR_DATABASE_SELECT_FAILED';
+            return false;
         }
     }
 }

@@ -15,6 +15,7 @@
 namespace MythicalSystemsFramework\Plugins;
 
 use MythicalSystemsFramework\Kernel\Logger;
+use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 
@@ -52,7 +53,6 @@ class PluginCompilerHelper
                         continue;
                     }
                     Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires composer package $composerVersion to be installed.");
-
                 }
 
                 // Check if the requirement is a php version
@@ -81,7 +81,6 @@ class PluginCompilerHelper
                     continue;
                 }
                 Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Plugin $plugin requires $requirement to be installed.");
-
             }
         }
     }
@@ -131,6 +130,14 @@ class PluginCompilerHelper
     }
 
     /**
+     * Is a plugin enabled?
+     */
+    public static function isPluginEnabled(string $plugin_name): bool
+    {
+        return Database::getPluginInfo($plugin_name, 'enabled') == 'true';
+    }
+
+    /**
      * Enable a plugin.
      */
     public static function enablePlugin(string $plugin, array $plugin_info, PluginEvent $eventHandler, bool $skipEventEnable = false): void
@@ -138,10 +145,24 @@ class PluginCompilerHelper
         $plugin_info_db = Database::getPlugin($plugin_info['name']);
         $plugin_home_dir = self::$plugins_path . '/' . $plugin_info['name'];
         $main_class = $plugin_home_dir . '/' . $plugin_info_db['name'] . '.php';
+        if (self::isPluginEnabled($plugin_info['name']) == false) {
+            return;
+        }
         if (file_exists($main_class)) {
             try {
                 require_once $main_class;
                 $plugin_class = new $plugin_info_db['name']();
+                if (self::isPluginInstalled($plugin_info['name']) == false) {
+                    $plugin_class->onInstall();
+                    Database::updatePlugin($plugin_info['name'], 'isInstalled', 'true');
+                }
+                // Register lang
+                if (self::doesPluginExtendLang($plugin_info['name'])) {
+                    $server_lang = Settings::getSetting('app', 'lang');
+                    if (!self::doesPluginHaveLanguage($plugin_info['name'], $server_lang)) {
+                        Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "The plugin '" . $plugin_info['name'] . "' does not have a language file for the server language. Using default language.");
+                    }
+                }
                 $plugin_class->Main();
                 try {
                     if (!$skipEventEnable) {
@@ -182,6 +203,30 @@ class PluginCompilerHelper
         }
 
         return $plugins;
+    }
+
+    /**
+     * Check if a plugin is installed.
+     *
+     * @param string $plugin_name The name of the plugin
+     *
+     * @return bool True if yes, false if no!
+     */
+    public static function isPluginInstalled(string $plugin_name): bool
+    {
+        self::ensurePluginPathExists();
+        if (!self::doesPluginExist($plugin_name)) {
+            return false;
+        }
+        if (!self::isPluginConfigValid($plugin_name)) {
+            return false;
+        }
+
+        if (Database::getPluginInfo($plugin_name, 'isInstalled') == 'true') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -233,11 +278,9 @@ class PluginCompilerHelper
             }
 
             return false;
-
         }
 
         return false;
-
     }
 
     /**
@@ -277,5 +320,104 @@ class PluginCompilerHelper
         }
 
         return $files;
+    }
+
+    /**
+     * Does a plugin have a lang folder?
+     *
+     * @param string $plugin_name The name of the plugin
+     *
+     * @return bool True if yes, false if no!
+     */
+    public static function doesPluginExtendLang(string $plugin_name): bool
+    {
+        self::ensurePluginPathExists();
+        if (!self::doesPluginExist($plugin_name)) {
+            return false;
+        }
+        $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/lang';
+        if (!file_exists($plugin_folder) || !is_dir($plugin_folder)) {
+            return false;
+        }
+        foreach (scandir($plugin_folder) as $file) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+            if (pathinfo($file, PATHINFO_EXTENSION) !== 'yml') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get all lang files for a plugin.
+     *
+     * @param string $lang The language you want to get the files for
+     */
+    public static function doesPluginHaveLanguage(string $plugin_name, string $lang): bool
+    {
+        self::ensurePluginPathExists();
+        if (!self::doesPluginExist($plugin_name)) {
+            return false;
+        }
+        $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/lang';
+        if (!file_exists($plugin_folder) || !is_dir($plugin_folder)) {
+            return false;
+        }
+
+        return file_exists($plugin_folder . '/' . $lang . '.yml');
+    }
+
+    /**
+     * Check if a plugin is missing.
+     *
+     * @param string $plugin_name The name of the plugin
+     */
+    public static function checkIfPluginIsMissing(string $plugin_name): void
+    {
+        $plugin_info_db = Database::getPlugin($plugin_name);
+
+        if ($plugin_info_db) {
+            if (!self::doesPluginExist($plugin_name)) {
+                Database::unRegisterPlugin($plugin_name);
+                Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, "Plugin $plugin_name was missing from the plugins folder and has been removed from the database.");
+            }
+        }
+    }
+
+    /**
+     * Run the plugins install check.
+     */
+    public static function runPluginsInstallCheck(): void
+    {
+        $plugins = Database::getAllPlugins();
+        foreach ($plugins as $plugin) {
+            self::checkIfPluginIsMissing($plugin['name']);
+        }
+    }
+    /**
+     * 
+     * Get the path to the language file.
+     * 
+     * @param string $plugin_name
+     * 
+     * @return string
+     */
+    public static function getLanguagePaths(): array
+    {
+        $plugins = self::getAllPlugins();
+        $languagePaths = [];
+
+        foreach ($plugins as $plugin) {
+            if (self::isPluginEnabled($plugin) == true) {
+                if (self::doesPluginExtendLang($plugin)) {
+                    $languagePaths[] = self::$plugins_path . '/' . $plugin . '/lang/' . Settings::getSetting('app', 'lang') . '.yml';
+                }
+            }
+        }
+
+        return $languagePaths;
     }
 }
