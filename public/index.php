@@ -24,6 +24,7 @@ try {
 
 use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Api\Api as api;
+use MythicalSystemsFramework\Plugins\PluginCompilerHelper;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\Plugins\PluginsManager;

@@ -34,6 +34,7 @@ class PluginsManager extends PluginCompilerHelper
             self::updatePluginIfOutdated($plugin_info);
             self::enablePlugin($plugin, $plugin_info, $eventHandler);
             self::runPluginsInstallCheck();
+            self::registerPluginPermissions();
         }
     }
 
@@ -50,6 +51,7 @@ class PluginsManager extends PluginCompilerHelper
             self::checkPluginRequirements($plugin, $plugin_info);
             self::registerPluginIfNotRegistered($plugin_info);
             self::updatePluginIfOutdated($plugin_info);
+            self::registerPluginPermissions();
             self::enablePlugin($plugin, $plugin_info, $eventHandler, true);
             if (self::doesPluginHaveCron($plugin)) {
                 $crons = self::getPluginCronFiles($plugin);

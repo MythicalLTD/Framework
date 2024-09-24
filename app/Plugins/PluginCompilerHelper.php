@@ -369,6 +369,60 @@ class PluginCompilerHelper
 
         return file_exists($plugin_folder . '/' . $lang . '.yml');
     }
+    public static function registerPluginPermissions() : void {
+        self::ensurePluginPathExists();
+        $plugins = self::getAllPlugins();
+        
+        foreach ($plugins as $plugin) {
+            if (self::isPluginEnabled($plugin['name']) == false) {
+                return;
+            }
+            if (self::doesPluginHavePermissions($plugin)) {
+                $permissions = self::getPluginPermissions($plugin);
+                Database::registerPermission($permissions, $plugin['name']);
+            }
+        }
+    }
+    /**
+     * Does a plugin have a permissions folder?
+     * 
+     * @param string $plugin_name The name of the plugin
+     * 
+     * @return bool True if yes, false if no!
+     */
+    public static function doesPluginHavePermissions(string $plugin_name): bool
+    {
+        self::ensurePluginPathExists();
+        if (!self::doesPluginExist($plugin_name)) {
+            return false;
+        }
+        $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/permissions.json';
+        if (!file_exists($plugin_folder) || !is_dir($plugin_folder)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the permissions file for a plugin.
+     * 
+     * @param string $plugin_name The name of the plugin
+     * 
+     * @return array
+     */
+    public static function getPluginPermissions(string $plugin_name): array
+    {
+        self::ensurePluginPathExists();
+        if (!self::doesPluginExist($plugin_name)) {
+            return [];
+        }
+        $permission_file = self::$plugins_path . '/' . $plugin_name . '/permissions.json';
+        if (!file_exists($permission_file)) {
+            return [];
+        }
+        return json_decode(file_get_contents($permission_file), true);
+    }
 
     /**
      * Check if a plugin is missing.

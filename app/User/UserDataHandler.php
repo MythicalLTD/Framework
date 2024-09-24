@@ -26,6 +26,7 @@ use MythicalSystemsFramework\Kernel\Logger as logger;
 use MythicalSystemsFramework\User\TwoFactor\TwoFactor;
 use MythicalSystemsFramework\Managers\SnowFlakeManager;
 use MythicalSystemsFramework\Encryption\XChaCha20 as enc;
+use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserDataHandler
 {
@@ -499,14 +500,17 @@ class UserDataHandler
         $renderer->addFunction(new TwigFunction('user', function ($info, $isEncrypted) {
             return self::getSpecificUserData($_COOKIE['token'], $info, $isEncrypted);
         }));
-        $renderer->addGlobal('role_name', RolesHelper::getRoleName(self::getRoleIdByUser($token)));
+        $role_id = self::getRoleIdByUser($token);
+        $renderer->addGlobal('role_name', RolesHelper::getRoleName($role_id));
         if ($skiptwofactorcheck == false) {
             $twofauser = new TwoFactor(account_token: $token);
             if ($twofauser->isBlocked()) {
                 exit(header('location: /auth/2fa/login'));
             }
         }
-
+        $renderer->addFunction(new TwigFunction('hasPermission', function ($info) use ($role_id): bool {
+            return RolesPermissionDataHandler::doesRoleHavePermission($role_id, $info);
+        }));
     }
 
     /**

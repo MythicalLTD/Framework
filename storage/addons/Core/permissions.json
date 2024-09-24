@@ -1,0 +1,16 @@
+[
+    "mythicalframework.admin.users.create",
+    "mythicalframework.admin.users.edit",
+    "mythicalframework.admin.users.delete",
+    "mythicalframework.admin.users.view",
+
+    "mythicalframework.admin.roles.create",
+    "mythicalframework.admin.roles.edit",
+    "mythicalframework.admin.roles.delete",
+    "mythicalframework.admin.roles.view",
+    
+    "mythicalframework.admin.permissions.create",
+    "mythicalframework.admin.permissions.edit",
+    "mythicalframework.admin.permissions.delete",
+    "mythicalframework.admin.permissions.view"
+]
