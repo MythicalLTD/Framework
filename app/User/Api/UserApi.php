@@ -14,13 +14,13 @@
 
 namespace MythicalSystemsFramework\User\Api;
 
-use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
-use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\UserDataHandler;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 
 class UserApi
 {
@@ -88,11 +88,12 @@ class UserApi
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to remove API key: ' . $e->getMessage());
         }
     }
+
     /**
      * Get the key id by the key.
-     * 
+     *
      * @param string $key The key!
-     * 
+     *
      * @return int The key id
      */
     public static function getKeyIdByKey(string $key): int
@@ -107,19 +108,23 @@ class UserApi
             $stmt->close();
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
+
                 return $row['id'];
             }
+
             return 0;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to get key id by key: ' . $e->getMessage());
+
             return 0;
         }
     }
+
     /**
      * Get the key name by the id.
-     * 
+     *
      * @param int $id The key id!
-     * 
+     *
      * @return string The key name
      */
     public static function getKeyName(int $id): string
@@ -127,7 +132,7 @@ class UserApi
         try {
             $mysql = new MySQL();
             if (self::doesKeyExist($id) == false) {
-                return "";
+                return '';
             }
             $conn = $mysql->connectMYSQLI();
             $stmt = $conn->prepare('SELECT * FROM ' . self::TABLE_NAME . ' WHERE id = ?');
@@ -137,20 +142,23 @@ class UserApi
             $stmt->close();
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
+
                 return $row['name'];
             }
+
             return '';
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to get key name by id: ' . $e->getMessage());
+
             return '';
         }
     }
 
     /**
      * Check if a key exists.
-     * 
+     *
      * @param int $id The key id!
-     * 
+     *
      * @return bool If the key exists
      */
     public static function doesKeyExist(int $id): bool
@@ -166,18 +174,20 @@ class UserApi
             if ($result->num_rows > 0) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to check if key exists: ' . $e->getMessage());
+
             return false;
         }
     }
 
     /**
      * Get the key by the id.
-     * 
+     *
      * @param int $id The key id!
-     * 
+     *
      * @return string The key
      */
     public static function getKeyById(int $id): string
@@ -192,14 +202,18 @@ class UserApi
             $stmt->close();
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
+
                 return $row['value'];
             }
+
             return '';
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to get key by id: ' . $e->getMessage());
+
             return '';
         }
     }
+
     /**
      * Get all api keys from the database.
      *
@@ -254,7 +268,8 @@ class UserApi
             $stmt->close();
             if ($result->num_rows > 0) {
                 return true;
-            } 
+            }
+
             return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, message: '(App/User/Api/UserApi.php) Failed to check if user owns key: ' . $e->getMessage());
@@ -376,13 +391,14 @@ class UserApi
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/Api/UserApi.php) Failed to delete all keys: ' . $e->getMessage());
         }
     }
+
     /**
      * Generate a new key.
-     * 
+     *
      * @return string The generated key
      */
     public static function generateKey(): string
     {
-        return uniqid("mythicalframework_", true);
+        return uniqid('mythicalframework_', true);
     }
 }

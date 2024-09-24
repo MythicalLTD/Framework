@@ -20,14 +20,14 @@ use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
 use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\Roles\RolesDataHandler;
-use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 use MythicalSystemsFramework\User\Notification\Notifications;
+use MythicalSystemsFramework\Roles\RolesPermissionDataHandler;
 
 class UserHelper extends UserDataHandler
 {
     private string $account_token;
 
-    public function __construct(string $token,\Twig\Environment $renderer)
+    public function __construct(string $token, \Twig\Environment $renderer)
     {
         $this->account_token = $token;
         $isBanned = self::isUserBanned($token);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of MythicalSystemsFramework.
  * Please view the LICENSE file that was distributed with this source code.
@@ -18,14 +19,14 @@ use MythicalSystemsFramework\Plugins\PluginBuilder;
 
 class Core implements PluginBuilder
 {
-
     public function Main(): void
     {
         // TODO: Implement the main function
     }
 
-
-    public function Event(MythicalSystemsFramework\Plugins\PluginEvent $eventHandler): void {}
+    public function Event(MythicalSystemsFramework\Plugins\PluginEvent $eventHandler): void
+    {
+    }
 
     public function onInstall(): void
     {

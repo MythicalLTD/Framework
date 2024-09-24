@@ -397,12 +397,10 @@ class PluginCompilerHelper
             self::checkIfPluginIsMissing($plugin['name']);
         }
     }
+
     /**
-     * 
      * Get the path to the language file.
-     * 
-     * @param string $plugin_name
-     * 
+     *
      * @return string
      */
     public static function getLanguagePaths(): array

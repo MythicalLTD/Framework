@@ -106,14 +106,12 @@ class MailBox
 
         return [];
     }
+
     /**
-     * 
      * Get the mail content.
-     * 
+     *
      * @param string $uuid The user uuid
      * @param string $id The id of the mail
-     * 
-     * @return string
      */
     public static function getMailContent(string $uuid, string $id): string
     {
@@ -133,14 +131,16 @@ class MailBox
 
                 if (count($emails) > 0) {
                     return $emails[0]['body'];
-                } else {
-                    return '';
                 }
+
+                return '';
+
             }
 
             return '';
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/User/Mail/MailBox.php) Failed to get mail content.' . $e->getMessage());
+
             return '';
         }
     }
@@ -251,14 +251,17 @@ class MailBox
 
                 if (count($emails) > 0) {
                     return true;
-                } else {
-                    return false;
                 }
-            } else {
+
                 return false;
+
             }
+
+            return false;
+
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::OTHER, '(App/User/Mail/MailBox.php) Failed to check if user owns email.' . $e->getMessage());
+
             return false;
         }
     }

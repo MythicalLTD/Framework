@@ -63,7 +63,7 @@ class App extends \MythicalSystems\Main
             Installer::showError('We are sorry but the app is missing required extensions!');
         }
         try {
-            
+
             if (cfg::get('encryption', 'key') == '') {
                 Installer::showError('We are sorry but you are missing the encryption key!');
             }

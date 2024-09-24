@@ -170,7 +170,7 @@ $router->add('/auth/verify-email', function (): void {
     if (isset($_GET['token']) && !$_GET['token'] == '') {
         if (MailVerification::isValid($_GET['token'])) {
             $token = UserDataHandler::getTokenUUID(MailVerification::getUserUUID($_GET['token']));
-            $user = new UserHelper($token,$renderer);
+            $user = new UserHelper($token, $renderer);
             $user->verifyUser();
             setcookie('token', $token, time() + 3600 * 24 * 365 * 5, '/');
             MailVerification::remove($_GET['token']);
@@ -270,7 +270,7 @@ $router->add('/auth/login', function (): void {
 $router->add('/auth/2fa/disable', function (): void {
     global $renderer;
 
-    $user = new UserHelper($_COOKIE['token'],$renderer);
+    $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token'], true);
 
     $user2fa = new TwoFactor($_COOKIE['token']);
@@ -293,7 +293,7 @@ $router->add('/auth/2fa/login', function (): void {
     global $renderer;
     $template_name = 'auth/2fa/login.twig';
 
-    $user = new UserHelper($_COOKIE['token'],$renderer);
+    $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token'], true);
 
     $user2fa = new TwoFactor($_COOKIE['token']);
@@ -352,7 +352,7 @@ $router->add('/auth/2fa/setup', function (): void {
     global $renderer;
     $template_name = 'auth/2fa/setup.twig';
 
-    $user = new UserHelper($_COOKIE['token'],$renderer);
+    $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
     $user2fa = new TwoFactor($_COOKIE['token']);
@@ -473,7 +473,7 @@ $router->add('/auth/register', function (): void {
                     header('Location: /auth/login?s=mail_verify');
                     exit;
                 }
-                $user = new UserHelper($user_check,$renderer);
+                $user = new UserHelper($user_check, $renderer);
                 $user->verifyUser();
                 setcookie('token', $user_check, time() + 3600 * 24 * 365 * 5, '/');
                 header('Location: /auth/login?s=register');
@@ -497,7 +497,7 @@ $router->add('/auth/register', function (): void {
  */
 $router->add('/auth/logout', function (): void {
     global $renderer;
-    $user = new UserHelper($_COOKIE['token'],$renderer);
+    $user = new UserHelper($_COOKIE['token'], $renderer);
     $user->killSession();
     header('Location: /');
     exit;

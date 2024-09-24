@@ -14,12 +14,12 @@
 
 namespace MythicalSystemsFramework\Web\Template;
 
-use MythicalSystemsFramework\CloudFlare\TurnStile;
 use Twig\Environment;
 use Twig\TwigFunction;
 use Twig\Loader\FilesystemLoader;
 use MythicalSystemsFramework\Language\Manager;
 use MythicalSystemsFramework\Managers\Settings;
+use MythicalSystemsFramework\CloudFlare\TurnStile;
 use MythicalSystemsFramework\Web\Installer\Installer;
 use MythicalSystemsFramework\Managers\ConfigManager as cfg;
 

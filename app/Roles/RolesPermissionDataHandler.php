@@ -238,8 +238,6 @@ class RolesPermissionDataHandler
      *
      * @param int $roleId The role id
      * @param string $permission The permission
-     * 
-     * @return bool
      */
     public static function doesRoleHavePermission(int $roleId, string $permission): bool
     {
@@ -261,9 +259,11 @@ class RolesPermissionDataHandler
             if ($count > 0) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to check role permission: ' . $e->getMessage());
+
             return false;
         }
     }

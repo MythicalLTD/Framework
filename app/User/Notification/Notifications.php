@@ -14,10 +14,10 @@
 
 namespace MythicalSystemsFramework\User\Notification;
 
-use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\Logger;
-use MythicalSystemsFramework\Kernel\LoggerLevels;
+use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
+use MythicalSystemsFramework\Kernel\LoggerLevels;
 
 class Notifications
 {
@@ -152,14 +152,12 @@ class Notifications
             return false;
         }
     }
+
     /**
-     * 
      * Check if a user owns a notification.
-     * 
+     *
      * @param string $user_uuid The user uuid
      * @param int $notification_id The notification id
-     * 
-     * @return bool
      */
     public static function doesUserOwnThisNotification(string $user_uuid, int $notification_id): bool
     {
@@ -174,9 +172,11 @@ class Notifications
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
+
             return $result->num_rows > 0;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/Notification/Notifications.php) Failed to check if user owns notification: ' . $e->getMessage());
+
             return false;
         }
     }
@@ -194,7 +194,7 @@ class Notifications
         try {
             self::delete($notification_id);
         } catch (\Exception $e) {
-            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE,''. $e->getMessage());
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '' . $e->getMessage());
         }
     }
 }

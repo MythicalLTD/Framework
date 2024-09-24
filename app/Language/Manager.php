@@ -15,8 +15,8 @@
 namespace MythicalSystemsFramework\Language;
 
 use Symfony\Component\Yaml\Yaml;
-use MythicalSystemsFramework\Managers\Settings as settings;
 use MythicalSystemsFramework\Plugins\PluginCompilerHelper;
+use MythicalSystemsFramework\Managers\Settings as settings;
 
 class Manager
 {
@@ -85,8 +85,6 @@ class Manager
 
         return is_string($value) ? $this->replacePlaceholders($value) : null;
     }
-
-
 
     /**
      * Set a language string.

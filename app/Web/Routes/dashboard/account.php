@@ -13,6 +13,7 @@
  */
 
 use MythicalSystemsFramework\User\UserHelper;
+use MythicalSystemsFramework\User\Api\UserApi;
 use MythicalSystemsFramework\Managers\Settings;
 use MythicalSystemsFramework\User\Mail\MailBox;
 use MythicalSystemsFramework\Web\Template\Engine;
@@ -20,11 +21,9 @@ use MythicalSystemsFramework\CloudFlare\TurnStile;
 use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use MythicalSystemsFramework\User\Activity\UserActivity;
-use MythicalSystemsFramework\User\Api\UserApi;
 use MythicalSystemsFramework\User\Notification\Notifications;
 
 global $router, $event, $renderer;
-
 
 $router->add('/account/notification/(.*)/read', function ($id): void {
     global $router, $event, $renderer;
@@ -35,17 +34,17 @@ $router->add('/account/notification/(.*)/read', function ($id): void {
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
-    if ($id == "") {
+    if ($id == '') {
         exit(header('location: /dashboard'));
     }
 
     if (Notifications::doesUserOwnThisNotification($uuid, $id) == true) {
         Notifications::markAsRead($id, $uuid);
         exit(header('location: /dashboard'));
-    } else {
-        header('location: /dashboard?e=user_not_own_object');
-        exit();
     }
+    header('location: /dashboard?e=user_not_own_object');
+    exit;
+
 });
 
 $router->add('/account/mails/(.*)/view', function ($mail_id): void {
@@ -57,18 +56,18 @@ $router->add('/account/mails/(.*)/view', function ($mail_id): void {
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
-    if ($mail_id == "") {
+    if ($mail_id == '') {
         exit(header('location: /account/mails'));
     }
     $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
     if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
         $mail = MailBox::getMailContent($uuid, $mail_id);
-        die($mail);
-    } else {
-        header('location: /account/mails?e=user_not_own_object');
-        exit();
+        exit($mail);
     }
+    header('location: /account/mails?e=user_not_own_object');
+    exit;
+
 });
 
 $router->add('/account/api/(.*)/delete', function ($key_id): void {
@@ -80,10 +79,9 @@ $router->add('/account/api/(.*)/delete', function ($key_id): void {
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
-    if ($key_id == "") {
+    if ($key_id == '') {
         exit(header('location: /account/api'));
     }
-
 
     if (UserApi::doesUserOwnKey($_COOKIE['token'], $key_id)) {
         UserApi::remove($key_id);
@@ -117,13 +115,13 @@ $router->add('/account/api', function (): void {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['apiAccess']) && !$_POST['apiAccess'] == "") {
+        if (isset($_POST['apiAccess']) && !$_POST['apiAccess'] == '') {
             $access = $_POST['apiAccess'];
         } else {
             $access = 'r';
         }
-        if (isset($_POST['apiKey']) && !$_POST['apiKey'] == "") {
-            $randomName = $_POST["apiKey"];
+        if (isset($_POST['apiKey']) && !$_POST['apiKey'] == '') {
+            $randomName = $_POST['apiKey'];
         } else {
             $randomName = bin2hex(random_bytes(8));
         }
@@ -181,7 +179,7 @@ $router->add('/account/security', function (): void {
         }
 
         if ($captcha_success) {
-            if (isset($_POST['currentPassword']) && !$_POST['currentPassword'] == "") {
+            if (isset($_POST['currentPassword']) && !$_POST['currentPassword'] == '') {
                 $currentPassword = $_POST['currentPassword'];
             } else {
                 header('Location: /account/security?e=missing_fields');
@@ -191,15 +189,14 @@ $router->add('/account/security', function (): void {
             if (isset($_POST['newPassword']) && $_POST['newPassword'] == '') {
                 header('Location: /account/security?e=missing_fields');
                 exit;
-            } else {
-                $newPassword = $_POST['newPassword'];
             }
+            $newPassword = $_POST['newPassword'];
+
             if (isset($_POST['confirmPassword']) && $_POST['confirmPassword'] == '') {
                 header('Location: /account/security?e=missing_fields');
                 exit;
-            } else {
-                $confirmPassword = $_POST['confirmPassword'];
             }
+            $confirmPassword = $_POST['confirmPassword'];
 
             if ($newPassword != $confirmPassword) {
                 header('Location: /account/security?e=password_mismatch');
@@ -218,10 +215,10 @@ $router->add('/account/security', function (): void {
             UserActivity::addActivity($uuid, 'Password changed', CloudFlare::getUserIP(), 'user:password:changed');
             header('Location: /account/security?s=updated');
             exit;
-        } else {
-            header('Location: /account/security?e=captcha');
-            exit;
         }
+        header('Location: /account/security?e=captcha');
+        exit;
+
     }
 });
 
@@ -259,27 +256,27 @@ $router->add('/account/settings', function (): void {
         }
 
         if ($captcha_success) {
-            if (isset($_POST['firstName']) && !$_POST['firstName'] == "") {
+            if (isset($_POST['firstName']) && !$_POST['firstName'] == '') {
                 $firstName = $_POST['firstName'];
             } else {
                 $firstName = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'first_name', true);
             }
-            if (isset($_POST['lastName']) && !$_POST['lastName'] == "") {
+            if (isset($_POST['lastName']) && !$_POST['lastName'] == '') {
                 $lastName = $_POST['lastName'];
             } else {
                 $lastName = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'last_name', true);
             }
-            if (isset($_POST['email']) && !$_POST['email'] == "") {
+            if (isset($_POST['email']) && !$_POST['email'] == '') {
                 $email = $_POST['email'];
             } else {
                 $email = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'email', false);
             }
-            if (isset($_POST['avatar']) && !$_POST['avatar'] == "") {
+            if (isset($_POST['avatar']) && !$_POST['avatar'] == '') {
                 $avatar = $_POST['avatar'];
             } else {
                 $avatar = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'avatar', false);
             }
-            if (isset($_POST['background']) && !$_POST['background'] == "") {
+            if (isset($_POST['background']) && !$_POST['background'] == '') {
                 $banner = $_POST['background'];
             } else {
                 $banner = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'background', false);
@@ -289,9 +286,9 @@ $router->add('/account/settings', function (): void {
                 if (UserDataHandler::doesEmailExist($email)) {
                     header('Location: /account/settings?e=email_exists');
                     exit;
-                } else {
-                    UserDataHandler::updateSpecificUserData($_COOKIE['token'], 'email', $email, false);
                 }
+                UserDataHandler::updateSpecificUserData($_COOKIE['token'], 'email', $email, false);
+
             }
 
             UserDataHandler::updateSpecificUserData($_COOKIE['token'], 'first_name', $firstName, true);
@@ -302,10 +299,10 @@ $router->add('/account/settings', function (): void {
             UserActivity::addActivity($uuid, 'User information updated in the database!', CloudFlare::getUserIP(), 'user:profile:updated');
             header('Location: /account/settings?s=updated');
             exit;
-        } else {
-            header('Location: /account/settings?e=captcha');
-            exit;
         }
+        header('Location: /account/settings?e=captcha');
+        exit;
+
     }
 });
 
@@ -342,7 +339,7 @@ $router->add('/account/mails/(.*)/delete', function ($mail_id): void {
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
-    if ($mail_id == "") {
+    if ($mail_id == '') {
         exit(header('location: /account/mails'));
     }
     $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
@@ -350,17 +347,17 @@ $router->add('/account/mails/(.*)/delete', function ($mail_id): void {
     if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
         MailBox::deleteEmail($uuid, $mail_id);
         exit(header('location: /account/mails?s=deleted'));
-    } else {
-        header('location: /account/mails?e=user_not_own_object');
-        exit();
     }
+    header('location: /account/mails?e=user_not_own_object');
+    exit;
+
 });
 
 $router->add('/account/mails', function (): void {
     global $router, $event, $renderer;
     $template_name = 'account/mails.twig';
     $template_array = ['sidebar_account_mails' => true];
-    if (isset($_COOKIE['token']) === false) {   
+    if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
     $user = new UserHelper($_COOKIE['token'], $renderer);

@@ -87,12 +87,12 @@ class Settings
             MySQLCache::saveCache('framework_settings');
         }
     }
+
     /**
      * Delete a setting from the database.
+     *
      * @param string $category The name of the category
      * @param string $name The name of the setting
-     * 
-     * @return void
      */
     public static function deleteSetting(string $category, string $name): void
     {
@@ -104,13 +104,11 @@ class Settings
 
     /**
      * Update the cache.
-     *
-     * @return void
      */
-    public static function updateCache() : void {
+    public static function updateCache(): void
+    {
         MySQLCache::saveCache('framework_settings');
     }
-
 
     /**
      * Migrate the settings table :).

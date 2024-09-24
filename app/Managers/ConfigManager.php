@@ -38,7 +38,6 @@ class ConfigManager
                 exit('We have no access to the config file!');
             }
 
-            
             $config = new ConfigHelper(self::$configpath);
 
         } catch (\Exception $e) {

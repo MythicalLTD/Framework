@@ -27,7 +27,7 @@ $router->add('/dashboard', function (): void {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
-    $user = new UserHelper($_COOKIE['token'],$renderer);
+    $user = new UserHelper($_COOKIE['token'], $renderer);
 
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     Engine::registerAlerts($renderer, $template);
