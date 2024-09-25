@@ -63,6 +63,7 @@ $router->add('/account/mails/(.*)/view', function ($mail_id): void {
 
     if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
         $mail = MailBox::getMailContent($uuid, $mail_id);
+        UserActivity::addActivity($uuid, 'Email viewed', CloudFlare::getUserIP(), 'user:email:viewed');
         exit($mail);
     }
     header('location: /account/mails?e=user_not_own_object');
@@ -346,6 +347,7 @@ $router->add('/account/mails/(.*)/delete', function ($mail_id): void {
 
     if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
         MailBox::deleteEmail($uuid, $mail_id);
+        UserActivity::addActivity($uuid, 'Email deleted', CloudFlare::getUserIP(), 'user:email:deleted');
         exit(header('location: /account/mails?s=deleted'));
     }
     header('location: /account/mails?e=user_not_own_object');

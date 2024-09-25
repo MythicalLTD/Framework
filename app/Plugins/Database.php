@@ -51,7 +51,7 @@ class Database extends MySQL implements Stability
      */
     public static function registerNewPlugin(string $name, string $description, ?string $homepage, string|array $require, ?string $license, Stability|string $stability, array|string $authors, ?string $support, ?string $funding, string $version, bool $isCheck): int
     {
-        try {
+        try {   
             if ($isCheck == true) {
                 return 1;
             }
@@ -59,7 +59,6 @@ class Database extends MySQL implements Stability
             $conn = $db->connectMYSQLI();
             if (self::doesInfoExist('name', $name)) {
                 Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "A plugin with the name $name already exists.");
-
                 return 0;
             }
             $stmt = $conn->prepare('INSERT INTO framework_plugins (name,description,homepage,`require`,license,stability,authors,support,funding,version) VALUES (?,?,?,?,?,?,?,?,?,?)');
@@ -72,7 +71,6 @@ class Database extends MySQL implements Stability
             return $stmt->insert_id;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while registering a new plugin: ' . $e->getMessage());
-
             return 0;
         }
     }
@@ -242,7 +240,7 @@ class Database extends MySQL implements Stability
 
             $db = self::getDatabase();
             $conn = $db->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_roles_permissions_list WHERE `owned_by` = "plugin" AND `owned_by_id` = ? ORDER BY `permission`.`id` DESC');
+            $stmt = $conn->prepare('SELECT * FROM framework_roles_permissions_list WHERE `owned_by` = "plugin" AND `owned_by_id` = ?');
             $stmt->bind_param('s', $plugin_id);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -267,7 +265,7 @@ class Database extends MySQL implements Stability
         try {
             $db = self::getDatabase();
             $conn = $db->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_roles_permissions_list ORDER BY `permission`.`id` DESC');
+            $stmt = $conn->prepare('SELECT * FROM framework_roles_permissions_list');
             $stmt->execute();
             $result = $stmt->get_result();
             $permissions = [];
@@ -290,7 +288,8 @@ class Database extends MySQL implements Stability
      * 
      * @return bool True if the permission already exists
      */
-    public static function doRegisteredPermissionAlreadyExists(array $permissions, string $plugin_name): bool {
+    public static function doRegisteredPermissionAlreadyExists(array $permissions, string $plugin_name): bool
+    {
         $db_permissions = self::getAllRegisteredPermissionsByPlugin($plugin_name);
         foreach ($permissions as $permission) {
             foreach ($db_permissions as $db_permission) {
@@ -308,7 +307,8 @@ class Database extends MySQL implements Stability
      * 
      * @return bool True if the permission was registered
      */
-    public static function doesPermissionAlreadyExist(string $permission): bool {
+    public static function doesPermissionAlreadyExist(string $permission): bool
+    {
         $db_permissions = self::getAllRegisteredPermissions();
         foreach ($db_permissions as $db_permission) {
             if ($permission == $db_permission['permission']) {
@@ -321,24 +321,121 @@ class Database extends MySQL implements Stability
      * Register a permission.
      * 
      * @param array $permissions The permissions
+     * @param string $plugin_name The name of the plugin
      * 
      * @return void
      */
-    public static function registerPermission(array $permissions,$plugin_name): void {
+    public static function registerPermission(array $permissions, string $plugin_name): void
+    {
 
-        foreach ($permissions as $permission) {
-            if (self::doesPermissionAlreadyExist($permission) == false) {
-                if (PluginCompilerHelper::doesPluginExist($plugin_name) == false) {
-                    return;
+        try {
+            foreach ($permissions as $permission) {
+                if (self::doesPermissionAlreadyExist($permission) == false) {
+                    if (PluginCompilerHelper::doesPluginExist($plugin_name) == false) {
+                        return;
+                    }
+                    $plugin_id = self::getPluginInfo($plugin_name, 'id');
+                    if ($plugin_id == '') {
+                        return;
+                    }
+
+                    $db = self::getDatabase();
+                    $conn = $db->connectMYSQLI();
+                    $stmt = $conn->prepare('INSERT INTO framework_roles_permissions_list (permission, owned_by_id) VALUES (?, ?)');
+                    $stmt->bind_param('si', $permission, $plugin_id);
+                    $stmt->execute();
                 }
-                $plugin_id = self::getPluginInfo($plugin_name, 'id');
-
-                $db = self::getDatabase();
-                $conn = $db->connectMYSQLI();
-                $stmt = $conn->prepare('INSERT INTO framework_roles_permissions_list (permission, owned_by_id) VALUES (?, ?)');
-                $stmt->bind_param('si', $permission, $plugin_id);
-                $stmt->execute();
             }
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while registering a permission: ' . $e->getMessage());
+        }
+    }
+    /**
+     * Get the plugin name by id.
+     * 
+     * @param int $id The id of the plugin
+     * 
+     * @return string The plugin name
+     */
+    public static function getPluginNameById(int $id): string
+    {
+        try {
+            $db = self::getDatabase();
+            $conn = $db->connectMYSQLI();
+            $stmt = $conn->prepare('SELECT name FROM framework_plugins WHERE `id` = ?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+
+            return $row['name'];
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while getting a plugin name by id: ' . $e->getMessage());
+
+            return '';
+        }
+    }
+
+    /**
+     * Remove a permission.
+     * 
+     * @param string $permission The permission
+     * 
+     * @return void
+     */
+    public static function removePermission(string $permission): void
+    {
+        try {
+            $db = self::getDatabase();
+            $conn = $db->connectMYSQLI();
+            $stmt = $conn->prepare('DELETE FROM framework_roles_permissions_list WHERE `permission` = ?');
+            $stmt->bind_param('s', $permission);
+            $stmt->execute();
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while removing a permission: ' . $e->getMessage());
+        }
+    }
+    /**
+     * 
+     * Check if a plugin exists!
+     * 
+     * @param int $id The id of the plugin
+     * 
+     * @return bool
+     */
+    public static function doesPluginExistID(int $id) : bool {
+        try {
+            $db = self::getDatabase();
+            $conn = $db->connectMYSQLI();
+            $stmt = $conn->prepare('SELECT * FROM framework_plugins WHERE `id` = ?');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0;
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while checking if a plugin exists: ' . $e->getMessage());
+
+            return true;
+        }
+    }
+    /**
+     * 
+     * Check if a plugin exists!
+     * 
+     * @param int $plugin_id The id of the plugin
+     * 
+     * @return void
+     */
+    public static function purgePermissions(int $plugin_id) : void {
+        try {
+            $db = self::getDatabase();
+            $conn = $db->connectMYSQLI();
+            $stmt = $conn->prepare('DELETE FROM framework_roles_permissions_list WHERE `owned_by_id` = ?');
+            $stmt->bind_param('i', $plugin_id);
+            $stmt->execute();
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while purging permissions: ' . $e->getMessage());
         }
     }
 }

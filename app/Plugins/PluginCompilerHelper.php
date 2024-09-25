@@ -84,22 +84,42 @@ class PluginCompilerHelper
             }
         }
     }
-
+    /**
+     * 
+     * Check if a plugin is installed.
+     * 
+     * @param array $plugins The plugins to check
+     * 
+     * @return void 
+     */
+    public static function installCheck(array $plugins): void
+    {
+        $plugins = array_reverse($plugins);
+        foreach ($plugins as $plugin) {
+            $plugin_info = self::readPluginFile($plugin);
+            if (empty($plugin_info)) {
+                Logger::log(LoggerLevels::ERROR, LoggerTypes::PLUGIN, "Failed to read plugin info for $plugin.");
+                continue;
+            }
+            if (Database::doesInfoExist("name",$plugin_info['name']) == false) {
+                self::registerPluginIfNotRegistered($plugin_info);
+            } else {
+                self::updatePluginIfOutdated($plugin_info);
+            }
+        }
+    }
     /**
      * Register a plugin if it is not already registered.
      */
     public static function registerPluginIfNotRegistered(array $plugin_info): void
     {
-        if (!Database::doesInfoExist('name', $plugin_info['name']) == true) {
-            $p = $plugin_info;
-
-            $p_homepage = $p['homepage'] ?? null;
-            $p_license = $p['license'] ?? null;
-            $p_support = $p['support'] ?? null;
-            $p_funding = $p['funding'] ?? null;
-            $p_require = $p['require'] ?? 'MythicalSystemsFramework';
-            Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
-        }
+        $p = $plugin_info;
+        $p_homepage = $p['homepage'] ?? null;
+        $p_license = $p['license'] ?? null;
+        $p_support = $p['support'] ?? null;
+        $p_funding = $p['funding'] ?? null;
+        $p_require = $p['require'] ?? 'MythicalSystemsFramework';
+        Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
     }
 
     /**
@@ -107,24 +127,26 @@ class PluginCompilerHelper
      */
     public static function updatePluginIfOutdated(array $plugin_info): void
     {
-        $plugin_info_db = Database::getPlugin($plugin_info['name']);
-        if ($plugin_info_db['enabled'] == 'true') {
-            $version_db = $plugin_info_db['version'];
-            $version_filesystem = $plugin_info['version'];
+        if (Database::doesInfoExist('name', $plugin_info['name']) == true) {
+            $plugin_info_db = Database::getPlugin($plugin_info['name']);
+            if ($plugin_info_db['enabled'] == 'true') {
+                $version_db = $plugin_info_db['version'];
+                $version_filesystem = $plugin_info['version'];
 
-            if ($version_db != $version_filesystem) {
-                $plugin_db_info_enabled = $plugin_info_db['enabled'];
-                Database::unRegisterPlugin($plugin_info['name']);
-                $p = $plugin_info;
+                if ($version_db != $version_filesystem) {
+                    $plugin_db_info_enabled = $plugin_info_db['enabled'];
+                    Database::unRegisterPlugin($plugin_info['name']);
+                    $p = $plugin_info;
 
-                $p_homepage = $p['homepage'] ?? null;
-                $p_license = $p['license'] ?? null;
-                $p_support = $p['support'] ?? null;
-                $p_funding = $p['funding'] ?? null;
-                $p_require = $p['require'] ?? 'MythicalSystemsFramework';
-                Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
-                Database::updatePlugin($plugin_info['name'], 'enabled', $plugin_db_info_enabled);
-                Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, 'Plugin ' . $plugin_info['name'] . ' has been updated to version ' . $plugin_info['version']);
+                    $p_homepage = $p['homepage'] ?? null;
+                    $p_license = $p['license'] ?? null;
+                    $p_support = $p['support'] ?? null;
+                    $p_funding = $p['funding'] ?? null;
+                    $p_require = $p['require'] ?? 'MythicalSystemsFramework';
+                    Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
+                    Database::updatePlugin($plugin_info['name'], 'enabled', $plugin_db_info_enabled);
+                    Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, 'Plugin ' . $plugin_info['name'] . ' has been updated to version ' . $plugin_info['version']);
+                }
             }
         }
     }
@@ -369,17 +391,24 @@ class PluginCompilerHelper
 
         return file_exists($plugin_folder . '/' . $lang . '.yml');
     }
-    public static function registerPluginPermissions() : void {
+    /**
+     * 
+     * Register plugin permissions.
+     * 
+     * @return void 
+     */
+    public static function registerPluginPermissions(): void
+    {
         self::ensurePluginPathExists();
         $plugins = self::getAllPlugins();
-        
         foreach ($plugins as $plugin) {
-            if (self::isPluginEnabled($plugin['name']) == false) {
-                return;
-            }
-            if (self::doesPluginHavePermissions($plugin)) {
-                $permissions = self::getPluginPermissions($plugin);
-                Database::registerPermission($permissions, $plugin['name']);
+
+            if (self::isPluginEnabled($plugin) == true) {
+                if (self::doesPluginHavePermissions($plugin)) {
+                    $permissions = self::getPluginPermissions($plugin);
+                    Database::registerPermission($permissions, $plugin);
+                    continue;
+                }
             }
         }
     }
@@ -397,11 +426,11 @@ class PluginCompilerHelper
             return false;
         }
         $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/permissions.json';
-        if (!file_exists($plugin_folder) || !is_dir($plugin_folder)) {
-            return false;
+        if (file_exists($plugin_folder)) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -471,5 +500,22 @@ class PluginCompilerHelper
         }
 
         return $languagePaths;
+    }
+    /**
+     * 
+     * Remove ghost permissions.
+     * 
+     * @return void  
+     */
+    public static function removeGhostPermissions(): void
+    {
+        $permissions = Database::getAllRegisteredPermissions();
+        $plugins = self::getAllPlugins();
+        foreach ($permissions as $permission) {
+            $plugin_owner = $permission['owned_by_id'];
+            if (Database::doesPluginExistID($plugin_owner) == false) {
+                Database::purgePermissions($plugin_owner);
+            }
+        }
     }
 }
