@@ -19,9 +19,9 @@
 							<form id="formAccountSettings" method="POST" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
 								<div class="row">
 									<div class="mb-6 col-md-6 form-password-toggle fv-plugins-icon-container">
-										<label class="form-label" for="currentPassword">Current Password</label>
+										<label class="form-label" for="currentPassword">{{ lang('Pages.Account.Security.CurrentPassword.Label') }}</label>
 										<div class="input-group input-group-merge has-validation">
-											<input class="form-control" type="password" name="currentPassword" id="currentPassword" placeholder="············">
+											<input class="form-control" type="password" name="currentPassword" id="currentPassword" placeholder="{{ lang('Pages.Account.Security.CurrentPassword.Placeholder') }}">
 											<span class="input-group-text cursor-pointer">
 												<i class="ti ti-eye-off"></i>
 											</span>
@@ -31,9 +31,9 @@
 								</div>
 								<div class="row">
 									<div class="mb-6 col-md-6 form-password-toggle fv-plugins-icon-container fv-plugins-bootstrap5-row-valid">
-										<label class="form-label" for="newPassword">New Password</label>
+										<label class="form-label" for="newPassword">{{ lang('Pages.Account.Security.NewPassword.Label') }}</label>
 										<div class="input-group input-group-merge has-validation">
-											<input class="form-control" type="password" id="newPassword" name="newPassword" placeholder="············">
+											<input class="form-control" type="password" id="newPassword" name="newPassword" placeholder="{{ lang('Pages.Account.Security.NewPassword.Placeholder') }}">
 											<span class="input-group-text cursor-pointer">
 												<i class="ti ti-eye-off"></i>
 											</span>
@@ -42,9 +42,9 @@
 									</div>
 
 									<div class="mb-6 col-md-6 form-password-toggle fv-plugins-icon-container fv-plugins-bootstrap5-row-invalid">
-										<label class="form-label" for="confirmPassword">Confirm New Password</label>
+										<label class="form-label" for="confirmPassword">{{ lang('Pages.Account.Security.ConfirmPassword.Label') }}</label>
 										<div class="input-group input-group-merge has-validation">
-											<input class="form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="············">
+											<input class="form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="{{ lang('Pages.Account.Security.ConfirmPassword.Placeholder') }}">
 											<span class="input-group-text cursor-pointer">
 												<i class="ti ti-eye-off"></i>
 											</span>
@@ -52,11 +52,14 @@
 
 									</div>
 								</div>
-								<h6 class="text-body">Password Requirements:</h6>
+								<h6 class="text-body">{{ lang('Pages.Account.Security.PasswordRequirements.Title') }}</h6>
 								<ul class="ps-4 mb-0">
-									<li class="mb-4">Minimum 8 characters long - the more, the better</li>
-									<li class="mb-4">At least one lowercase character</li>
-									<li>At least one number, symbol, or whitespace character</li>
+									<li class="mb-4">{{ lang('Pages.Account.Security.PasswordRequirements.Items.Length') }}</li>
+									<li class="mb-4">{{ lang('Pages.Account.Security.PasswordRequirements.Items.Uppercase') }}</li>
+									<li class="mb-4">{{ lang('Pages.Account.Security.PasswordRequirements.Items.Lowercase') }}</li>
+									<li class="mb-4">{{ lang('Pages.Account.Security.PasswordRequirements.Items.Number') }}</li>
+									<li class="mb-4">{{ lang('Pages.Account.Security.PasswordRequirements.Items.Special') }}</li>
+
 								</ul>
 								{{ csrf_input | raw }}
 								<!-- Turnstile -->
@@ -67,8 +70,8 @@
 									{% else %}
 								{% endif %}
 								<div class="mt-6">
-									<button type="submit" class="btn btn-primary me-3 waves-effect waves-light">Save changes</button>
-									<button type="reset" class="btn btn-label-secondary waves-effect">Reset</button>
+									<button type="submit" class="btn btn-primary me-3 waves-effect waves-light">{{ lang('Pages.Account.Security.SaveChanges') }}</button>
+									<button type="reset" class="btn btn-label-secondary waves-effect">{{ lang('Pages.Account.Security.Reset') }}</button>
 								</div>
 								<input type="hidden"></form>
 						</div>
@@ -79,24 +82,24 @@
 				</div>
 				<div class="card mb-6">
 					<div class="card-body">
-						<h5 class="mb-6">Two-steps verification</h5>
+						<h5 class="mb-6">{{ lang('Pages.Account.Security.TwoFactor.Title') }}</h5>
 						{% if user('2fa_enabled',false) == "false" %}
-							<h5 class="mb-4 text-body">Two factor authentication is not enabled yet.</h5>
+							<h5 class="mb-4 text-body">{{ lang('Pages.Account.Security.TwoFactor.Disabled.Title') }}</h5>
 							<p class="w-75">
-								Two-factor authentication adds an additional layer of security to your account by requiring more
-																																																							                        than just a password to log in.
-								<a target="_blank" href="https://en.wikipedia.org/wiki/Multi-factor_authentication">Learn more.</a>
+								{{ lang('Pages.Account.Security.TwoFactor.Disabled.Description') }}
+								<a target="_blank" href="https://en.wikipedia.org/wiki/Multi-factor_authentication">{{ lang('Pages.Account.Security.TwoFactor.Disabled.LearnMore') }}</a>
 							</p>
 							<a class="btn btn-primary mt-2 waves-effect waves-light" href="/auth/2fa/setup">
-								Enable Two-Factor Authentication
+								{{lang('Pages.Account.Security.TwoFactor.Enabled.Button') }}
 							</a>
 						{% else %}
-							<h5 class="mb-4 text-body">Two factor authentication is enabled.</h5>
-							<p class="w-75">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.
-								<a href="https://en.wikipedia.org/wiki/Multi-factor_authentication" target="_blank">Learn more.</a>
+							<h5 class="mb-4 text-body">{{ lang('Pages.Account.Security.TwoFactor.Enabled.Title') }}</h5>
+							<p class="w-75">
+								{{ lang('Pages.Account.Security.TwoFactor.Enabled.Description') }}
+								<a href="https://en.wikipedia.org/wiki/Multi-factor_authentication" target="_blank">{{ lang('Pages.Account.Security.TwoFactor.Enabled.LearnMore') }}</a>
 							</p>
 							<a class="btn btn-primary mt-2 waves-effect waves-light" href="/auth/2fa/disable">
-								Disable Two-Factor Authentication
+								{{ lang('Pages.Account.Security.TwoFactor.Disabled.Button') }}
 							</a>
 						{% endif %}
 
@@ -109,32 +112,32 @@
 {% endblock %}
 
 {% block footer %}
-	 <script>
-		document.getElementById('formAccountSettings').addEventListener('submit', function(event) {
-			event.preventDefault();
-			
-			var firstPassword = document.getElementById('currentPassword').value;
-			var newPassword = document.getElementById('newPassword').value;
-			var confirmPassword = document.getElementById('confirmPassword').value;
+<script>
+	document.getElementById('formAccountSettings').addEventListener('submit', function(event) {
+		event.preventDefault();
 		
-			if ( firstPassword === '' ||  newPassword === '' ||  confirmPassword === '') {
-				Swal.fire({
-					icon: 'error',
-					title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",
-					text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}",
-				});
-				return false;
-			}
-		
-			if (newPassword !== confirmPassword) {
-				Swal.fire({
-					icon: 'error',
-					title: "{{ lang('Alerts.Error.PasswordsNotTheSame.Title') }}",
-					text: "{{ lang('Alerts.Error.PasswordsNotTheSame.Message') }}",
-				});
-				return false;
-			}
-			event.target.submit();
-		});
-		</script>
+		var firstPassword = document.getElementById('currentPassword').value;
+		var newPassword = document.getElementById('newPassword').value;
+		var confirmPassword = document.getElementById('confirmPassword').value;
+	
+		if ( firstPassword === '' ||  newPassword === '' ||  confirmPassword === '') {
+			Swal.fire({
+				icon: 'error',
+				title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",
+				text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}",
+			});
+			return false;
+		}
+	
+		if (newPassword !== confirmPassword) {
+			Swal.fire({
+				icon: 'error',
+				title: "{{ lang('Alerts.Error.PasswordsNotTheSame.Title') }}",
+				text: "{{ lang('Alerts.Error.PasswordsNotTheSame.Message') }}",
+			});
+			return false;
+		}
+		event.target.submit();
+	});
+</script>
 {% endblock %}

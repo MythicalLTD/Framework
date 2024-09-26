@@ -18,25 +18,25 @@
 						<form id="formAccountSettings" method="POST" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
 							<div class="row">
 								<div class="mb-4 col-md-6 fv-plugins-icon-container">
-									<label for="firstName" class="form-label">First Name</label>
+									<label for="firstName" class="form-label">{{ lang('Pages.Account.Settings.Form.FirstName.Label') }}</label>
 									<input class="form-control" type="text" id="firstName" required name="firstName" value="{{ user('first_name',true) }}" autofocus="">
 									<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
 								</div>
 								<div class="mb-4 col-md-6 fv-plugins-icon-container">
-									<label for="lastName" class="form-label">Last Name</label>
+									<label for="lastName" class="form-label">{{ lang('Pages.Account.Settings.Form.LastName.Label') }}</label>
 									<input class="form-control" type="text" name="lastName" required id="lastName" value="{{ user('last_name',true) }}">
 									<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
 								</div>
 								<div class="mb-4 col-md-6">
-									<label for="email" class="form-label">E-mail</label>
+									<label for="email" class="form-label">{{ lang('Pages.Account.Settings.Form.Email.Label') }}</label>
 									<input class="form-control" type="text" id="email" name="email" required value="{{ user('email',false) }}" placeholder="{{ user('email',false) }}">
 								</div>
 								<div class="mb-4 col-md-6">
-									<label for="avatar" class="form-label">Avatar</label>
+									<label for="avatar" class="form-label">{{ lang('Pages.Account.Settings.Form.Avatar.Label') }}</label>
 									<input type="text" class="form-control" id="avatar" name="avatar" required placeholder="{{ user('avatar',false) }}" value="{{ user('avatar',false) }}">
 								</div>
 								<div class="mb-4 col-md-6">
-									<label for="background" class="form-label">Background</label>
+									<label for="background" class="form-label">{{ lang('Pages.Account.Settings.Form.Background.Label') }}</label>
 									<input class="form-control" type="text" id="background" name="background" required value="{{ user('background',false) }}" placeholder="{{ user('background',false) }}">
 								</div>
 
@@ -61,24 +61,35 @@
 					<!-- /Account -->
 				</div>
 				<div class="card">
-					<h5 class="card-header">Delete Account</h5>
+					<h5 class="card-header">{{lang("Pages.Account.Settings.Form.DeactivateAccount.Title") }}</h5>
 					<div class="card-body">
 						<div class="mb-6 col-12">
 							<div class="alert alert-warning">
-								<h5 class="alert-heading mb-1">Are you sure you want to delete your account?</h5>
-								<p class="mb-0">Once you delete your account, there is no going back. Please be certain.</p>
+								<h5 class="alert-heading mb-1">{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Title') }}</h5>
+								<p class="mb-0">{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Items.First') }}</p>
+								<p class="mb-0">{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Items.Secondary') }}</p>
+								<p class="mb-0">{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Items.Third') }}</p>
+								<p class="mb-0">{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Items.Fourth') }}</p>
+								
+
 							</div>
 						</div>
 						<form id="formAccountDeactivation" onsubmit="return false" class="fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
 							<div class="form-check my-8">
 								<input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation">
-								<label class="form-check-label" for="accountActivation">I confirm my account deactivation</label>
+								<label class="form-check-label" for="accountActivation">{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Confirm') }}</label>
 								<div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
 							</div>
 							<button type="submit" class="btn btn-danger deactivate-account waves-effect waves-light" disabled="">
-								Deactivate Account
+								{{ lang('Pages.Account.Settings.Form.DeactivateAccount.Warning.Button') }}
 							</button>
-							<input type="hidden"></form>
+							<script>
+							document.getElementById('accountActivation').addEventListener('change', function() {
+								var deactivateButton = document.querySelector('.deactivate-account');
+								deactivateButton.disabled = !this.checked;
+							});
+							</script>
+						</form>
 					</div>
 				</div>
 			</div>

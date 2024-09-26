@@ -12,6 +12,13 @@
 # %seo_description% - The SEO description of the application
 # %seo_keywords% - The SEO keywords of the application
 
+# If you were asking what raw input means here is a simple explanation:
+# Raw input means that the input is not processed by the framework. This means that the input is not escaped or sanitized.
+# This is useful for passwords or other sensitive data that should not be processed by the framework.
+
+# The language file is divided into sections. Each section has its own keys and values.
+# You can use the keys in your views to display the values in the correct language.
+
 Pages:
   Components:
     Sidebar:
@@ -91,7 +98,122 @@ Pages:
       Title: "Invalid credentials"
       Description: "The credentials you provided are invalid."
       Button: "Go back home"
+  Account:
+    Components:
+      Navbar:
+        Settings: "Settings"
+        Security: "Security"
+        Mails: "Mails"
+        Activities: "Activities"
+        APIKeys: "API Keys"
+        Connections: "Connections"
+      Profile:
+        UUID: "UUID:"
+        Role: "Role:"
+        FirstIP: "First IP:"
+        Verified: "Verified:"
+        FirstSeen: "First seen:"
+    Security:
+      CurrentPassword:
+        Label: "Current password"
+        Placeholder: "············" # Raw input !!
+      NewPassword:
+        Label: "New password"
+        Placeholder: "············" # Raw input !!
+      ConfirmPassword:
+        Label: "Confirm password"
+        Placeholder: "············" # Raw input !!
+      PasswordRequirements:
+        Title: "Password requirements:"
+        Items:
+          Length: "At least 8 characters"
+          Uppercase: "At least one uppercase letter"
+          Lowercase: "At least one lowercase letter"
+          Number: "At least one number"
+          Special: "At least one special character"
+      SaveChanges: "Save changes"
+      Reset: "Reset"
+      TwoFactor: 
+        Title: "Two Factor verification"
+        Enabled: 
+          Title: "Two factor authentication is enabled."
+          Description: "Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in."
+          LearnMore: "Learn more"
+          Button: "Enable two factor authentication"
+        Disabled:
+          Title: "Two factor authentication is not enabled yet." 
+          Description: "Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in."
+          LearnMore: "Learn more"
+          Button: "Disable two factor authentication"
+    Settings:
+      Form: 
+        FirstName:
+          Label: "First name"
+        LastName:
+          Label: "Last name"
+        Email:
+          Label: "Email"
+        Avatar: 
+          Label: "Avatar"
+        Background: 
+          Label: "Background"
+        Submit: "Save changes"
+        Cancel: "Cancel"
+        DeactivateAccount:
+          Title: "Deactivate account"
+          Warning: 
+            Title: "Are you sure you want to delete your account?"
+            Items: 
+              First: "Once you delete your account, there is a 30 days window for you to contact support"
+              Secondary: "to recover your account. After 30 days, your account will be permanently disabled."
+              Third: "This means that you account will be marked as deleted BUT we reserve to keep all the data"
+              Fourth: "for legal reasons. You may open a ticket for your data to be anonymized due to GDPR!"
+            Confirm: "Yes, i want to delete my account and i agree with the terms of the account deletion policy."  
+            Button: "Deactivate account"
 
+    Mails: 
+      Table:
+        Head:
+          Columns:
+            ID: "ID"
+            Subject: "Subject"
+            From: "From"
+            Date: "Date"
+            Actions: "Actions"
+          Actions: 
+            View: "View"
+            Delete: "Delete"
+    ApiKeys:
+      Create:
+        Title: "Create API Key"
+        Form:
+          Name:
+            Label: "Name the API key"
+            Placeholder: "Enter the name of the API key..."
+          Permissions:
+            Label: "Permissions"
+            Placeholder: "Select the permissions..."
+            Items:
+              ReadOnly: "Read Only"
+              ReadWrite: "Read & Write"
+              Unknown: "Unknown"
+          Submit:
+            Label: "Create new key"
+        List:
+          Title: "API Key List & Access"
+          Description: "An API key is a simple encrypted string that identifies an application without any principal. They are useful for accessing public data anonymously, and are used to associate API requests with your project for quota and billing."
+          Items: 
+            Created: "Created on"
+            Deleted: "Delete"
+    Activities:
+      Table:
+        Head:
+          Columns:
+            ID: "ID"
+            Action: "Action"
+            Description: "Description"
+            IPAddress: "IP Address"
+            Date: "Date"
   Auth:
     Login:
       Title: "Welcome back 👋!"

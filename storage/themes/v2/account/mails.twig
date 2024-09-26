@@ -19,11 +19,11 @@
 						<table class="datatables-basic table">
 							<thead>
 								<tr>
-									<th>ID</th>
-									<th>Subject</th>
-									<th>From</th>
-									<th>Date</th>
-									<th>Actions</th>
+									<th>{{ lang('Pages.Account.Mails.Table.Head.Columns.ID') }}</th>
+									<th>{{ lang('Pages.Account.Mails.Table.Head.Columns.Subject') }}</th>
+									<th>{{ lang('Pages.Account.Mails.Table.Head.Columns.From') }}</th>
+									<th>{{ lang('Pages.Account.Mails.Table.Head.Columns.Date') }}</th>
+									<th>{{ lang('Pages.Account.Mails.Table.Head.Columns.Actions') }}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -34,8 +34,8 @@
 										<td>{{ email.from }}</td>
 										<td>{{ email.date }}</td>
 										<td>
-											<a href="/account/mails/{{ email.id }}/view" target="_new" class="btn btn-sm btn-primary">View</a>
-											<button onclick="requireConfirmation('/account/mails/{{ email.id }}/delete')" class="btn btn-sm btn-danger">Delete</button>
+											<a href="/account/mails/{{ email.id }}/view" target="_new" class="btn btn-sm btn-primary">{{ lang('Pages.Account.Mails.Table.Head.Actions.View') }}</a>
+											<button onclick="requireConfirmation('/account/mails/{{ email.id }}/delete')" class="btn btn-sm btn-danger">{{ lang('Pages.Account.Mails.Table.Head.Actions.Delete') }}</button>
 										</td>
 									</tr>
 								{% endfor %}

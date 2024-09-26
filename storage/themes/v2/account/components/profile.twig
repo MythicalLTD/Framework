@@ -2,19 +2,19 @@
 	<div class="d-flex align-items-start align-items-sm-center gap-6">
 		<img src="{{ user('avatar',false) }}" alt="user-avatar" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar">
 		<div class="button-wrapper">
-			<div>UUID:
+			<div>{{ lang('Pages.Account.Components.Profile.UUID') }}
 				<code>{{ user('uuid',false) }}</code>
 			</div>
-			<div>Role:
+			<div>{{ lang('Pages.Account.Components.Profile.Role') }}
 				<code>{{role_name}}</code>
 			</div>
-			<div>First IP:
+			<div>{{ lang('Pages.Account.Components.Profile.FirstIP') }}
 				<code>{{user('first_ip',true) }}</code>
 				/ (<code>{{user('last_ip',true) }}</code>)</div>
-			<div>Verified:
+			<div>{{ lang('Pages.Account.Components.Profile.Verified') }}
 				<code>{{user('verified',false) }}</code>
 			</div>
-			<div>First Seen:
+			<div>{{ lang('Pages.Account.Components.Profile.FirstSeen') }}
 				<code>{{user('first_seen',false) }}</code>
 				/ (<code>{{user('last_seen',false) }}</code>)</div>
 		</div>

@@ -3,35 +3,35 @@
 		<li class="nav-item">
 			<a class="nav-link {{ sidebar_account_settings is defined and sidebar_account_settings == 'active' ? 'active' : '' }} waves-effect waves-light" href="/account/settings">
 				<i class="ti-sm ti ti-users me-1_5"></i>
-				Settings</a>
+				{{ lang('Pages.Account.Components.Navbar.Settings') }}</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link {{ sidebar_account_security is defined and sidebar_account_security == 'active' ? 'active' : '' }} waves-effect waves-light" href="/account/security">
 				<i class="ti-sm ti ti-lock me-1_5"></i>
-				Security</a>
+				{{ lang('Pages.Account.Components.Navbar.Security') }}</a>
 		</li>
 		{% if settings('smtp','enabled') == "true" %}
 			<li class="nav-item">
 				<a class="nav-link {{ sidebar_account_mails is defined and sidebar_account_mails == 'active' ? 'active' : '' }} waves-effect waves-light" href="/account/mails">
 					<i class="ti-sm ti ti-bookmark me-1_5"></i>
-					Mails
+					{{ lang('Pages.Account.Components.Navbar.Mails') }}
 				</a>
 			</li>
 		{% endif %}
 		<li class="nav-item">
 			<a class="nav-link {{ sidebar_account_activities is defined and sidebar_account_activities == 'active' ? 'active' : '' }} waves-effect waves-light" href="/account/activities">
 				<i class="ti-sm ti ti-bell me-1_5"></i>
-				Activities</a>
+				{{ lang('Pages.Account.Components.Navbar.Activities') }}</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link {{ sidebar_account_api_key is defined and sidebar_account_api_key == 'active' ? 'active' : '' }} waves-effect waves-light" href="/account/api">
 				<i class="ti-sm ti ti-brand-stackshare me-1_5"></i>
-				API Keys</a>
+				{{ lang('Pages.Account.Components.Navbar.APIKeys') }}</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link {{ sidebar_account_connections is defined and sidebar_account_connections == 'active' ? 'active' : '' }} waves-effect waves-light" href="/account/connections">
 				<i class="ti-sm ti ti-link me-1_5"></i>
-				Connections</a>
+				{{ lang('Pages.Account.Components.Navbar.Connections') }}</a>
 		</li>
 	</ul>
 </div>

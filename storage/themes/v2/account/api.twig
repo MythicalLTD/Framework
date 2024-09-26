@@ -14,61 +14,58 @@
 
 					<hr
 					class="my-0">
-				<!-- /Account -->
-
-				</div>
-			</div>
-			<div class="card mb-6">
-				<h5 class="card-header">Create an API key</h5>
-				<div class="row">
-					<div class="col-md-5 order-md-0 order-1">
-						<div class="card-body">
-							<form id="formAccountSettingsApiKey" method="POST">
-								<div class="row">
-									<div class="mb-5 col-12">
-										<label for="apiKey" class="form-label">Name the API key</label>
-										<input type="text" class="form-control" id="apiKey" name="apiKey" placeholder="Server Key 1"/>
+					<!-- /Account -->
+					<div class="row">
+						<h5 class="card-header text-left">&nbsp;&nbsp;&nbsp;{{lang("Pages.Account.ApiKeys.Create.Title")}}</h5>
+						<div class="col-md-5 order-md-0 order-1">
+							<div class="card-body">
+								<form id="formAccountSettingsApiKey" method="POST">
+									<div class="row">
+										<div class="mb-5 col-12">
+											<label for="apiKey" class="form-label">{{lang("Pages.Account.ApiKeys.Create.Form.Name.Label") }}</label>
+											<input type="text" class="form-control" id="apiKey" name="apiKey" placeholder="{{lang("Pages.Account.ApiKeys.Create.Form.Name.Placeholder") }}"/>
+										</div>
+										<div class="mb-5 col-12">
+											<label for="apiAccess" class="form-label">{{lang("Pages.Account.ApiKeys.Create.Form.Permissions.Label")}}</label>
+											<select id="apiAccess" name="apiAccess" class="select2 form-select form-select-lg">
+												<option value="">{{lang("Pages.Account.ApiKeys.Create.Form.Permissions.Placeholder")}}</option>
+												<option value="rw">{{lang("Pages.Account.ApiKeys.Create.Form.Permissions.Items.ReadWrite")}}</option>
+												<option value="r">{{lang("Pages.Account.ApiKeys.Create.Form.Permissions.Items.ReadOnly")}}</option>
+											</select>
+										</div>
+										{{ csrf_input | raw }}
+										<!-- Turnstile -->
+										{% if isTurnStileEnabled == true  %}
+											<center>
+												<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+											</center>
+											<br>
+												<br>
+											</br>
+											<br/>
+										{% else %}
+											<br>
+										{% endif %}
+										<div class="col-12">
+											<button type="submit" class="btn btn-primary me-2 d-grid w-100">{{lang("Pages.Account.ApiKeys.Create.Form.Submit.Label")}}</button>
+										</div>
 									</div>
-									<div class="mb-5 col-12">
-										<label for="apiAccess" class="form-label">Choose the Api key type you want to create</label>
-										<select id="apiAccess" name="apiAccess" class="select2 form-select form-select-lg">
-											<option value="">Choose Key Type</option>
-											<option value="rw">Read / Write</option>
-											<option value="r">Read Only</option>
-										</select>
-									</div>
-									{{ csrf_input | raw }}
-									<!-- Turnstile -->
-									{% if isTurnStileEnabled == true  %}
-										<center>
-											<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
-										</center>
-										<br>
-										<br>
-										</br>
-										<br/>
-									{% else %}
-										<br>
-									{% endif %}
-									<div class="col-12">
-										<button type="submit" class="btn btn-primary me-2 d-grid w-100">Create Key</button>
-									</div>
-								</div>
-							</form>
+								</form>
+							</div>
 						</div>
-					</div>
-					<div class="col-md-7 order-md-1 order-0">
-						<div class="text-center mt-4 mx-3 mx-md-0">
-							<img src="/assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Api Key Image" width="202"/>
+						<div class="col-md-7 order-md-1 order-0">
+							<div class="text-center mt-4 mx-3 mx-md-0">
+								<img src="/assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Api Key Image" width="202"/>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="card mb-6">
 				<div class="card-body">
-					<h5>API Key List & Access</h5>
+					<h5>{{ lang('Pages.Account.ApiKeys.Create.List.Title') }}</h5>
 					<p class="mb-6">
-						An API key is a simple encrypted string that identifies an application without any principal. They are useful for accessing public data anonymously, and are used to associate API requests with your project for quota and billing.
+						{{lang("Pages.Account.ApiKeys.Create.List.Description") }}
 					</p>
 					<div class="row">
 						<div class="col-md-12">
@@ -79,11 +76,11 @@
 											({{api_key.id}})</h5>
 										<span class="badge bg-label-primary">
 											{% if api_key.type == 'rw' %}
-												Read & Write
+												{{ lang('Pages.Account.ApiKeys.Create.Form.Permissions.Items.ReadWrite') }}
 											{% elseif api_key.type == 'r' %}
-												Read
+												{{ lang('Pages.Account.ApiKeys.Create.Form.Permissions.Items.ReadOnly') }}
 											{% else %}
-												Unknown
+												{{ lang('Pages.Account.ApiKeys.Create.Form.Permissions.Items.Unknown') }}
 											{% endif %}
 										</span>
 									</div>
@@ -93,11 +90,11 @@
 											<i class="ti ti-copy"></i>
 										</span>
 									</div>
-									<span class="text-muted">Created on
+									<span class="text-muted">{{ lang('Pages.Account.ApiKeys.Create.List.Items.Created') }}
 										{{ api_key.date}}</span>
 									<div class="position-absolute top-50 end-0 translate-middle-y me-3">
 										<button class="btn btn-sm btn-danger" onclick="requireConfirmation('/account/api/{{ api_key.id }}/delete')">
-											Delete
+											{{ lang('Pages.Account.ApiKeys.Create.List.Items.Deleted') }}
 										</button>
 									</div>
 								</div>
@@ -114,18 +111,18 @@
 {% endblock %}
 
 {% block footer %}
-		{% include 'requirements/datatables.twig' %}
+	{% include 'requirements/datatables.twig' %}
 
 	 <script>
-		document.getElementById('formAccountSettingsApiKey').addEventListener('submit', function(event) {		
-			const apiKey = document.getElementById('apiKey').value;
-			const apiAccess = document.getElementById('apiAccess').value;
-	
-			if (apiKey === '' || apiAccess === '') {
-				Swal.fire({icon: 'error',title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}"});
-				event.preventDefault();
-				return;
-			}
-		});
-	</script>
+					document.getElementById('formAccountSettingsApiKey').addEventListener('submit', function(event) {		
+						const apiKey = document.getElementById('apiKey').value;
+						const apiAccess = document.getElementById('apiAccess').value;
+				
+						if (apiKey === '' || apiAccess === '') {
+							Swal.fire({icon: 'error',title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}"});
+							event.preventDefault();
+							return;
+						}
+					});
+				</script>
 {% endblock %}
