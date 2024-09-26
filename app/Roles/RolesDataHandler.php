@@ -221,7 +221,7 @@ class RolesDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
-
+            
             // Check if the role exists
             $stmtRole = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles WHERE id = ?');
             $stmtRole->bind_param('i', $id);

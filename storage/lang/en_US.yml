@@ -20,6 +20,47 @@
 # You can use the keys in your views to display the values in the correct language.
 
 Pages:
+  AdminArea:
+    Pages: 
+      Announcements:
+        Create:
+          Title: "Create Announcement"
+          Description: "Enter the title and content of the announcement."
+          Forms:
+            Title:
+              Label: "Title"
+              Placeholder: "Enter the title of the announcement..."
+            Content:
+              Label: "Content"
+              Placeholder: "Enter the content of the announcement..."
+            Submit: "Create announcement"
+            Cancel: "Cancel"
+        Edit:
+          Title: "Edit Announcement"
+          Description: "Here you can edit the announcement."
+          Form:
+            Title:
+              Label: "Title"
+              Placeholder: "Enter the title of the announcement..."
+            Content:
+              Label: "Content"
+              Placeholder: "Enter the content of the announcement..."
+            Submit: "Save changes"
+            Cancel: "Cancel"
+        List: 
+          Title: "Announcements"
+          Description: "Here you can manage all the announcements."
+          Table:
+            CreateButton: "Create new announcement"
+            Head:
+              Columns:
+                ID: "ID"
+                Title: "Title"
+                Date: "Date"
+                Actions: "Actions"
+              Actions:
+                Edit: "Edit"
+                Delete: "Delete"
   Components:
     Sidebar:
       Admin:
@@ -170,7 +211,6 @@ Pages:
               Fourth: "for legal reasons. You may open a ticket for your data to be anonymized due to GDPR!"
             Confirm: "Yes, i want to delete my account and i agree with the terms of the account deletion policy."  
             Button: "Deactivate account"
-
     Mails: 
       Table:
         Head:
@@ -367,6 +407,9 @@ Alerts:
       AlreadyUnfollowed:
         Title: "Already Unfollowed"
         Message: "You have already unfollowed this. Please try again."
+    NoPermission: 
+      Title: "No Permission"
+      Message: "You do not have permission to do that."
     UserDoesNotOwnTarget:
       Title: "Sorry, you can't do that"
       Message: "You do not own that object."

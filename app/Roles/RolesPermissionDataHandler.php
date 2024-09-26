@@ -229,12 +229,12 @@ class RolesPermissionDataHandler
             return 'ERROR_DATABASE_INSERT_FAILED';
         }
     }
-
     /**
      * Check if a role has a specific permission.
      *
      * @param int $roleId The role id
      * @param string $permission The permission
+     * @return bool True if the role has the permission, false otherwise
      */
     public static function doesRoleHavePermission(int $roleId, string $permission): bool
     {
@@ -242,6 +242,18 @@ class RolesPermissionDataHandler
             // Connect to the database
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
+
+            // Check if the role has full access (* permission)
+            $stmtFullAccess = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND permission = "*"');
+            $stmtFullAccess->bind_param('i', $roleId);
+            $stmtFullAccess->execute();
+            $stmtFullAccess->bind_result($fullAccessCount);
+            $stmtFullAccess->fetch();
+            $stmtFullAccess->close();
+
+            if ($fullAccessCount > 0) {
+                return true; // Role has full access
+            }
 
             // Check for exact permission match
             $stmtExact = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND permission = ?');
@@ -252,13 +264,12 @@ class RolesPermissionDataHandler
             $stmtExact->close();
 
             if ($exactCount > 0) {
-                return true;
+                return true; // Role has the exact permission
             }
 
             // Check for wildcard match
             $permissionParts = explode('.', $permission);
             $wildcardPermissions = [];
-
             // Build wildcard permissions from longest to shortest
             for ($i = count($permissionParts); $i > 0; --$i) {
                 $wildcardPermissions[] = implode('.', array_slice($permissionParts, 0, $i)) . '.*';
@@ -273,7 +284,7 @@ class RolesPermissionDataHandler
                 $stmtWildcard->close();
 
                 if ($wildcardCount > 0) {
-                    return true;
+                    return true; // Role has a matching wildcard permission
                 }
             }
 

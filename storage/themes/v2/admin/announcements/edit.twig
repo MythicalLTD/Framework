@@ -1,0 +1,40 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Title') }}</h4>
+                    <p class="card-text">{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Description') }}</p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="title">{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Form.Title.Label') }}</label>
+                            <input type="text" id="title" name="title" placeholder="{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Form.Title.Placeholder') }}"class="form-control" value="{{ announcement.title }}" required>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="message">{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Form.Content.Label') }}</label>
+                            <textarea id="message" name="message" placeholder="{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Form.Content.Placeholder') }}" class="form-control" rows="5" required>{{ announcement.text }}</textarea>
+                        </div>
+                        <br>
+                        {% if isTurnStileEnabled == true  %}
+								<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+							<br>
+						{% else %}
+							<br>
+						{% endif %}
+                        <button type="submit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Form.Submit') }}</button>
+                        <a href="/admin/announcements" class="btn btn-secondary">{{ lang('Pages.AdminArea.Pages.Announcements.Edit.Form.Cancel') }}</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

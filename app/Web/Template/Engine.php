@@ -258,6 +258,10 @@ class Engine
                     $error_title = self::getError('PasswordsNotTheSame.Title');
                     $error_message = self::getError('PasswordsNotTheSame.Message');
                     break;
+                case 'missing_permission':
+                    $error_title = self::getError('NoPermission.Title');
+                    $error_message = self::getError('NoPermission.Message');
+                    break;
                 default:
                     $error_title = self::getError('UnknownError.Title');
                     $error_message = self::getError('UnknownError.Message');

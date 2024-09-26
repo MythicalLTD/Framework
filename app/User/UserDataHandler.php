@@ -511,6 +511,23 @@ class UserDataHandler
         $renderer->addFunction(new TwigFunction('hasPermission', function ($info) use ($role_id): bool {
             return RolesPermissionDataHandler::doesRoleHavePermission($role_id, $info);
         }));
+
+
+    }
+    /**
+     * Check if the user has a permission.
+     * 
+     * @param string $token 
+     * @param string $permission
+     * 
+     * @return bool 
+     */
+    public static function hasPermission(string $token, string $permission) : bool {
+        if (self::isUserValid($token) == false) {
+            return false;
+        }
+        $role_id = self::getRoleIdByUser($token);
+        return RolesPermissionDataHandler::doesRoleHavePermission($role_id, $permission);
     }
 
     /**

@@ -23,31 +23,25 @@ class Announcements
 {
     /**
      * Does an announcement exist?
+     * 
+     * @param string $id the ID of the announcement
+     * 
+     * @return bool
      */
-    public static function exists(int $id): bool
+    public static function exists(string $id): bool
     {
         try {
             $mysql = new MySQL();
             $conn = $mysql->connectMYSQLI();
-
-            $stmt = $conn->prepare('SELECT * FROM framework_announcements WHERE id = ?');
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM framework_announcements WHERE id = ?');
             $stmt->bind_param('i', $id);
             $stmt->execute();
-
+            $stmt->bind_result($count);
+            $stmt->fetch();
             $stmt->close();
-
-            return $stmt->affected_rows > 0;
+            return $count > 0;
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while checking if an announcement exists: ' . $e->getMessage());
-
             return false;
         }
     }
@@ -55,6 +49,9 @@ class Announcements
     /**
      * Create a new announcement.
      *
+     * @param string $title the title of the announcement
+     * @param string $text the text of the announcement
+     * 
      * @return int the ID of the created announcement
      */
     public static function create(string $title, string $text): int
@@ -73,16 +70,7 @@ class Announcements
 
             return $announcementID;
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while creating an announcement: ' . $e->getMessage());
-
             return -1;
         }
     }
@@ -90,13 +78,13 @@ class Announcements
     /**
      * Edit an existing announcement by ID.
      *
-     * @param int $id the ID of the announcement to edit
+     * @param string $id the ID of the announcement to edit
      * @param string $title the new announcement title
      * @param string $text the new announcement text
      *
      * @throws \Exception
      */
-    public static function edit(int $id, string $title, string $text): void
+    public static function edit(string $id, string $title, string $text): void
     {
         global $event; // This is a global variable that is used to emit events.
         try {
@@ -113,14 +101,6 @@ class Announcements
             $stmt->execute();
             $stmt->close();
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while editing an announcement: ' . $e->getMessage());
             throw new \Exception('', $e->getCode(), $e);
         }
@@ -129,23 +109,15 @@ class Announcements
     /**
      * Delete an announcement by ID.
      */
-    public static function delete(int $id): void
+    public static function delete(string $id): void
     {
-        global $event;
         try {
             if (!self::exists($id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while deleting an announcement: Announcement not found.');
-
                 return;
             }
+            global $event;
+
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
             $event->emit('announcements.Delete', [$id]);
@@ -154,16 +126,7 @@ class Announcements
             $stmt->execute();
             $stmt->close();
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while deleting an announcement: ' . $e->getMessage());
-            throw new \Exception('', $e->getCode(), $e);
         }
     }
 
@@ -179,14 +142,6 @@ class Announcements
             $event->emit('announcements.DeleteAll', []);
             $conn->query('TRUNCATE TABLE framework_announcements');
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while deleting all announcements: ' . $e->getMessage());
             throw new \Exception('', $e->getCode(), $e);
         }
@@ -195,18 +150,10 @@ class Announcements
     /**
      * Get a single announcement by ID.
      */
-    public static function getOne(int $id): ?array
+    public static function getOne(string $id): ?array
     {
         try {
             if (!self::exists($id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while getting an announcement: Announcement not found.');
 
                 return [];
@@ -223,16 +170,7 @@ class Announcements
 
             return $announcement ? $announcement : null;
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting an announcement: ' . $e->getMessage());
-
             return [];
         }
     }
@@ -250,14 +188,6 @@ class Announcements
 
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting all announcements: ' . $e->getMessage());
 
             return [];
@@ -272,19 +202,9 @@ class Announcements
         try {
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
-
             $result = $conn->query('SELECT * FROM framework_announcements ORDER BY id DESC');
-
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting all announcements sorted by ID: ' . $e->getMessage());
 
             return [];
@@ -304,16 +224,7 @@ class Announcements
 
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting all announcements sorted by date: ' . $e->getMessage());
-
             return [];
         }
     }
@@ -328,16 +239,7 @@ class Announcements
         global $event;
         try {
             if (!self::exists($announcement_id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while adding a social interaction to an announcement: Announcement not found.');
-
                 return;
             }
             $event->emit('announcements.AddSocialInteraction', [$announcement_id, $user_uuid, $type]);
@@ -348,14 +250,6 @@ class Announcements
             $stmt->execute();
             $stmt->close();
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while adding a social interaction to an announcement: ' . $e->getMessage());
             throw new \Exception('' . $e->getMessage());
         }
@@ -371,16 +265,7 @@ class Announcements
         global $event;
         try {
             if (!self::exists($announcement_id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while removing a social interaction from an announcement: Announcement not found.');
-
                 return;
             }
             $event->emit('announcements.RemoveSocialInteraction', [$announcement_id, $user_uuid, $type]);
@@ -391,14 +276,6 @@ class Announcements
             $stmt->execute();
             $stmt->close();
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while removing a social interaction from an announcement: ' . $e->getMessage());
             throw new \Exception('' . $e->getMessage());
         }
@@ -411,14 +288,6 @@ class Announcements
     {
         try {
             if (!self::exists($announcement_id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while getting a social interaction from an announcement: Announcement not found.');
 
                 return false;
@@ -434,20 +303,9 @@ class Announcements
             if ($stmt->num_rows > 0) {
                 return true;
             }
-
             return false;
-
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting a social interaction from an announcement: ' . $e->getMessage());
-
             return false;
         }
     }
@@ -459,16 +317,7 @@ class Announcements
     {
         try {
             if (!self::exists($announcement_id)) {
-                /*
-                 * Logger
-                 *
-                 * Logs something: LEVEL, TYPE, MESSAGE
-                 *
-                 * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-                 * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-                 */
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while getting the total social interactions from an announcement: Announcement not found.');
-
                 return 0;
             }
             $mysqli = new MySQL();
@@ -483,18 +332,8 @@ class Announcements
             }
 
             return 0;
-
         } catch (\Exception $e) {
-            /*
-             * Logger
-             *
-             * Logs something: LEVEL, TYPE, MESSAGE
-             *
-             * LEVELS: INFO, WARNING, ERROR, CRITICAL, OTHER
-             * TYPE: OTHER, CORE, DATABASE, PLUGIN, LOG, OTHER
-             */
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting the total social interactions from an announcement: ' . $e->getMessage());
-
             return 0;
         }
     }
