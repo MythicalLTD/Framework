@@ -16,7 +16,6 @@ namespace MythicalSystemsFramework\User;
 
 use Gravatar\Gravatar;
 use Twig\TwigFunction;
-use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Database\MySQL;
 use MythicalSystemsFramework\Roles\RolesHelper;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
@@ -500,6 +499,7 @@ class UserDataHandler
         $renderer->addFunction(new TwigFunction('user', function ($info, $isEncrypted) {
             return self::getSpecificUserData($_COOKIE['token'], $info, $isEncrypted);
         }));
+
         $role_id = self::getRoleIdByUser($token);
         $renderer->addGlobal('role_name', RolesHelper::getRoleName($role_id));
         if ($skiptwofactorcheck == false) {
@@ -516,24 +516,24 @@ class UserDataHandler
     /**
      * Get the user role by user.
      */
-    public static function getRoleIdByUser(string $token): int
+    public static function getRoleIdByUser(string $token): string
     {
         try {
             if (self::isUserValid($token) == false) {
-                return 0;
+                return '0';
             }
 
             $id = self::getSpecificUserData($token, 'role', false);
             $role = RolesDataHandler::roleExists($id);
             if ($role == false) {
-                return 0;
+                return '0';
             }
 
-            return App::convertStringToInt($id);
+            return $id;
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to get role by user: ' . $e->getMessage());
 
-            return 0;
+            return '0';
         }
     }
 }

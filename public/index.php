@@ -24,7 +24,6 @@ try {
 
 use MythicalSystemsFramework\App;
 use MythicalSystemsFramework\Api\Api as api;
-use MythicalSystemsFramework\Plugins\PluginCompilerHelper;
 use MythicalSystemsFramework\Plugins\PluginEvent;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\Plugins\PluginsManager;
@@ -37,6 +36,9 @@ $event = new PluginEvent();
 
 global $event, $languageManager;
 
+ini_set('expose_php', 'off');
+header_remove('X-Powered-By');
+header_remove('Server');
 /*
  * Check if the app is installed
  */

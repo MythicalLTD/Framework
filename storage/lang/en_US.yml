@@ -13,6 +13,60 @@
 # %seo_keywords% - The SEO keywords of the application
 
 Pages:
+  Components:
+    Sidebar:
+      Admin:
+        Name: "Administration Area"
+        Items: 
+          Support:
+            Title: "Support Tickets"
+          Announcements:
+            Title: "Announcements"
+          Backups:
+            Title: "Backups"
+          Addons:
+            Title: "Addons"
+          Logs:
+            Title: "Logs"
+          Users:
+            Title: "Users"
+            Items: 
+              List:
+                Title: "User List"
+              Other:
+                Title: "Other"
+                Items: 
+                  SendMail:
+                    Title: "Send Mail"
+                  Activities:
+                    Title: "Activities"
+                  ApiKeys:
+                    Title: "API Keys"
+            RolesAndPermissions:
+              Title: "Roles & Permissions"
+              Items: 
+                Roles:
+                  Title: "Roles"
+                Permissions:
+                  Title: "Permissions"
+            Languages:
+              Title: "Languages"
+            Settings:
+              Title: "Settings"
+              Items:
+                General:
+                  Title: "General"
+                Mail:
+                  Title: "Mail"
+                CloudFlare:
+                  Title: "CloudFlare"
+                SEO:
+                  Title: "SEO"
+                Custom:
+                  Title: "Custom"
+      Client:
+    Navbar:
+
   Utils:
     ConfirmAction:
       Title: "Confirm action"

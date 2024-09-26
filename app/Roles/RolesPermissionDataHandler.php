@@ -80,7 +80,6 @@ class RolesPermissionDataHandler
             }
 
             return 'ROLE_PERMISSION_DELETE_FAILED';
-
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to delete role permission: ' . $e->getMessage());
 
@@ -120,7 +119,6 @@ class RolesPermissionDataHandler
             }
 
             return 'ROLE_PERMISSION_UPDATE_FAILED';
-
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to update role permission: ' . $e->getMessage());
 
@@ -225,7 +223,6 @@ class RolesPermissionDataHandler
             }
 
             return 'ROLE_PERMISSION_MISSING';
-
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to check if role permission exists: ' . $e->getMessage());
 
@@ -249,7 +246,7 @@ class RolesPermissionDataHandler
             // Check if the role has the permission
             $permissionWildcard = str_replace('*', '%', $permission);
             // Check if the role has the wildcard or specific permission
-            $stmtRole = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND (permission = "*" OR permission LIKE ?) AND status = "true"');
+            $stmtRole = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND (permission = "*" OR permission LIKE ?)');
             $stmtRole->bind_param('is', $roleId, $permissionWildcard);
             $stmtRole->execute();
             $stmtRole->bind_result($count);

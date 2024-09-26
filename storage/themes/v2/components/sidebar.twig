@@ -10,22 +10,155 @@
 		</a>
 	</div>
 	<div class="menu-inner-shadow"></div>
-	<ul class="menu-inner py-1">
-		<!-- Misc -->
-		<li class="menu-header small">
-			<span class="menu-header-text" data-i18n="Misc">Misc</span>
-		</li>
+	<ul
+		class="menu-inner py-1">
+		<!-- Dashboards -->
 		<li class="menu-item">
-			<a href="https://pixinvent.ticksy.com/" target="_blank" class="menu-link">
-				<i class="menu-icon tf-icons ti ti-lifebuoy"></i>
-				<div data-i18n="Support">Support</div>
+			<a href="javascript:void(0);" class="menu-link menu-toggle active">
+				<i class="menu-icon tf-icons ti ti-smart-home"></i>
+				<div>Dashboards</div>
+				<div class="badge bg-danger rounded-pill ms-auto">1</div>
 			</a>
+			<ul class="menu-sub">
+				<li class="menu-item active">
+					<a href="/" class="menu-link">
+						<div>Main</div>
+					</a>
+				</li>
+			</ul>
 		</li>
-		<li class="menu-item">
-			<a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/" target="_blank" class="menu-link">
-				<i class="menu-icon tf-icons ti ti-file-description"></i>
-				<div data-i18n="Documentation">Documentation</div>
-			</a>
-		</li>
+
+
+		<!-- Apps & Pages -->
+		{% if hasPermission("mythicalframework.admin.*") %}
+			<li class="menu-header small">
+				<span class="menu-header-text">{{lang("Pages.Components.Sidebar.Admin.Name") }}</span>
+			</li>
+			<li class="menu-item">
+				<a href="app-chat.html" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-messages"></i>
+					<div>{{lang('Pages.Components.Sidebar.Admin.Items.Support.Title')}}</div>
+				</a>
+			</li>
+			<li class="menu-item">
+				<a href="app-calendar.html" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-antenna"></i>
+					<div>{{lang("Pages.Components.Sidebar.Admin.Items.Announcements.Title")}}</div>
+				</a>
+			</li>
+			<li class="menu-item">
+				<a href="app-calendar.html" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-device-floppy"></i>
+					<div>{{lang('Pages.Components.Sidebar.Admin.Items.Backups.Title')}}</div>
+				</a>
+			</li>
+			<li class="menu-item">
+				<a href="app-calendar.html" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-plug"></i>
+					<div>{{lang('Pages.Components.Sidebar.Admin.Items.Addons.Title')}}</div>
+				</a>
+			</li>
+			<li class="menu-item">
+				<a href="app-calendar.html" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-books"></i>
+					<div>{{lang('Pages.Components.Sidebar.Admin.Items.Logs.Title')}}</div>
+				</a>
+			</li>
+			<li class="menu-item">
+				<a href="app-calendar.html" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-language"></i>
+					<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Languages.Title")}}</div>
+				</a>
+			</li>
+			<li class="menu-item">
+				<a href="javascript:void(0);" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons ti ti-users"></i>
+					<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Title') }}</div>
+				</a>
+				<ul class="menu-sub">
+					<li class="menu-item">
+						<a href="app-user-list.html" class="menu-link">
+							<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.List.Title') }}</div>
+						</a>
+					</li>
+
+					<li class="menu-item">
+						<a href="javascript:void(0);" class="menu-link menu-toggle">
+							<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Title') }}</div>
+						</a>
+						<ul class="menu-sub">
+							<li class="menu-item">
+								<a href="app-email.html" class="menu-link">
+									<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Items.SendMail.Title')}}</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="app-user-view-security.html" class="menu-link">
+									<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Items.Activities.Title') }}</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="app-user-view-billing.html" class="menu-link">
+									<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Items.ApiKeys.Title') }}</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li class="menu-item">
+				<a href="javascript:void(0);" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons ti ti-lock-open"></i>
+					<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.RolesAndPermissions.Title")}}</div>
+				</a>
+				<ul class="menu-sub">
+					<li class="menu-item">
+						<a href="app-access-roles.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.RolesAndPermissions.Items.Roles.Title") }}</div>
+						</a>
+					</li>
+					<li class="menu-item">
+						<a href="app-access-permission.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.RolesAndPermissions.Items.Permissions.Title")}}</div>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="menu-item">
+				<a href="javascript:void(0);" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons ti ti-settings"></i>
+					<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Title")}}</div>
+				</a>
+				<ul class="menu-sub">
+					<li class="menu-item">
+						<a href="app-access-roles.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.General.Title")}}</div>
+						</a>
+					</li>
+					<li class="menu-item">
+						<a href="app-access-permission.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.Mail.Title")}}</div>
+						</a>
+					</li>
+					<li class="menu-item">
+						<a href="app-access-permission.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.CloudFlare.Title")}}</div>
+						</a>
+					</li>
+					<li class="menu-item">
+						<a href="app-access-permission.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.SEO.Title")}}</div>
+						</a>
+					</li>
+					<li class="menu-item">
+						<a href="app-access-permission.html" class="menu-link">
+							<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.Custom.Title")}}</div>
+						</a>
+				</ul>
+			</li>
+		{% endif %}
+
+
 	</ul>
 </aside>

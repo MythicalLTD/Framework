@@ -84,13 +84,11 @@ class PluginCompilerHelper
             }
         }
     }
+
     /**
-     * 
      * Check if a plugin is installed.
-     * 
+     *
      * @param array $plugins The plugins to check
-     * 
-     * @return void 
      */
     public static function installCheck(array $plugins): void
     {
@@ -101,13 +99,14 @@ class PluginCompilerHelper
                 Logger::log(LoggerLevels::ERROR, LoggerTypes::PLUGIN, "Failed to read plugin info for $plugin.");
                 continue;
             }
-            if (Database::doesInfoExist("name",$plugin_info['name']) == false) {
+            if (Database::doesInfoExist('name', $plugin_info['name']) == false) {
                 self::registerPluginIfNotRegistered($plugin_info);
             } else {
                 self::updatePluginIfOutdated($plugin_info);
             }
         }
     }
+
     /**
      * Register a plugin if it is not already registered.
      */
@@ -391,11 +390,9 @@ class PluginCompilerHelper
 
         return file_exists($plugin_folder . '/' . $lang . '.yml');
     }
+
     /**
-     * 
      * Register plugin permissions.
-     * 
-     * @return void 
      */
     public static function registerPluginPermissions(): void
     {
@@ -412,11 +409,12 @@ class PluginCompilerHelper
             }
         }
     }
+
     /**
      * Does a plugin have a permissions folder?
-     * 
+     *
      * @param string $plugin_name The name of the plugin
-     * 
+     *
      * @return bool True if yes, false if no!
      */
     public static function doesPluginHavePermissions(string $plugin_name): bool
@@ -435,10 +433,8 @@ class PluginCompilerHelper
 
     /**
      * Get the permissions file for a plugin.
-     * 
+     *
      * @param string $plugin_name The name of the plugin
-     * 
-     * @return array
      */
     public static function getPluginPermissions(string $plugin_name): array
     {
@@ -450,6 +446,7 @@ class PluginCompilerHelper
         if (!file_exists($permission_file)) {
             return [];
         }
+
         return json_decode(file_get_contents($permission_file), true);
     }
 
@@ -501,11 +498,9 @@ class PluginCompilerHelper
 
         return $languagePaths;
     }
+
     /**
-     * 
      * Remove ghost permissions.
-     * 
-     * @return void  
      */
     public static function removeGhostPermissions(): void
     {

@@ -12,5 +12,30 @@
     "mythicalframework.admin.permissions.create",
     "mythicalframework.admin.permissions.edit",
     "mythicalframework.admin.permissions.delete",
-    "mythicalframework.admin.permissions.view"
+    "mythicalframework.admin.permissions.view",
+
+    "mythicalframework.admin.ticket.view",
+    "mythicalframework.admin.ticket.create",
+    "mythicalframework.admin.ticket.reply",
+    "mythicalframework.admin.ticket.delete",
+    
+    "mythicalframework.admin.announcements.view",
+    "mythicalframework.admin.announcements.create",
+    "mythicalframework.admin.announcements.edit",
+    "mythicalframework.admin.announcements.delete",
+
+    "mythicalframework.admin.backups.view",
+    "mythicalframework.admin.backups.create",
+    "mythicalframework.admin.backups.delete",
+
+    "mythicalframework.admin.logs.view",
+
+    "mythicalframework.admin.plugins.view",
+    "mythicalframework.admin.plugins.enable",
+    "mythicalframework.admin.plugins.install",
+    "mythicalframework.admin.plugins.uninstall",
+    "mythicalframework.admin.plugins.disable",
+
+    "mythicalframework.admin.languages.view",
+    "mythicalframework.admin.languages.edit"
 ]

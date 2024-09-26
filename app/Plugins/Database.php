@@ -24,8 +24,6 @@ class Database extends MySQL implements Stability
 {
     /**
      * Get the database.
-     * 
-     * @return \MythicalSystemsFramework\Database\MySQL
      */
     public static function getDatabase(): MySQL
     {
@@ -46,12 +44,12 @@ class Database extends MySQL implements Stability
      * @param string|null $funding The funding of the plugin
      * @param string $version The version of the plugin
      * @param bool $isCheck Is this is a check?
-     * 
+     *
      * @return int The plugin id
      */
     public static function registerNewPlugin(string $name, string $description, ?string $homepage, string|array $require, ?string $license, Stability|string $stability, array|string $authors, ?string $support, ?string $funding, string $version, bool $isCheck): int
     {
-        try {   
+        try {
             if ($isCheck == true) {
                 return 1;
             }
@@ -59,6 +57,7 @@ class Database extends MySQL implements Stability
             $conn = $db->connectMYSQLI();
             if (self::doesInfoExist('name', $name)) {
                 Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "A plugin with the name $name already exists.");
+
                 return 0;
             }
             $stmt = $conn->prepare('INSERT INTO framework_plugins (name,description,homepage,`require`,license,stability,authors,support,funding,version) VALUES (?,?,?,?,?,?,?,?,?,?)');
@@ -71,16 +70,17 @@ class Database extends MySQL implements Stability
             return $stmt->insert_id;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while registering a new plugin: ' . $e->getMessage());
+
             return 0;
         }
     }
 
     /**
      * Does info exist?
-     * 
+     *
      * @param string $info The info to check
      * @param string $value The value to check
-     * 
+     *
      * @return bool Does the info exist?
      */
     public static function doesInfoExist(string $info, string $value): bool
@@ -105,7 +105,7 @@ class Database extends MySQL implements Stability
      * Get the plugin info from db.
      *
      * @param string $name The name of the plugin
-     * 
+     *
      * @return array The plugin info
      */
     public static function getPlugin(string $name): array
@@ -130,8 +130,6 @@ class Database extends MySQL implements Stability
      * UnRegister a plugin.
      *
      * @param string $name The name of the plugin
-     * 
-     * @return void 
      */
     public static function unRegisterPlugin(string $name): void
     {
@@ -152,8 +150,6 @@ class Database extends MySQL implements Stability
      * @param string $plugin The plugin name
      * @param string $column The column from the database
      * @param string $value The value to update
-     * 
-     * @return void
      */
     public static function updatePlugin(string $plugin, string $column, string $value): void
     {
@@ -173,7 +169,7 @@ class Database extends MySQL implements Stability
      *
      * @param string $plugin The plugin name!
      * @param string $column The info you are looking for!
-     * 
+     *
      * @return string The info
      */
     public static function getPluginInfo(string $plugin, string $column): string
@@ -197,7 +193,7 @@ class Database extends MySQL implements Stability
 
     /**
      * Get all the plugins from the database.
-     * 
+     *
      * @return array The plugins
      */
     public static function getAllPlugins(): array
@@ -222,11 +218,10 @@ class Database extends MySQL implements Stability
     }
 
     /**
-     * 
      * Get all the plugins from the database.
-     * 
+     *
      * @param string $plugin_name The name of the plugin
-     * 
+     *
      * @return array The permissions
      */
     public static function getAllRegisteredPermissionsByPlugin(string $plugin_name): array
@@ -234,9 +229,8 @@ class Database extends MySQL implements Stability
         try {
             if (PluginCompilerHelper::doesPluginExist($plugin_name) == false) {
                 return [];
-            } else {
-                $plugin_id = self::getPluginInfo($plugin_name, 'id');
             }
+            $plugin_id = self::getPluginInfo($plugin_name, 'id');
 
             $db = self::getDatabase();
             $conn = $db->connectMYSQLI();
@@ -252,12 +246,14 @@ class Database extends MySQL implements Stability
             return $permissions;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while getting all permissions: ' . $e->getMessage());
+
             return [];
         }
     }
+
     /**
      * Get all the registered permissions.
-     * 
+     *
      * @return array The permissions
      */
     public static function getAllRegisteredPermissions(): array
@@ -276,16 +272,17 @@ class Database extends MySQL implements Stability
             return $permissions;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while getting all permissions: ' . $e->getMessage());
+
             return [];
         }
     }
+
     /**
-     * 
      * Get all the plugins from the database.
-     * 
+     *
      * @param array $permissions The permissions
      * @param string $plugin_name The name of the plugin
-     * 
+     *
      * @return bool True if the permission already exists
      */
     public static function doRegisteredPermissionAlreadyExists(array $permissions, string $plugin_name): bool
@@ -298,13 +295,15 @@ class Database extends MySQL implements Stability
                 }
             }
         }
+
         return false;
     }
+
     /**
      * Register a permission.
-     * 
+     *
      * @param string $permission The permission
-     * 
+     *
      * @return bool True if the permission was registered
      */
     public static function doesPermissionAlreadyExist(string $permission): bool
@@ -315,15 +314,15 @@ class Database extends MySQL implements Stability
                 return true;
             }
         }
+
         return false;
     }
+
     /**
      * Register a permission.
-     * 
+     *
      * @param array $permissions The permissions
      * @param string $plugin_name The name of the plugin
-     * 
-     * @return void
      */
     public static function registerPermission(array $permissions, string $plugin_name): void
     {
@@ -350,11 +349,12 @@ class Database extends MySQL implements Stability
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while registering a permission: ' . $e->getMessage());
         }
     }
+
     /**
      * Get the plugin name by id.
-     * 
+     *
      * @param int $id The id of the plugin
-     * 
+     *
      * @return string The plugin name
      */
     public static function getPluginNameById(int $id): string
@@ -378,10 +378,8 @@ class Database extends MySQL implements Stability
 
     /**
      * Remove a permission.
-     * 
+     *
      * @param string $permission The permission
-     * 
-     * @return void
      */
     public static function removePermission(string $permission): void
     {
@@ -395,15 +393,14 @@ class Database extends MySQL implements Stability
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, 'An error occurred while removing a permission: ' . $e->getMessage());
         }
     }
+
     /**
-     * 
      * Check if a plugin exists!
-     * 
+     *
      * @param int $id The id of the plugin
-     * 
-     * @return bool
      */
-    public static function doesPluginExistID(int $id) : bool {
+    public static function doesPluginExistID(int $id): bool
+    {
         try {
             $db = self::getDatabase();
             $conn = $db->connectMYSQLI();
@@ -419,15 +416,14 @@ class Database extends MySQL implements Stability
             return true;
         }
     }
+
     /**
-     * 
      * Check if a plugin exists!
-     * 
+     *
      * @param int $plugin_id The id of the plugin
-     * 
-     * @return void
      */
-    public static function purgePermissions(int $plugin_id) : void {
+    public static function purgePermissions(int $plugin_id): void
+    {
         try {
             $db = self::getDatabase();
             $conn = $db->connectMYSQLI();
