@@ -39,7 +39,7 @@
 			</li>
 			{% if hasPermission("mythicalframework.admin.ticket.view") or hasPermission("mythicalframework.admin.ticket.create") or hasPermission("mythicalframework.admin.ticket.reply") or hasPermission("mythicalframework.admin.ticket.delete") %}
 				<li class="menu-item">
-					<a href="/dashboard/admin/support" class="menu-link">
+					<a href="/admin/support" class="menu-link">
 						<i class="menu-icon tf-icons ti ti-messages"></i>
 						<div>{{lang('Pages.Components.Sidebar.Admin.Items.Support.Title')}}</div>
 					</a>
@@ -55,9 +55,9 @@
 				</li>
 			{% endif %}
 
-			{% if hasPermission("mythicalframework.admin.backups.view") or hasPermission("mythicalframework.admin.backups.create") or hasPermission("mythicalframework.admin.backups.delete") %}
+			{% if hasPermission("mythicalframework.admin.backups.view") or hasPermission("mythicalframework.admin.backups.restore") or hasPermission("mythicalframework.admin.backups.create") or hasPermission("mythicalframework.admin.backups.delete") %}
 				<li class="menu-item">
-					<a href="app-calendar.html" class="menu-link">
+					<a href="/admin/backups" class="menu-link">
 						<i class="menu-icon tf-icons ti ti-device-floppy"></i>
 						<div>{{lang('Pages.Components.Sidebar.Admin.Items.Backups.Title')}}</div>
 					</a>
@@ -66,7 +66,7 @@
 
 			{% if hasPermission("mythicalframework.admin.plugins.view") or hasPermission("mythicalframework.admin.plugins.enable") or hasPermission("mythicalframework.admin.plugins.install") or hasPermission("mythicalframework.admin.plugins.uninstall") or hasPermission("mythicalframework.admin.plugins.disable") %}
 				<li class="menu-item">
-					<a href="app-calendar.html" class="menu-link">
+					<a href="/admin/plugins" class="menu-link">
 						<i class="menu-icon tf-icons ti ti-plug"></i>
 						<div>{{lang('Pages.Components.Sidebar.Admin.Items.Addons.Title')}}</div>
 					</a>
@@ -74,7 +74,7 @@
 			{% endif %}
 			{% if hasPermission("mythicalframework.admin.logs.view") %}
 				<li class="menu-item">
-					<a href="app-calendar.html" class="menu-link">
+					<a href="/admin/logs" class="menu-link">
 						<i class="menu-icon tf-icons ti ti-books"></i>
 						<div>{{lang('Pages.Components.Sidebar.Admin.Items.Logs.Title')}}</div>
 					</a>
@@ -83,7 +83,7 @@
 
 			{% if hasPermission("mythicalframework.admin.languages.view") or hasPermission("mythicalframework.admin.languages.edit") %}
 				<li class="menu-item">
-					<a href="app-calendar.html" class="menu-link">
+					<a href="/admin/language" class="menu-link">
 						<i class="menu-icon tf-icons ti ti-language"></i>
 						<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Languages.Title")}}</div>
 					</a>
@@ -97,7 +97,7 @@
 					</a>
 					<ul class="menu-sub">
 						<li class="menu-item">
-							<a href="app-user-list.html" class="menu-link">
+							<a href="/admin/users" class="menu-link">
 								<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.List.Title') }}</div>
 							</a>
 						</li>
@@ -108,17 +108,12 @@
 							</a>
 							<ul class="menu-sub">
 								<li class="menu-item">
-									<a href="app-email.html" class="menu-link">
-										<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Items.SendMail.Title')}}</div>
-									</a>
-								</li>
-								<li class="menu-item">
-									<a href="app-user-view-security.html" class="menu-link">
+									<a href="/admin/user/activities" class="menu-link">
 										<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Items.Activities.Title') }}</div>
 									</a>
 								</li>
 								<li class="menu-item">
-									<a href="app-user-view-billing.html" class="menu-link">
+									<a href="/admin/user/apikeys" class="menu-link">
 										<div>{{lang('Pages.Components.Sidebar.Admin.Items.Users.Items.Other.Items.ApiKeys.Title') }}</div>
 									</a>
 								</li>
@@ -135,12 +130,12 @@
 					</a>
 					<ul class="menu-sub">
 						<li class="menu-item">
-							<a href="app-access-roles.html" class="menu-link">
+							<a href="/admin/roles" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.RolesAndPermissions.Items.Roles.Title") }}</div>
 							</a>
 						</li>
 						<li class="menu-item">
-							<a href="app-access-permission.html" class="menu-link">
+							<a href="/admin/permissions" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.RolesAndPermissions.Items.Permissions.Title")}}</div>
 							</a>
 						</li>
@@ -155,27 +150,27 @@
 					</a>
 					<ul class="menu-sub">
 						<li class="menu-item">
-							<a href="app-access-roles.html" class="menu-link">
+							<a href="/admin/settings/general" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.General.Title")}}</div>
 							</a>
 						</li>
 						<li class="menu-item">
-							<a href="app-access-permission.html" class="menu-link">
+							<a href="/admin/settings/mails" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.Mail.Title")}}</div>
 							</a>
 						</li>
 						<li class="menu-item">
-							<a href="app-access-permission.html" class="menu-link">
+							<a href="/admin/settings/cloudflare" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.CloudFlare.Title")}}</div>
 							</a>
 						</li>
 						<li class="menu-item">
-							<a href="app-access-permission.html" class="menu-link">
+							<a href="/admin/settings/seo" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.SEO.Title")}}</div>
 							</a>
 						</li>
 						<li class="menu-item">
-							<a href="app-access-permission.html" class="menu-link">
+							<a href="/admin/settings/other" class="menu-link">
 								<div>{{lang("Pages.Components.Sidebar.Admin.Items.Users.Settings.Items.Custom.Title")}}</div>
 							</a>
 						</li>

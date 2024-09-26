@@ -26,6 +26,7 @@
 
     "mythicalframework.admin.backups.view",
     "mythicalframework.admin.backups.create",
+    "mythicalframework.admin.backups.restore",
     "mythicalframework.admin.backups.delete",
 
     "mythicalframework.admin.logs.view",

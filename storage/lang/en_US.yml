@@ -21,7 +21,22 @@
 
 Pages:
   AdminArea:
-    Pages: 
+    Pages:
+      Backups:
+        List: 
+          Title: "Backups"
+          Description: "Here you can manage all the backups."
+          Table:
+            CreateButton: "Create new backup"
+            Head:
+              Columns:
+                ID: "ID"
+                Status: "Status"
+                Date: "Date"
+                Actions: "Actions"
+              Actions:
+                Restore: "Restore"
+                Delete: "Delete"
       Announcements:
         Create:
           Title: "Create Announcement"

@@ -1,0 +1,46 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Backups.List.Title') }}</h3>
+				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Backups.List.Description') }}</p>
+				<br>
+				<div class="card-options">
+					<a class="btn btn-primary" href="/admin/backups/create">
+						{{ lang('Pages.AdminArea.Pages.Backups.List.Table.CreateButton') }}
+					</a>
+				</div>
+			</div>
+			<table class="datatables-basic table">
+				<thead>
+					<tr>
+						<th>{{lang('Pages.AdminArea.Pages.Backups.List.Table.Head.Columns.ID')}}</th>
+						<th>{{lang('Pages.AdminArea.Pages.Backups.List.Table.Head.Columns.Status') }}</th>
+						<th>{{lang('Pages.AdminArea.Pages.Backups.List.Table.Head.Columns.Date')}}</th>
+						<th>{{lang('Pages.AdminArea.Pages.Backups.List.Table.Head.Columns.Actions')}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for backup in backups %}
+						<tr>
+							<td>{{ backup.id }}</td>
+							<td>{{ backup.backup_status }}</td>
+							<td>{{ backup.backup_date_end }}</td>
+							<td>
+								<button onclick="requireConfirmation('/admin/backups/{{ backup.id }}/restore')" class="btn btn-sm btn-primary">{{lang('Pages.AdminArea.Pages.Backups.List.Table.Head.Actions.Restore') }}</button>
+								<button onclick="requireConfirmation('/admin/backups/{{ backup.id }}/delete')" class="btn btn-sm btn-danger">{{lang('Pages.AdminArea.Pages.Backups.List.Table.Head.Actions.Delete')}}</button>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>{% endblock %}{% block footer %}
+{% include 'requirements/datatables.twig' %}
+ <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}

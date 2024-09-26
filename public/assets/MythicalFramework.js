@@ -306,3 +306,26 @@ function showDialogWithInput(title, text, confirmButtonText, cancelButtonText) {
         }
     });
 }
+
+/**
+ * Highlight active sidebar menu item based on current URL
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const currentUrl = window.location.pathname;
+    const menuItems = document.querySelectorAll('#layout-menu .menu-item a');
+
+    menuItems.forEach((menuItem) => {
+        const menuItemUrl = menuItem.getAttribute('href');
+        if (menuItemUrl === currentUrl) {
+            menuItem.classList.add('active');
+            const parentMenuItem = menuItem.closest('.menu-item');
+            if (parentMenuItem) {
+                parentMenuItem.classList.add('active');
+                const parentMenuToggle = parentMenuItem.querySelector('.menu-toggle');
+                if (parentMenuToggle) {
+                    parentMenuToggle.classList.add('active');
+                }
+            }
+        }
+    });
+});
