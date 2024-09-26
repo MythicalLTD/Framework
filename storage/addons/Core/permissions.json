@@ -37,5 +37,9 @@
     "mythicalframework.admin.plugins.disable",
 
     "mythicalframework.admin.languages.view",
-    "mythicalframework.admin.languages.edit"
+    "mythicalframework.admin.languages.edit",
+
+    "mythicalframework.admin.settings.view",
+    "mythicalframework.admin.settings.edit"
+    
 ]

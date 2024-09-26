@@ -243,20 +243,41 @@ class RolesPermissionDataHandler
             $database = new \MythicalSystemsFramework\Database\MySQL();
             $mysqli = $database->connectMYSQLI();
 
-            // Check if the role has the permission
-            $permissionWildcard = str_replace('*', '%', $permission);
-            // Check if the role has the wildcard or specific permission
-            $stmtRole = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND (permission = "*" OR permission LIKE ?)');
-            $stmtRole->bind_param('is', $roleId, $permissionWildcard);
-            $stmtRole->execute();
-            $stmtRole->bind_result($count);
-            $stmtRole->fetch();
-            $stmtRole->close();
+            // Check for exact permission match
+            $stmtExact = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND permission = ?');
+            $stmtExact->bind_param('is', $roleId, $permission);
+            $stmtExact->execute();
+            $stmtExact->bind_result($exactCount);
+            $stmtExact->fetch();
+            $stmtExact->close();
 
-            if ($count > 0) {
+            if ($exactCount > 0) {
                 return true;
             }
 
+            // Check for wildcard match
+            $permissionParts = explode('.', $permission);
+            $wildcardPermissions = [];
+
+            // Build wildcard permissions from longest to shortest
+            for ($i = count($permissionParts); $i > 0; --$i) {
+                $wildcardPermissions[] = implode('.', array_slice($permissionParts, 0, $i)) . '.*';
+            }
+
+            foreach ($wildcardPermissions as $wildcardPermission) {
+                $stmtWildcard = $mysqli->prepare('SELECT COUNT(*) FROM framework_roles_permissions WHERE role_id = ? AND permission = ?');
+                $stmtWildcard->bind_param('is', $roleId, $wildcardPermission);
+                $stmtWildcard->execute();
+                $stmtWildcard->bind_result($wildcardCount);
+                $stmtWildcard->fetch();
+                $stmtWildcard->close();
+
+                if ($wildcardCount > 0) {
+                    return true;
+                }
+            }
+
+            // If no matches found
             return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/Roles/RolesPermissionDataHandler.php) Failed to check role permission: ' . $e->getMessage());

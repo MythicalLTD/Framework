@@ -65,6 +65,7 @@ Pages:
                 Custom:
                   Title: "Custom"
       Client:
+        Name: "Client Area"
     Navbar:
 
   Utils:
