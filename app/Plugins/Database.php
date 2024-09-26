@@ -201,7 +201,7 @@ class Database extends MySQL implements Stability
         try {
             $db = self::getDatabase();
             $conn = $db->connectMYSQLI();
-            $stmt = $conn->prepare('SELECT * FROM framework_plugins ORDER BY `framework_plugins`.`id` DESC');
+            $stmt = $conn->prepare('SELECT * FROM framework_plugins');
             $stmt->execute();
             $result = $stmt->get_result();
             $plugins = [];

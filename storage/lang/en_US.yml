@@ -22,6 +22,21 @@
 Pages:
   AdminArea:
     Pages:
+      Plugins:
+        List: 
+          Title: "Plugins"
+          Description: "Here you can manage all the plugins from the framework."
+          Table:
+            CreateButton: "Create new backup"
+            Head:
+              Columns:
+                ID: "ID"
+                Status: "Status"
+                Date: "Date"
+                Actions: "Actions"
+              Actions:
+                Restore: "Restore"
+                Delete: "Delete"
       Backups:
         List: 
           Title: "Backups"

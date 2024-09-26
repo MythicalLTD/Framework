@@ -33,8 +33,6 @@
 
     "mythicalframework.admin.plugins.view",
     "mythicalframework.admin.plugins.enable",
-    "mythicalframework.admin.plugins.install",
-    "mythicalframework.admin.plugins.uninstall",
     "mythicalframework.admin.plugins.disable",
 
     "mythicalframework.admin.languages.view",

@@ -1,0 +1,89 @@
+<?php
+
+use MythicalSystemsFramework\Plugins\PluginsManager;
+use MythicalSystemsFramework\User\Announcement\Announcements;
+use MythicalSystemsFramework\User\UserDataHandler;
+use MythicalSystemsFramework\User\UserHelper;
+use MythicalSystemsFramework\Web\Template\Engine;
+
+global $router;
+
+$router->add('/admin/plugins', function (): void {
+    global $router, $event, $renderer;
+    $template = 'admin/plugins/list.twig';
+    if (isset($_COOKIE['token']) === false) {
+        exit(header('location: /auth/login'));
+    }
+
+    $user = new UserHelper($_COOKIE['token'], $renderer);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+
+    if (
+        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.plugins.view") ||
+        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.plugins.enable") ||
+        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.plugins.install") ||
+        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.plugins.uninstall") ||
+        !UserDataHandler::hasPermission($_COOKIE["token"], "mythicalframework.admin.plugins.disable")
+    ) {
+        exit(header('location: /errors/403'));
+    }
+
+    $plugins = \MythicalSystemsFramework\Plugins\Database::getAllPlugins();
+    $renderer->addGlobal('plugins', $plugins);
+    $renderer->addGlobal('page_name', 'Plugins');
+
+    Engine::registerAlerts($renderer, $template);
+    exit($renderer->render($template));
+});
+
+$router->add('/admin/plugins/(.*)/disable', function (string $id): void {
+    global $router, $event, $renderer;
+    if (isset($_COOKIE['token']) === false) {
+        exit(header('location: /auth/login'));
+    }
+
+    $user = new UserHelper($_COOKIE['token'], $renderer);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+
+    if (
+        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.plugins.disable")
+    ) {
+        exit(header('location: /errors/403'));
+    }
+
+    if (\MythicalSystemsFramework\Plugins\Database::doesPluginExistID($id) == false) {
+        exit(header('location: /admin/plugins?s=not_found'));
+    } else {
+        $plugin_name = \MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
+
+        \MythicalSystemsFramework\Plugins\Database::updatePlugin($plugin_name, 'enabled', 'false');
+        exit(header('location: /admin/plugins?s=ok'));
+    }
+});
+
+$router->add('/admin/plugins/(.*)/enable', function (string $id): void {
+    global $router, $event, $renderer;
+    if (isset($_COOKIE['token']) === false) {
+        exit(header('location: /auth/login'));
+    }
+
+    $user = new UserHelper($_COOKIE['token'], $renderer);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+
+    if (
+        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.plugins.enable")
+    ) {
+        exit(header('location: /errors/403'));
+    }
+
+    if (\MythicalSystemsFramework\Plugins\Database::doesPluginExistID($id) == false) {
+        exit(header('location: /admin/plugins?s=not_found'));
+    } else {
+        $plugin_name = \MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
+
+        \MythicalSystemsFramework\Plugins\Database::updatePlugin($plugin_name, 'enabled', 'true');
+        exit(header('location: /admin/plugins?s=ok'));
+    }
+});
+
+$router->add('/admin/plugin/(.*)/info', function (string $id): void {});

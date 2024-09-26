@@ -1,0 +1,68 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Plugins.List.Title') }}</h3>
+				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Plugins.List.Description') }}</p>
+			</div>
+			<table class="datatables-basic table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Stability</th>
+						<th>Authors</th>
+						<th>Enabled</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for plugin in plugins %}
+						<tr>
+							<td>{{ plugin.id }}</td>
+							<td>{{ plugin.name }}</td>
+							<td>{{ plugin.description }}</td>
+							<td>{{ plugin.stability }}</td>
+							<td>{{ plugin.authors }}</td>
+							<td>{{ plugin.enabled }}</td>
+							<td>
+								<a href="/admin/plugins/{{ plugin.id }}/info" target="_blank" class="btn btn-dark ">
+									<i class="fas fa-info"></i>
+								</a>
+								{% if plugin.enabled == "true" %}
+									{% if plugin.support is defined and plugin.support is not null and plugin.support is not empty %}
+										<a href="{{ plugin.support }}" target="_blank" class="btn btn-primary">
+											<i class="fas fa-phone"></i>
+										</a>
+									{% endif %}
+									{% if plugin.funding is defined and plugin.funding is not null and plugin.funding is not empty %}
+										<a href="{{ plugin.funding }}" target="_blank" class="btn btn-success">
+											<i class="fas fa-coins"></i>
+										</a>
+									{% endif %}
+									{% if plugin.homepage is defined and plugin.homepage is not null and plugin.homepage is not empty %}
+										<a href="{{ plugin.homepage }}" target="_blank" class="btn btn-info">
+											<i class="fas fa-home"></i>
+										</a>
+									{% endif %}
+									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/disable')" class="btn btn-sm btn-danger">Disable</button>
+								{% else %}
+									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/enable')" class="btn btn-sm btn-primary">Enable</button>
+								{% endif %}
+
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>{% endblock %}{% block footer %}
+{% include 'requirements/datatables.twig' %}
+ <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}
