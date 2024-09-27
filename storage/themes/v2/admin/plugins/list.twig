@@ -12,47 +12,31 @@
 			<table class="datatables-basic table">
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Stability</th>
-						<th>Authors</th>
-						<th>Enabled</th>
-						<th>Actions</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Columns.ID') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Columns.Name') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Columns.Stability') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Columns.Authors') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Columns.Enabled') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Columns.Actions') }}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for plugin in plugins %}
 						<tr>
-							<td>{{ plugin.id }}</td>
-							<td>{{ plugin.name }}</td>
-							<td>{{ plugin.description }}</td>
+							<td>{{plugin.id }}</td>
+							<td><img src="{% if plugin.logo is defined and plugin.logo is not null and plugin.logo is not empty %}{{ plugin.logo }}{% else %}{{ setting('app', 'logo') }}{% endif %}" alt="{{ plugin.name }} logo" width="64" height="64">&nbsp;&nbsp;&nbsp;<code>{{ plugin.name }}</code>
+							</td>
 							<td>{{ plugin.stability }}</td>
 							<td>{{ plugin.authors }}</td>
 							<td>{{ plugin.enabled }}</td>
 							<td>
-								<a href="/admin/plugins/{{ plugin.id }}/info" target="_blank" class="btn btn-dark ">
+								<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-{{ plugin.id }}">
 									<i class="fas fa-info"></i>
-								</a>
+								</button>
 								{% if plugin.enabled == "true" %}
-									{% if plugin.support is defined and plugin.support is not null and plugin.support is not empty %}
-										<a href="{{ plugin.support }}" target="_blank" class="btn btn-primary">
-											<i class="fas fa-phone"></i>
-										</a>
-									{% endif %}
-									{% if plugin.funding is defined and plugin.funding is not null and plugin.funding is not empty %}
-										<a href="{{ plugin.funding }}" target="_blank" class="btn btn-success">
-											<i class="fas fa-coins"></i>
-										</a>
-									{% endif %}
-									{% if plugin.homepage is defined and plugin.homepage is not null and plugin.homepage is not empty %}
-										<a href="{{ plugin.homepage }}" target="_blank" class="btn btn-info">
-											<i class="fas fa-home"></i>
-										</a>
-									{% endif %}
-									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/disable')" class="btn btn-sm btn-danger">Disable</button>
+									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/disable')" class="btn btn-sm btn-danger">{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Actions.Disable') }}</button>
 								{% else %}
-									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/enable')" class="btn btn-sm btn-primary">Enable</button>
+									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/enable')" class="btn btn-sm btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Actions.Enable') }}</button>
 								{% endif %}
 
 							</td>
@@ -62,7 +46,67 @@
 			</table>
 		</div>
 	</div>
-
+	{% for plugin in plugins %}
+		<div class="modal fade" id="modal-{{ plugin.id }}" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<div class="text-center mb-4">
+							<img src="{% if plugin.logo is defined and plugin.logo is not null and plugin.logo is not empty %}{{ plugin.logo }}{% else %}{{ setting('app', 'logo') }}{% endif %}" alt="{{ plugin.name }} logo" width="128" height="128">
+							<h4 class="mb-2">{{ plugin.name }}
+								(<code>{{plugin.version }}</code>)</h4>
+							<p>{{ plugin.description }}</p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Stability') }}</label>
+							<p>
+								<code>{{ plugin.stability }}</code>
+							</p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Requirements') }}</label>
+							<p>
+								<code>{{ plugin.require }}</code>
+							</p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.License') }}</label>
+							<p>
+								<code>{{ plugin.license }}</code>
+							</p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Authors') }}</label>
+							<p>
+								<code>{{ plugin.authors }}</code>
+							</p>
+						</div>
+						<div class="text-center">
+							{% if plugin.homepage is defined and plugin.homepage is not null and plugin.homepage is not empty %}
+								<a href="{{ plugin.homepage }}" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Extends.HomePage') }}</a>
+							{% endif %}
+							{% if plugin.support is defined and plugin.support is not null and plugin.support is not empty %}
+								<a href="{{ plugin.support }}" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Extends.Support') }}</a>
+							{% endif %}
+							{% if plugin.funding is defined and plugin.funding is not null and plugin.funding is not empty %}
+								<a href="{{ plugin.funding }}" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Extends.Funding') }}</a>
+							{% endif %}
+						</div>
+						<br>
+						<div class="text-center">
+							{% if plugin.enabled == "true" %}
+								<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/disable'); $('#modal-{{ plugin.id }}').modal('hide');" class="btn btn-danger">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Buttons.Disable') }}</button>
+							{% else %}
+								<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/enable'); $('#modal-{{ plugin.id }}').modal('hide');" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Buttons.Enable') }}</button>
+							{% endif %}
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lang('Pages.AdminArea.Pages.Plugins.List.Info.Buttons.Close') }}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 </div>{% endblock %}{% block footer %}
 {% include 'requirements/datatables.twig' %}
  <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}

@@ -111,6 +111,22 @@ class Manager
     }
 
     /**
+     * Get all available languages.
+     */
+    public function getLangs(): array
+    {
+        $files = scandir($this->lang_dir);
+        $langs = [];
+        foreach ($files as $file) {
+            if (pathinfo($file, PATHINFO_EXTENSION) == 'yml') {
+                $langs[] = $file;
+            }
+        }
+
+        return $langs;
+    }
+
+    /**
      * Replace placeholders in the language string.
      */
     private function replacePlaceholders(?string $replacePlaceholders): ?string
@@ -158,22 +174,6 @@ class Manager
     private function doesLanguageExist(string $lang): bool
     {
         return in_array($lang, $this->langs);
-    }
-
-    /**
-     * Get all available languages.
-     */
-    private function getLangs(): array
-    {
-        $files = scandir($this->lang_dir);
-        $langs = [];
-        foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) == 'yml') {
-                $langs[] = $file;
-            }
-        }
-
-        return $langs;
     }
 
     /**

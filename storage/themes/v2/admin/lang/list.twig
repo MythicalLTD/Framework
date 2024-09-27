@@ -1,0 +1,39 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Languages.List.Title') }}</h3>
+				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Languages.List.Description') }}</p>
+			</div>
+			<table class="datatables-basic table">
+				<thead>
+					<tr>
+						<th>{{ lang('Pages.AdminArea.Pages.Languages.List.Table.Head.Columns.ID') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Languages.List.Table.Head.Columns.Message') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Languages.List.Table.Head.Columns.Date') }}</th>
+						<th>{{ lang('Pages.AdminArea.Pages.Languages.List.Table.Head.Columns.Actions') }}</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					{% for language in langs %}
+						<tr>
+							<td>{{ loop.index }}</td>
+							<td>{{ language }}</td>
+							<td>{{ "now"|date("Y-m-d H:i:s") }}</td>
+							<td>
+								<a href="/admin/language/{{language }}/editor" class="btn btn-info">{{ lang('Pages.AdminArea.Pages.Languages.List.Table.Head.Actions.Edit') }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div><br>{% endblock %}{% block footer %}
+{% include 'requirements/datatables.twig' %}
+ <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}

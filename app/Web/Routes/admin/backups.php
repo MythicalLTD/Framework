@@ -1,10 +1,21 @@
 <?php
 
+/*
+ * This file is part of MythicalSystemsFramework.
+ * Please view the LICENSE file that was distributed with this source code.
+ *
+ * (c) MythicalSystems <mythicalsystems.xyz> - All rights reserved
+ * (c) NaysKutzu <nayskutzu.xyz> - All rights reserved
+ * (c) Cassian Gherman <nayskutzu.xyz> - All rights reserved
+ *
+ * You should have received a copy of the MIT License
+ * along with this program. If not, see <https://opensource.org/licenses/MIT>.
+ */
+
 use MythicalSystemsFramework\Backup\Backup;
-use MythicalSystemsFramework\User\Announcement\Announcements;
-use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
+use MythicalSystemsFramework\User\UserDataHandler;
 
 global $router;
 
@@ -19,11 +30,10 @@ $router->add('/admin/backups', function (): void {
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
-
     if (
-        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.backups.view") ||
-        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.backups.create") ||
-        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.backups.delete")
+        !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.view')
+        || !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.create')
+        || !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.delete')
     ) {
         exit(header('location: /errors/403'));
     }
@@ -46,17 +56,17 @@ $router->add('/admin/backups/(.*)/restore', function ($id): void {
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
     if (
-        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.backups.restore")
+        !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.restore')
     ) {
         exit(header('location: /errors/403'));
     }
 
     if (Backup::doesBackupExist($id) == false) {
         exit(header('location: /admin/backups?s=not_found'));
-    } else {
-        Backup::restore($id);
-        exit(header('location: /admin/backups?s=ok'));
     }
+    Backup::restore($id);
+    exit(header('location: /admin/backups?s=ok'));
+
 });
 
 $router->add('/admin/backups/(.*)/delete', function ($id): void {
@@ -69,17 +79,15 @@ $router->add('/admin/backups/(.*)/delete', function ($id): void {
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
     if (
-        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.backups.delete")
+        !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.delete')
     ) {
         exit(header('location: /errors/403'));
-    }  
+    }
     if (Backup::doesBackupExist($id) == false) {
         exit(header('location: /admin/backups?s=not_found'));
-    } else {
-        Backup::remove($id);
-        exit(header('location: /admin/backups?s=ok'));
     }
-
+    Backup::remove($id);
+    exit(header('location: /admin/backups?s=ok'));
 
 });
 
@@ -93,13 +101,13 @@ $router->add('/admin/backups/create', function (): void {
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
 
     if (
-        !UserDataHandler::hasPermission($_COOKIE['token'], "mythicalframework.admin.backups.create")
+        !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.create')
     ) {
         exit(header('location: /errors/403'));
     }
 
     $backup = Backup::take();
-    Backup::setBackupStatus($backup, \MythicalSystemsFramework\Backup\Status::DONE);
+    Backup::setBackupStatus($backup, MythicalSystemsFramework\Backup\Status::DONE);
 
     exit(header('location: /admin/backups?s=ok'));
 });

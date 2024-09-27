@@ -229,11 +229,13 @@ class RolesPermissionDataHandler
             return 'ERROR_DATABASE_INSERT_FAILED';
         }
     }
+
     /**
      * Check if a role has a specific permission.
      *
      * @param int $roleId The role id
      * @param string $permission The permission
+     *
      * @return bool True if the role has the permission, false otherwise
      */
     public static function doesRoleHavePermission(int $roleId, string $permission): bool

@@ -23,10 +23,8 @@ class Announcements
 {
     /**
      * Does an announcement exist?
-     * 
+     *
      * @param string $id the ID of the announcement
-     * 
-     * @return bool
      */
     public static function exists(string $id): bool
     {
@@ -39,9 +37,11 @@ class Announcements
             $stmt->bind_result($count);
             $stmt->fetch();
             $stmt->close();
+
             return $count > 0;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while checking if an announcement exists: ' . $e->getMessage());
+
             return false;
         }
     }
@@ -51,7 +51,7 @@ class Announcements
      *
      * @param string $title the title of the announcement
      * @param string $text the text of the announcement
-     * 
+     *
      * @return int the ID of the created announcement
      */
     public static function create(string $title, string $text): int
@@ -71,6 +71,7 @@ class Announcements
             return $announcementID;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while creating an announcement: ' . $e->getMessage());
+
             return -1;
         }
     }
@@ -114,6 +115,7 @@ class Announcements
         try {
             if (!self::exists($id)) {
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while deleting an announcement: Announcement not found.');
+
                 return;
             }
             global $event;
@@ -171,6 +173,7 @@ class Announcements
             return $announcement ? $announcement : null;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting an announcement: ' . $e->getMessage());
+
             return [];
         }
     }
@@ -203,6 +206,7 @@ class Announcements
             $mysqli = new MySQL();
             $conn = $mysqli->connectMYSQLI();
             $result = $conn->query('SELECT * FROM framework_announcements ORDER BY id DESC');
+
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting all announcements sorted by ID: ' . $e->getMessage());
@@ -225,6 +229,7 @@ class Announcements
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting all announcements sorted by date: ' . $e->getMessage());
+
             return [];
         }
     }
@@ -240,6 +245,7 @@ class Announcements
         try {
             if (!self::exists($announcement_id)) {
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while adding a social interaction to an announcement: Announcement not found.');
+
                 return;
             }
             $event->emit('announcements.AddSocialInteraction', [$announcement_id, $user_uuid, $type]);
@@ -266,6 +272,7 @@ class Announcements
         try {
             if (!self::exists($announcement_id)) {
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while removing a social interaction from an announcement: Announcement not found.');
+
                 return;
             }
             $event->emit('announcements.RemoveSocialInteraction', [$announcement_id, $user_uuid, $type]);
@@ -303,9 +310,11 @@ class Announcements
             if ($stmt->num_rows > 0) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting a social interaction from an announcement: ' . $e->getMessage());
+
             return false;
         }
     }
@@ -318,6 +327,7 @@ class Announcements
         try {
             if (!self::exists($announcement_id)) {
                 Logger::log(LoggerLevels::WARNING, LoggerTypes::OTHER, 'An error occurred while getting the total social interactions from an announcement: Announcement not found.');
+
                 return 0;
             }
             $mysqli = new MySQL();
@@ -334,6 +344,7 @@ class Announcements
             return 0;
         } catch (\Exception $e) {
             Logger::log(LoggerLevels::ERROR, LoggerTypes::OTHER, 'An error occurred while getting the total social interactions from an announcement: ' . $e->getMessage());
+
             return 0;
         }
     }

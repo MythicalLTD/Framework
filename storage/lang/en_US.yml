@@ -22,23 +22,69 @@
 Pages:
   AdminArea:
     Pages:
-      Plugins:
-        List: 
-          Title: "Plugins"
-          Description: "Here you can manage all the plugins from the framework."
+      Languages:
+        List:
+          Title: "Languages"
+          Description: "Here you can see all the framework languages and manage them :)"
           Table:
-            CreateButton: "Create new backup"
             Head:
               Columns:
                 ID: "ID"
-                Status: "Status"
+                Type: "Type"
+                Severity: "Severity"
+                Message: "Message"
                 Date: "Date"
                 Actions: "Actions"
+              Actions: 
+                Edit: "Edit"
+
+      Logs:
+        List:
+          Title: "Logs"
+          Description: "Here you can see all the framework logs :)"
+          Table:
+            Head:
+              Columns:
+                ID: "ID"
+                Type: "Type"
+                Severity: "Severity"
+                Message: "Message"
+                Date: "Date"
+      Plugins:
+        List:
+          Title: "Plugins"
+          Description: "Here you can manage all the plugins from the framework."
+          Table:
+            Head:
+              Columns:
+                ID: "ID"
+                Name: "Name"
+                Stability: "Stability"
+                Authors: "Authors"
+                Enabled: "Enabled"
+                Actions: "Actions"
               Actions:
-                Restore: "Restore"
-                Delete: "Delete"
+                Disable: "Disable"
+                Enable: "Enable"
+          Info:
+            Stability: "Stability:"
+            Authors: "Authors:"
+            Requirements: "Requirements:"
+            License: "License:"
+            Actions:
+              Enable: "Enable"
+              Disable: "Disable"
+            Extends:
+              HomePage: "Visit HomePage"
+              Support: "Support page"
+              Funding: "Funding page"
+            Buttons:
+              Enable: "Enable"
+              Disable: "Disable"
+              Close: "Close"
+
       Backups:
-        List: 
+        List:
           Title: "Backups"
           Description: "Here you can manage all the backups."
           Table:
@@ -77,7 +123,7 @@ Pages:
               Placeholder: "Enter the content of the announcement..."
             Submit: "Save changes"
             Cancel: "Cancel"
-        List: 
+        List:
           Title: "Announcements"
           Description: "Here you can manage all the announcements."
           Table:
@@ -95,7 +141,7 @@ Pages:
     Sidebar:
       Admin:
         Name: "Administration Area"
-        Items: 
+        Items:
           Support:
             Title: "Support Tickets"
           Announcements:
@@ -108,12 +154,12 @@ Pages:
             Title: "Logs"
           Users:
             Title: "Users"
-            Items: 
+            Items:
               List:
                 Title: "User List"
               Other:
                 Title: "Other"
-                Items: 
+                Items:
                   SendMail:
                     Title: "Send Mail"
                   Activities:
@@ -122,7 +168,7 @@ Pages:
                     Title: "API Keys"
             RolesAndPermissions:
               Title: "Roles & Permissions"
-              Items: 
+              Items:
                 Roles:
                   Title: "Roles"
                 Permissions:
@@ -204,44 +250,44 @@ Pages:
           Special: "At least one special character"
       SaveChanges: "Save changes"
       Reset: "Reset"
-      TwoFactor: 
+      TwoFactor:
         Title: "Two Factor verification"
-        Enabled: 
+        Enabled:
           Title: "Two factor authentication is enabled."
           Description: "Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in."
           LearnMore: "Learn more"
           Button: "Enable two factor authentication"
         Disabled:
-          Title: "Two factor authentication is not enabled yet." 
+          Title: "Two factor authentication is not enabled yet."
           Description: "Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in."
           LearnMore: "Learn more"
           Button: "Disable two factor authentication"
     Settings:
-      Form: 
+      Form:
         FirstName:
           Label: "First name"
         LastName:
           Label: "Last name"
         Email:
           Label: "Email"
-        Avatar: 
+        Avatar:
           Label: "Avatar"
-        Background: 
+        Background:
           Label: "Background"
         Submit: "Save changes"
         Cancel: "Cancel"
         DeactivateAccount:
           Title: "Deactivate account"
-          Warning: 
+          Warning:
             Title: "Are you sure you want to delete your account?"
-            Items: 
+            Items:
               First: "Once you delete your account, there is a 30 days window for you to contact support"
               Secondary: "to recover your account. After 30 days, your account will be permanently disabled."
               Third: "This means that you account will be marked as deleted BUT we reserve to keep all the data"
               Fourth: "for legal reasons. You may open a ticket for your data to be anonymized due to GDPR!"
-            Confirm: "Yes, i want to delete my account and i agree with the terms of the account deletion policy."  
+            Confirm: "Yes, i want to delete my account and i agree with the terms of the account deletion policy."
             Button: "Deactivate account"
-    Mails: 
+    Mails:
       Table:
         Head:
           Columns:
@@ -250,7 +296,7 @@ Pages:
             From: "From"
             Date: "Date"
             Actions: "Actions"
-          Actions: 
+          Actions:
             View: "View"
             Delete: "Delete"
     ApiKeys:
@@ -272,7 +318,7 @@ Pages:
         List:
           Title: "API Key List & Access"
           Description: "An API key is a simple encrypted string that identifies an application without any principal. They are useful for accessing public data anonymously, and are used to associate API requests with your project for quota and billing."
-          Items: 
+          Items:
             Created: "Created on"
             Deleted: "Delete"
     Activities:
@@ -437,7 +483,7 @@ Alerts:
       AlreadyUnfollowed:
         Title: "Already Unfollowed"
         Message: "You have already unfollowed this. Please try again."
-    NoPermission: 
+    NoPermission:
       Title: "No Permission"
       Message: "You do not have permission to do that."
     UserDoesNotOwnTarget:
@@ -514,7 +560,7 @@ Alerts:
     CodeInvalid:
       Title: "Code Invalid"
       Message: "The code provided is invalid. Please try again."
-    PasswordsNotTheSame: 
+    PasswordsNotTheSame:
       Title: "Passwords Not The Same"
       Message: "The passwords provided are not the same. Please try again."
     TwoFactorSetup:
