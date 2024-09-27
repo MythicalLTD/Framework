@@ -19,10 +19,33 @@
 # The language file is divided into sections. Each section has its own keys and values.
 # You can use the keys in your views to display the values in the correct language.
 
+# This part was updated by the web gui!
+
 Pages:
   AdminArea:
     Pages:
+      Users:
+        List:
+          Title: "Users"
+          Description: "On this page you can manage all your users!"
+          Table:
+            Head:
+              Columns:
+                ID: "ID"
+                Role: "Role"
+                LastSeen: "Last Seen"
+                Actions: "Actions"
+              Actions: 
+                Edit: "Edit"
+                Delete: "Delete"
       Languages:
+        Editor:
+          Title: "Language Editor"
+          Description: "Here you can edit the language files."
+          Buttons:  
+            Save: "Save changes"
+            Cancel: "Cancel"
+
         List:
           Title: "Languages"
           Description: "Here you can see all the framework languages and manage them :)"

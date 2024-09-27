@@ -73,6 +73,7 @@ class Engine
         self::registerConfig($renderer);
         self::registerLanguage($renderer);
         self::registerGlobals($renderer);
+        self::registerCryptographic($renderer);
 
         return $renderer;
     }
@@ -121,6 +122,11 @@ class Engine
         $renderer->addGlobal('php_version', phpversion());
         $renderer->addGlobal('page_name', 'Home');
         $renderer->addGlobal('isTurnStileEnabled', TurnStile::isEnabled());
+    }
+
+    public static function registerCryptographic(Environment $renderer): void
+    {
+        $renderer->addFunction(new TwigFunction('decrypt', function ($value) { return \MythicalSystemsFramework\Encryption\XChaCha20::decrypt($value); }));
     }
 
     public static function registerAlerts(Environment $renderer, string $template_name): void

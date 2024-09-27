@@ -1,0 +1,43 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Users.List.Title') }}</h3>
+				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Users.List.Description') }}</p>
+			</div>
+			<table class="datatables-basic table">
+				<thead>
+					<tr>
+                        <th>{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Columns.ID') }}</th>
+                        <th>{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Columns.Role') }}</th>
+                        <th>{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Columns.LastSeen') }}</th>
+                        <th>{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Columns.Actions') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in users %}
+						<tr>
+                            <td>
+                                <img src="{{ user.avatar }}" alt="{{ user.username }}'s avatar" class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                                &nbsp; {{ user.username }}
+                            </td>
+                            <td>{{ getRoleName(user.role) }}</td>
+                            <td>{{ user.last_seen }}</td>
+							<td>
+                                <a href="/admin/user/{{ user.id }}/edit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Actions.Edit') }}</a>
+                                <a href="javascript:void(0);" onclick="requireConfirmation('/admin/user/{{ user.id }}/delete')" class="btn btn-danger">{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Actions.Delete') }}</a>
+
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div><br>{% endblock %}{% block footer %}
+{% include 'requirements/datatables.twig' %}
+ <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}

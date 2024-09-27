@@ -1,5 +1,4 @@
 [
-    "mythicalframework.admin.users.create",
     "mythicalframework.admin.users.edit",
     "mythicalframework.admin.users.delete",
     "mythicalframework.admin.users.view",

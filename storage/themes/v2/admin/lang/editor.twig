@@ -1,0 +1,55 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}
+	<link href="https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/css/ace.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Languages.Editor.Title') }}</h3>
+				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Languages.Editor.Description') }}</p>
+			</div>
+			<div id="editor" style="height: 500px; width: 100%;">{{content}}</div>
+			<div class="card-footer">
+				<a href="javascript:void(0);" onclick="requireConfirmation2()" class="btn btn-success">{{ lang('Pages.AdminArea.Pages.Languages.Editor.Buttons.Save') }}</a>
+				<a href="/admin/language" class="btn btn-info">{{ lang('Pages.AdminArea.Pages.Languages.Editor.Buttons.Cancel') }}</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block footer %} <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/mode-yaml.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/worker-yaml.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/theme-monokai.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/snippets/yaml.min.js" referrerpolicy="no-referrer"></script>
+	<script>var editor = ace.edit("editor");editor.setTheme("ace/theme/monokai");editor.session.setMode("ace/mode/yaml");editor.setShowPrintMargin(false);editor.setOptions({enableBasicAutocompletion: true,enableSnippets: true,enableLiveAutocompletion: true});</script>
+	<script>
+function requireConfirmation2() {
+    var currentUrl = window.location.href;
+    console.log("Current URL:", currentUrl);
+    var content = editor.getValue();
+    var xhr = new XMLHttpRequest();
+    try {
+        xhr.open("POST", currentUrl, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    alert("Changes saved successfully!");
+                    // Optionally, you can redirect or refresh the page here
+                } else {
+                    alert("An error occurred while saving changes. Please try again.");
+                }
+            }
+        };
+        xhr.send("content=" + encodeURIComponent(content));
+    } catch (error) {
+        alert("An unexpected error occurred: " + error.message);
+    }
+    
+}
+</script>
+{% endblock %}

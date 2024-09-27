@@ -550,4 +550,28 @@ class UserDataHandler
             return '0';
         }
     }
+
+    /**
+     * Get all users.
+     *
+     * @return array All users
+     */
+    public static function getAll(): array
+    {
+        try {
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            $stmt = $mysqli->prepare('SELECT * FROM framework_users');
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $users = $result->fetch_all(MYSQLI_ASSOC);
+            $stmt->close();
+
+            return $users;
+        } catch (\Exception $e) {
+            logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to get all users: ' . $e->getMessage());
+
+            return [];
+        }
+    }
 }

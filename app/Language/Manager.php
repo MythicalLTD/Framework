@@ -20,11 +20,10 @@ use MythicalSystemsFramework\Managers\Settings as settings;
 
 class Manager
 {
-    private string $lang_dir = __DIR__ . '/../../storage/lang';
-    private array $langs = [];
-    private string $default_lang = 'en_US';
-
-    private string $language;
+    public string $lang_dir = __DIR__ . '/../../storage/lang';
+    public array $langs = [];
+    public string $default_lang = 'en_US';
+    public string $language;
 
     public function __construct()
     {
@@ -84,6 +83,16 @@ class Manager
         }
 
         return is_string($value) ? $this->replacePlaceholders($value) : null;
+    }
+
+    /**
+     * Get the full language file.
+     */
+    public function getFullFile(): array
+    {
+        $file = $this->lang_dir . '/' . $this->language . '.yml';
+
+        return Yaml::parseFile($file);
     }
 
     /**
