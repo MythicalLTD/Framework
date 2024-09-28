@@ -13,6 +13,8 @@
  */
 
 use MythicalSystemsFramework\Backup\Backup;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
@@ -54,6 +56,7 @@ $router->add('/admin/backups/(.*)/restore', function ($id): void {
 
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
     if (
         !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.restore')
@@ -65,8 +68,8 @@ $router->add('/admin/backups/(.*)/restore', function ($id): void {
         exit(header('location: /admin/backups?s=not_found'));
     }
     Backup::restore($id);
+    UserActivity::addActivity($uuid, "Restored a backup with the ID: (" . $id . ")", CloudFlare::getRealUserIP(), "backup:restore");
     exit(header('location: /admin/backups?s=ok'));
-
 });
 
 $router->add('/admin/backups/(.*)/delete', function ($id): void {
@@ -77,6 +80,7 @@ $router->add('/admin/backups/(.*)/delete', function ($id): void {
 
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
     if (
         !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.delete')
@@ -87,8 +91,8 @@ $router->add('/admin/backups/(.*)/delete', function ($id): void {
         exit(header('location: /admin/backups?s=not_found'));
     }
     Backup::remove($id);
+    UserActivity::addActivity($uuid, "Deleted a backup with the ID: (" . $id . ")", CloudFlare::getRealUserIP(), "backup:delete");
     exit(header('location: /admin/backups?s=ok'));
-
 });
 
 $router->add('/admin/backups/create', function (): void {
@@ -99,6 +103,7 @@ $router->add('/admin/backups/create', function (): void {
 
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
     if (
         !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.backups.create')
@@ -108,6 +113,6 @@ $router->add('/admin/backups/create', function (): void {
 
     $backup = Backup::take();
     Backup::setBackupStatus($backup, MythicalSystemsFramework\Backup\Status::DONE);
-
+    UserActivity::addActivity($uuid, "Created a backup with the ID: (" . $backup . ")", CloudFlare::getRealUserIP(), "backup:create");
     exit(header('location: /admin/backups?s=ok'));
 });

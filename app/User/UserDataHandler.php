@@ -511,7 +511,6 @@ class UserDataHandler
         $renderer->addFunction(new TwigFunction('hasPermission', function ($info) use ($role_id): bool {
             return RolesPermissionDataHandler::doesRoleHavePermission($role_id, $info);
         }));
-
     }
 
     /**
@@ -572,6 +571,29 @@ class UserDataHandler
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to get all users: ' . $e->getMessage());
 
             return [];
+        }
+    }
+    /**
+     * Does this uuid exist?
+     * 
+     * @param string $uuid The uuid
+     * 
+     * @return bool Does the uuid exist?
+     */
+    public static function doesUUIDExist(string $uuid): bool
+    {
+        try {
+            $database = new MySQL();
+            $mysqli = $database->connectMYSQLI();
+            $stmt = $mysqli->prepare('SELECT COUNT(*) FROM framework_users WHERE uuid = ?');
+            $stmt->bind_param('s', $uuid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+            return $result->num_rows > 0;
+        } catch (\Exception $e) {
+            logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to check if UUID exists: ' . $e->getMessage());
+            return false;
         }
     }
 }

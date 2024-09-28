@@ -28,9 +28,8 @@
                             <td>{{ getRoleName(user.role) }}</td>
                             <td>{{ user.last_seen }}</td>
 							<td>
-                                <a href="/admin/user/{{ user.id }}/edit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Actions.Edit') }}</a>
-                                <a href="javascript:void(0);" onclick="requireConfirmation('/admin/user/{{ user.id }}/delete')" class="btn btn-danger">{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Actions.Delete') }}</a>
-
+                                <a href="/admin/users/{{ user.uuid }}/edit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Actions.Edit') }}</a>
+                                <a href="javascript:void(0);" onclick="requireConfirmation('/admin/users/{{ user.uuid }}/delete')" class="btn btn-danger">{{ lang('Pages.AdminArea.Pages.Users.List.Table.Head.Actions.Delete') }}</a>
 							</td>
 						</tr>
 					{% endfor %}

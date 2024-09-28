@@ -12,6 +12,8 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
@@ -41,7 +43,6 @@ $router->add('/admin/plugins', function (): void {
     $plugins = MythicalSystemsFramework\Plugins\Database::getAllPlugins();
     $renderer->addGlobal('plugins', $plugins);
     $renderer->addGlobal('page_name', 'Plugins');
-
     Engine::registerAlerts($renderer, $template);
     exit($renderer->render($template));
 });
@@ -51,9 +52,10 @@ $router->add('/admin/plugins/(.*)/disable', function (string $id): void {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
-
+    
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
     if (
         !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.plugins.disable')
@@ -65,7 +67,7 @@ $router->add('/admin/plugins/(.*)/disable', function (string $id): void {
         exit(header('location: /admin/plugins?s=not_found'));
     }
     $plugin_name = MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
-
+    UserActivity::addActivity($uuid, "Disabled the plugin: (".$plugin_name.")", CloudFlare::getRealUserIP(), "plugin:disabled");
     MythicalSystemsFramework\Plugins\Database::updatePlugin($plugin_name, 'enabled', 'false');
     exit(header('location: /admin/plugins?s=ok'));
 
@@ -79,6 +81,7 @@ $router->add('/admin/plugins/(.*)/enable', function (string $id): void {
 
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+    $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
     if (
         !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.plugins.enable')
@@ -92,6 +95,7 @@ $router->add('/admin/plugins/(.*)/enable', function (string $id): void {
     $plugin_name = MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
 
     MythicalSystemsFramework\Plugins\Database::updatePlugin($plugin_name, 'enabled', 'true');
+    UserActivity::addActivity($uuid, "Enabled the plugin: (".$plugin_name.")", CloudFlare::getRealUserIP(), "plugin:enabled");  
     exit(header('location: /admin/plugins?s=ok'));
 
 });
