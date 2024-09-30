@@ -37,9 +37,4 @@ class Core implements PluginBuilder
     {
         Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, 'Core plugin uninstalled');
     }
-
-    public function onUpdate(): void
-    {
-        Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, 'Core plugin updated');
-    }
 }

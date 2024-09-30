@@ -42,8 +42,4 @@ interface PluginBuilder
      */
     public function onUninstall(): void;
 
-    /**
-     * The update function of the plugin.
-     */
-    public function onUpdate(): void;
 }

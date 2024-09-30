@@ -157,9 +157,57 @@ class PluginCompilerHelper
     {
         return Database::getPluginInfo($plugin_name, 'enabled') == 'true';
     }
+    
+    /**
+     * Disable a plugin
+     * 
+     * @param string $plugin_name The name of the plugin
+     * 
+     * @return void 
+     */
+    public static function disablePlugin(string $plugin_name): void
+    {
+        try {
+            $plugin_info_db = Database::getPlugin($plugin_name);
+            $plugin_home_dir = self::$plugins_path . '/' . $plugin_name;
+            $main_class = $plugin_home_dir . '/' . $plugin_info_db['name'] . '.php';
+            if (self::isPluginEnabled($plugin_name) == false) {
+                return;
+            }
+            if (file_exists($main_class)) {
+                try {
+                    require_once $main_class;
+                    $plugin_class = new $plugin_info_db['name']();
+                    if (self::isPluginInstalled($plugin_info_db['name']) == false) {
+                        return;
+                    }
+                    try {
+                        $plugin_class->onUninstall();
+                    } catch (\Exception $e) {
+                        Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Something failed while we tried to enable the plugin '" . $plugin_info_db['name'] . "'. " . $e->getMessage());
+                    }
+                    Database::updatePlugin($plugin_info_db['name'], 'isInstalled', 'false');
+                    Database::updatePlugin($plugin_info_db['name'], 'enabled', 'false');
+                } catch (\Exception $e) {
+                    Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "Something failed while we tried to enable the plugin '" . $plugin_info_db['name'] . "'. " . $e->getMessage());
+                }
+            } else {
+                Logger::log(LoggerLevels::CRITICAL, LoggerTypes::PLUGIN, "The main class for plugin '$plugin_name' does not exist.");
+            }
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::ERROR, LoggerTypes::PLUGIN, 'Failed to uninstall plugin (' . $plugin_name . ').' . $e->getMessage());
+        }
+    }
 
     /**
      * Enable a plugin.
+     * 
+     * @param string $plugin The name of the plugin
+     * @param array $plugin_info The plugin info
+     * @param PluginEvent $eventHandler The event handler
+     * @param bool $skipEventEnable Skip the event enable
+     * 
+     * @return void
      */
     public static function enablePlugin(string $plugin, array $plugin_info, PluginEvent $eventHandler, bool $skipEventEnable = false): void
     {

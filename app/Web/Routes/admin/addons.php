@@ -68,7 +68,7 @@ $router->add('/admin/plugins/(.*)/disable', function (string $id): void {
     }
     $plugin_name = MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
     UserActivity::addActivity($uuid, "Disabled the plugin: (".$plugin_name.")", CloudFlare::getRealUserIP(), "plugin:disabled");
-    MythicalSystemsFramework\Plugins\Database::updatePlugin($plugin_name, 'enabled', 'false');
+    MythicalSystemsFramework\Plugins\PluginsManager::disablePlugin($plugin_name);
     exit(header('location: /admin/plugins?s=ok'));
 
 });
