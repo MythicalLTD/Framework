@@ -157,13 +157,11 @@ class PluginCompilerHelper
     {
         return Database::getPluginInfo($plugin_name, 'enabled') == 'true';
     }
-    
+
     /**
-     * Disable a plugin
-     * 
+     * Disable a plugin.
+     *
      * @param string $plugin_name The name of the plugin
-     * 
-     * @return void 
      */
     public static function disablePlugin(string $plugin_name): void
     {
@@ -201,13 +199,11 @@ class PluginCompilerHelper
 
     /**
      * Enable a plugin.
-     * 
+     *
      * @param string $plugin The name of the plugin
      * @param array $plugin_info The plugin info
      * @param PluginEvent $eventHandler The event handler
      * @param bool $skipEventEnable Skip the event enable
-     * 
-     * @return void
      */
     public static function enablePlugin(string $plugin, array $plugin_info, PluginEvent $eventHandler, bool $skipEventEnable = false): void
     {
@@ -560,5 +556,40 @@ class PluginCompilerHelper
                 Database::purgePermissions($plugin_owner);
             }
         }
+    }
+
+    /**
+     * @deprecated Do not use this method. It is not implemented yet.
+     */
+    public static function installJavaPlugin(): void
+    {
+    }
+
+    /**
+     * @deprecated Do not use this method. It is not implemented yet.
+     */
+    public static function installPythonPlugin(): void
+    {
+    }
+
+    /**
+     * @deprecated Do not use this method. It is not implemented yet.
+     */
+    public static function installRubyPlugin(): void
+    {
+    }
+
+    /**
+     * @deprecated Do not use this method. It is not implemented yet.
+     */
+    public static function installNodePlugin(): void
+    {
+    }
+
+    /**
+     * @deprecated Do not use this method. It is not implemented yet.
+     */
+    public static function installGoPlugin(): void
+    {
     }
 }

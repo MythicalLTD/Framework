@@ -87,12 +87,7 @@
         ],
         "lint": [
             "export COMPOSER_ALLOW_SUPERUSER=1",
-            "storage/caches/vendor/bin/php-cs-fixer fix --config=./.github/.php-cs-fixer.dist.php"
-        ],
-        "build": [
-            "export COMPOSER_ALLOW_SUPERUSER=1",
-            "composer run lint",
-            "cd storage/frontend && yarn && yarn build"
+            "storage/caches/vendor/bin/php-cs-fixer fix --config=./.github/.php-cs-fixer.dist.php && exit 0"
         ]
     }
 }

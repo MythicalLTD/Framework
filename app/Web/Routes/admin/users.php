@@ -12,12 +12,12 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
-use MythicalSystemsFramework\User\Activity\UserActivity;
 use Twig\TwigFunction;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
 use MythicalSystemsFramework\Roles\RolesDataHandler;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 
 global $router;
 
@@ -40,7 +40,7 @@ $router->add('/admin/users/(.*)/edit', function ($uuid): void {
         exit(header('location: /errors/403'));
     }
 
-    if ($uuid == "") {
+    if ($uuid == '') {
         exit(header('location: /admin/users'));
     }
     if (UserDataHandler::doesUUIDExist($uuid) === false) {
@@ -66,7 +66,7 @@ $router->add('/admin/users/(.*)/edit', function ($uuid): void {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         Engine::registerAlerts($renderer, $template);
         exit($renderer->render($template));
-    } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         exit(header('location: /dashboard'));
     }

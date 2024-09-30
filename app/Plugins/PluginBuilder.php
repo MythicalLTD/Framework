@@ -41,5 +41,4 @@ interface PluginBuilder
      * The uninstall function of the plugin.
      */
     public function onUninstall(): void;
-
 }

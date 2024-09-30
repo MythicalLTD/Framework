@@ -12,11 +12,11 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
-use MythicalSystemsFramework\CloudFlare\CloudFlare;
-use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 
 global $router;
 
@@ -52,7 +52,7 @@ $router->add('/admin/plugins/(.*)/disable', function (string $id): void {
     if (isset($_COOKIE['token']) === false) {
         exit(header('location: /auth/login'));
     }
-    
+
     $user = new UserHelper($_COOKIE['token'], $renderer);
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
@@ -67,7 +67,7 @@ $router->add('/admin/plugins/(.*)/disable', function (string $id): void {
         exit(header('location: /admin/plugins?s=not_found'));
     }
     $plugin_name = MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
-    UserActivity::addActivity($uuid, "Disabled the plugin: (".$plugin_name.")", CloudFlare::getRealUserIP(), "plugin:disabled");
+    UserActivity::addActivity($uuid, 'Disabled the plugin: (' . $plugin_name . ')', CloudFlare::getRealUserIP(), 'plugin:disabled');
     MythicalSystemsFramework\Plugins\PluginsManager::disablePlugin($plugin_name);
     exit(header('location: /admin/plugins?s=ok'));
 
@@ -95,7 +95,7 @@ $router->add('/admin/plugins/(.*)/enable', function (string $id): void {
     $plugin_name = MythicalSystemsFramework\Plugins\Database::getPluginNameById($id);
 
     MythicalSystemsFramework\Plugins\Database::updatePlugin($plugin_name, 'enabled', 'true');
-    UserActivity::addActivity($uuid, "Enabled the plugin: (".$plugin_name.")", CloudFlare::getRealUserIP(), "plugin:enabled");  
+    UserActivity::addActivity($uuid, 'Enabled the plugin: (' . $plugin_name . ')', CloudFlare::getRealUserIP(), 'plugin:enabled');
     exit(header('location: /admin/plugins?s=ok'));
 
 });

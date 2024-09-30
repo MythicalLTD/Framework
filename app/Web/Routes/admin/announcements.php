@@ -12,11 +12,11 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
-use MythicalSystemsFramework\CloudFlare\CloudFlare;
-use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\Announcement\Announcements;
 
 global $router;
@@ -59,7 +59,6 @@ $router->add('/admin/announcements/create', function (): void {
     UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
     $uuid = UserDataHandler::getSpecificUserData($_COOKIE['token'], 'uuid', false);
 
-
     if (
         !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.announcements.create')
     ) {
@@ -70,7 +69,7 @@ $router->add('/admin/announcements/create', function (): void {
         Announcements::create($_POST['title'], $_POST['description']);
         exit(header('location: /admin/announcements?s=ok'));
     }
-    UserActivity::addActivity($uuid, "Created an announcement", CloudFlare::getRealUserIP(), "announcement:create");
+    UserActivity::addActivity($uuid, 'Created an announcement', CloudFlare::getRealUserIP(), 'announcement:create');
     exit(header('location: /admin/announcements?e=missing_fields'));
 });
 
@@ -97,7 +96,7 @@ $router->add('/admin/announcements/(.*)/delete', function ($aid): void {
     }
 
     Announcements::delete($aid);
-    UserActivity::addActivity($uuid, "Deleted an announcement", CloudFlare::getRealUserIP(), "announcement:delete");
+    UserActivity::addActivity($uuid, 'Deleted an announcement', CloudFlare::getRealUserIP(), 'announcement:delete');
     exit(header('location: /admin/announcements?s=ok'));
 });
 
@@ -135,6 +134,6 @@ $router->add('/admin/announcements/(.*)/edit', function ($aid): void {
     }
     $array = Announcements::getOne($aid);
     $renderer->addGlobal('announcement', $array);
-    UserActivity::addActivity($uuid, "Edited an announcement", CloudFlare::getRealUserIP(), "announcement:edit");
+    UserActivity::addActivity($uuid, 'Edited an announcement', CloudFlare::getRealUserIP(), 'announcement:edit');
     exit($renderer->render($template));
 });

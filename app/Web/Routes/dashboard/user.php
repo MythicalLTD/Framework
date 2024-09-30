@@ -12,14 +12,14 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
-use MythicalSystemsFramework\CloudFlare\CloudFlare;
 use Twig\TwigFunction;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Roles\RolesHelper;
-use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\Social\Likes;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 
 global $router, $event;
 
@@ -56,7 +56,7 @@ $router->add('/user/(.*)/like', function ($uuid): void {
         exit(header('location: /user/' . $uuid . '/profile?e=like_yourself'));
     }
     Likes::addLike($uuid_current_user, $uuid);
-    UserActivity::addActivity($uuid_current_user, "Liked the user: (".$uuid.")", CloudFlare::getRealUserIP(), "user:like:add");
+    UserActivity::addActivity($uuid_current_user, 'Liked the user: (' . $uuid . ')', CloudFlare::getRealUserIP(), 'user:like:add');
     exit(header('location: /user/' . $uuid . '/profile?s=liked'));
 
 });
@@ -91,7 +91,7 @@ $router->add('/user/(.*)/dislike', function ($uuid): void {
         exit(header('location: /user/' . $uuid . '/profile?e=not_liked'));
     }
     Likes::removeLike($uuid_current_user, $uuid);
-    UserActivity::addActivity($uuid_current_user, "Removed the like for user: (".$uuid.")", CloudFlare::getRealUserIP(), "user:like:remove");
+    UserActivity::addActivity($uuid_current_user, 'Removed the like for user: (' . $uuid . ')', CloudFlare::getRealUserIP(), 'user:like:remove');
     exit(header('location: /user/' . $uuid . '/profile?s=disliked'));
 
 });

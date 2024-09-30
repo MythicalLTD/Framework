@@ -573,11 +573,12 @@ class UserDataHandler
             return [];
         }
     }
+
     /**
      * Does this uuid exist?
-     * 
+     *
      * @param string $uuid The uuid
-     * 
+     *
      * @return bool Does the uuid exist?
      */
     public static function doesUUIDExist(string $uuid): bool
@@ -590,9 +591,11 @@ class UserDataHandler
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
+
             return $result->num_rows > 0;
         } catch (\Exception $e) {
             logger::log(LoggerLevels::CRITICAL, LoggerTypes::DATABASE, '(App/User/UserDataHandler.php) Failed to check if UUID exists: ' . $e->getMessage());
+
             return false;
         }
     }

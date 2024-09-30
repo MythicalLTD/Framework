@@ -64,7 +64,7 @@ $router->add('/account/mails/(.*)/view', function ($mail_id): void {
 
     if (MailBox::doesUserOwnThisEmail($uuid, $mail_id)) {
         $mail = MailBox::getMailContent($uuid, $mail_id);
-        UserActivity::addActivity($uuid, 'Email viewed ('.$mail_id.')', CloudFlare::getUserIP(), 'user:email:viewed');
+        UserActivity::addActivity($uuid, 'Email viewed (' . $mail_id . ')', CloudFlare::getUserIP(), 'user:email:viewed');
         exit($mail);
     }
     header('location: /account/mails?e=user_not_own_object');
@@ -87,7 +87,7 @@ $router->add('/account/api/(.*)/delete', function ($key_id): void {
 
     if (UserApi::doesUserOwnKey($_COOKIE['token'], $key_id)) {
         UserApi::remove($key_id);
-        UserActivity::addActivity($key_id,'User deleted client api key!', CloudFlare::getRealUserIP(),'user:api:key:deleted');
+        UserActivity::addActivity($key_id, 'User deleted client api key!', CloudFlare::getRealUserIP(), 'user:api:key:deleted');
         header('location: /account/api?s=deleted');
     } else {
         header('location: /account/api?e=user_not_own_object');

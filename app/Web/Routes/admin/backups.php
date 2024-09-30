@@ -13,11 +13,11 @@
  */
 
 use MythicalSystemsFramework\Backup\Backup;
-use MythicalSystemsFramework\CloudFlare\CloudFlare;
-use MythicalSystemsFramework\User\Activity\UserActivity;
 use MythicalSystemsFramework\User\UserHelper;
 use MythicalSystemsFramework\Web\Template\Engine;
 use MythicalSystemsFramework\User\UserDataHandler;
+use MythicalSystemsFramework\CloudFlare\CloudFlare;
+use MythicalSystemsFramework\User\Activity\UserActivity;
 
 global $router;
 
@@ -68,7 +68,7 @@ $router->add('/admin/backups/(.*)/restore', function ($id): void {
         exit(header('location: /admin/backups?s=not_found'));
     }
     Backup::restore($id);
-    UserActivity::addActivity($uuid, "Restored a backup with the ID: (" . $id . ")", CloudFlare::getRealUserIP(), "backup:restore");
+    UserActivity::addActivity($uuid, 'Restored a backup with the ID: (' . $id . ')', CloudFlare::getRealUserIP(), 'backup:restore');
     exit(header('location: /admin/backups?s=ok'));
 });
 
@@ -91,7 +91,7 @@ $router->add('/admin/backups/(.*)/delete', function ($id): void {
         exit(header('location: /admin/backups?s=not_found'));
     }
     Backup::remove($id);
-    UserActivity::addActivity($uuid, "Deleted a backup with the ID: (" . $id . ")", CloudFlare::getRealUserIP(), "backup:delete");
+    UserActivity::addActivity($uuid, 'Deleted a backup with the ID: (' . $id . ')', CloudFlare::getRealUserIP(), 'backup:delete');
     exit(header('location: /admin/backups?s=ok'));
 });
 
@@ -113,6 +113,6 @@ $router->add('/admin/backups/create', function (): void {
 
     $backup = Backup::take();
     Backup::setBackupStatus($backup, MythicalSystemsFramework\Backup\Status::DONE);
-    UserActivity::addActivity($uuid, "Created a backup with the ID: (" . $backup . ")", CloudFlare::getRealUserIP(), "backup:create");
+    UserActivity::addActivity($uuid, 'Created a backup with the ID: (' . $backup . ')', CloudFlare::getRealUserIP(), 'backup:create');
     exit(header('location: /admin/backups?s=ok'));
 });
