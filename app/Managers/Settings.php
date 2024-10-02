@@ -146,7 +146,7 @@ class Settings
                     }
                 }
                 if ($isTerminal) {
-                    echo color::translateColorsCode('&rMigration completed. &oMigrated &e' . $migratedCount . ' &rfiles.&o');
+                    echo color::translateColorsCode('&rMigration completed. Migrated &e' . $migratedCount . ' &rfiles.');
                 }
             } else {
                 if ($isTerminal) {

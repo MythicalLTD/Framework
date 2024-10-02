@@ -122,8 +122,9 @@ class PluginCompilerHelper
         $p_license = $p['license'] ?? null;
         $p_support = $p['support'] ?? null;
         $p_funding = $p['funding'] ?? null;
+        $p_icon = $p['icon'] ?? null;
         $p_require = $p['require'] ?? 'MythicalSystemsFramework';
-        Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
+        Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], $p_icon, false);
     }
 
     /**
@@ -148,8 +149,9 @@ class PluginCompilerHelper
                     $p_license = $p['license'] ?? null;
                     $p_support = $p['support'] ?? null;
                     $p_funding = $p['funding'] ?? null;
+                    $p_icon = $p['icon'] ?? null;
                     $p_require = $p['require'] ?? 'MythicalSystemsFramework';
-                    Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], false);
+                    Database::registerNewPlugin($p['name'], $p['description'], $p_homepage, $p_require, $p_license, $p['stability'], $p['authors'], $p_support, $p_funding, $p['version'], $p_icon, false);
                     Database::updatePlugin($plugin_info['name'], 'enabled', $plugin_db_info_enabled);
                     Logger::log(LoggerLevels::INFO, LoggerTypes::PLUGIN, 'Plugin ' . $plugin_info['name'] . ' has been updated to version ' . $plugin_info['version']);
                 }
@@ -376,13 +378,19 @@ class PluginCompilerHelper
      */
     public static function doesPluginHaveCron(string $plugin_name)
     {
-        self::ensurePluginPathExists();
-        if (!self::doesPluginExist($plugin_name)) {
+        try {
+            self::ensurePluginPathExists();
+            if (!self::doesPluginExist($plugin_name)) {
+                return false;
+            }
+            $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/crons';
+
+            return file_exists($plugin_folder);
+        } catch (\Exception $e) {
+            Logger::log(LoggerLevels::ERROR, LoggerTypes::PLUGIN, 'Failed to check if plugin has cron job folder. ' . $e->getMessage());
+
             return false;
         }
-        $plugin_folder = self::$plugins_path . '/' . $plugin_name . '/crons';
-
-        return file_exists($plugin_folder);
     }
 
     /**

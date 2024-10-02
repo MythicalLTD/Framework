@@ -51,7 +51,7 @@ class Backup extends Command implements CommandBuilder
                 self::exit();
                 break;
             default:
-                echo self::log_info('&7Invalid option selected. &o');
+                echo self::log_info('&7Invalid option selected. ');
                 break;
         }
     }
@@ -86,12 +86,12 @@ class Backup extends Command implements CommandBuilder
 
         if (Database::doesBackupExist($backup_id)) {
             echo self::log_info('Backup exists!');
-            echo self::NewLine();
-            echo self::translateColorsCode('&4&lWARNING: &rThis option will wipe the database. &o');
-            echo self::translateColorsCode('&4&lWARNING: &rOnly use this function if you know what you are doing &o');
-            echo self::translateColorsCode('&4&lWARNING: &rOnce you wipe the database there is no going back! &o');
-            echo self::translateColorsCode("&4&lWARNING: &rPlease be careful and don't play around with commands!  &o");
-            echo self::translateColorsCode('&4&lWARNING: &rThere is no other message then this so keep in mind! &o');
+
+            echo self::translateColorsCode('&4&lWARNING: &rThis option will wipe the database. ');
+            echo self::translateColorsCode('&4&lWARNING: &rOnly use this function if you know what you are doing ');
+            echo self::translateColorsCode('&4&lWARNING: &rOnce you wipe the database there is no going back! ');
+            echo self::translateColorsCode("&4&lWARNING: &rPlease be careful and don't play around with commands!  ");
+            echo self::translateColorsCode('&4&lWARNING: &rThere is no other message then this so keep in mind! ');
             echo self::translateColorsCode('&4&lWARNING: &rDo you really want to wipe the database? (&ey&r/&en&r): ');
 
             $confirm = readline();
@@ -133,13 +133,13 @@ class Backup extends Command implements CommandBuilder
     {
         $backups = BackupUtil::getBackups();
         foreach ($backups as $backup) {
-            echo self::NewLine();
+
             echo self::log_info('------ &7[&cBackup Info&7] ------');
-            echo self::NewLine();
+
             echo self::log_info('Backup ID: &c' . $backup['id']);
             echo self::log_info('Backup Status: &c' . $backup['backup_status']);
             echo self::log_info('Backup Date: &c' . $backup['backup_date_end']);
-            echo self::NewLine();
+
             echo self::log_info('------ (&c' . $backup['id'] . '&7/&c' . count($backups) . '&7) ------');
         }
     }

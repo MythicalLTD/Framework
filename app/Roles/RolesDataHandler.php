@@ -178,7 +178,7 @@ class RolesDataHandler
      * Get all roles with name, weight, and id.
      *
      * @param bool $inverted If true, the roles will be inverted
-     * 
+     *
      * @return array|null An array of roles with name, weight, and id
      */
     public static function getAllRoles(bool $inverted = false): ?array
@@ -189,7 +189,7 @@ class RolesDataHandler
             $mysqli = $database->connectMYSQLI();
 
             // Get all roles
-            $stmtRoles = $mysqli->prepare('SELECT id, name, weight FROM framework_roles'.($inverted ? ' ORDER BY weight DESC' : ''));
+            $stmtRoles = $mysqli->prepare('SELECT id, name, weight FROM framework_roles' . ($inverted ? ' ORDER BY weight DESC' : ''));
             $stmtRoles->execute();
             $stmtRoles->bind_result($id, $name, $weight);
 

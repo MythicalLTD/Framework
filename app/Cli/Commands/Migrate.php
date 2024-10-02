@@ -51,11 +51,11 @@ class Migrate extends Command implements CommandBuilder
     public static function db(): void
     {
         try {
-            self::log_info('Migrating the database...&o');
+            self::log_info('Migrating the database...');
             self::log_info('');
             MySQL::migrate(true);
             Settings::migrate(true);
-            self::log_success('&rDatabase migrated &asuccessfully&r!&o');
+            self::log_success('&rDatabase migrated &asuccessfully&r!');
             self::exit();
         } catch (\Exception $e) {
             exit('Failed to migrate the database: ' . $e->getMessage() . '');
@@ -65,10 +65,10 @@ class Migrate extends Command implements CommandBuilder
     public static function cfg(): void
     {
         try {
-            self::log_info('Migrating the config...&o');
+            self::log_info('Migrating the config...');
             self::log_info('');
             Settings::migrate(true);
-            self::log_success('&rConfig migrated &asuccessfully&r!&o');
+            self::log_success('&rConfig migrated &asuccessfully&r!');
             self::exit();
         } catch (\Exception $e) {
             exit('Failed to migrate the config: ' . $e->getMessage() . '');

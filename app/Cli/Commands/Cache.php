@@ -54,7 +54,7 @@ class Cache extends Command implements CommandBuilder
 
     public static function flush(): void
     {
-        echo self::translateColorsCode('Please wait while we purge your &ccaches&r.&o');
+        echo self::translateColorsCode('Please wait while we purge your &ccaches&r.');
         try {
             CacheWorker::purge();
             echo self::translateColorsCode('&rPurged caches!');
@@ -65,7 +65,7 @@ class Cache extends Command implements CommandBuilder
 
     public static function process(): void
     {
-        echo self::translateColorsCode('Please wait while we process your &ccaches&r.&o');
+        echo self::translateColorsCode('Please wait while we process your &ccaches&r.');
         try {
             CacheWorker::process();
             echo self::translateColorsCode('&rProcessed caches!');
@@ -76,24 +76,24 @@ class Cache extends Command implements CommandBuilder
 
     public static function create(): void
     {
-        echo self::translateColorsCode('Please wait while we create your &ccaches&r.&o');
+        echo self::translateColorsCode('Please wait while we create your &ccaches&r.');
         $table = readline('Enter the name of the table you want to cache: ');
         $status = MySQLCache::saveCache($table);
         switch ($status) {
             case 'ERROR_TABLE_DOES_NOT_EXIST':
-                self::exit('&cTable not found!&o');
+                self::exit('&cTable not found!');
                 break;
             case 'ERROR_NO_DATA_FOUND_IN_TABLE':
-                self::exit('&cNo data found in table!&o');
+                self::exit('&cNo data found in table!');
                 break;
             case 'ERROR_TABLE_NOT_SUPPORTED':
-                self::exit('&cTable does not support cache!&o');
+                self::exit('&cTable does not support cache!');
                 break;
             case 'ERROR_MYSQL_ERROR':
-                self::exit('&cThere was an error while trying to connect to the mysql server :(&o');
+                self::exit('&cThere was an error while trying to connect to the mysql server :(');
                 break;
             case 'OK':
-                self::exit('&rCreated &acaches&r!&o');
+                self::exit('&rCreated &acaches&r!');
                 break;
             default:
                 break;

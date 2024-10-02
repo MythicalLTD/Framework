@@ -302,28 +302,24 @@ class MySQL
                         $stmt = $db->prepare('INSERT INTO framework_migrations (script) VALUES (?)');
                         $stmt->execute([$fileName]);
                         if ($isCli == true) {
-                            echo Kernel::translateColorsCode('&rExecuted migration: &e' . $fileName . '&o');
-                            echo Kernel::NewLine();
+                            echo Kernel::translateColorsCode('&rExecuted migration: &e' . $fileName . '');
                         }
                     } else {
                         if ($isCli == true) {
-                            echo Kernel::translateColorsCode('&rSkipping migration: &e' . $fileName . ' &r(&ealready executed&r)&o');
-                            echo Kernel::NewLine();
+                            echo Kernel::translateColorsCode('&rSkipping migration: &e' . $fileName . ' &r(&ealready executed&r)');
                         }
                     }
                 }
             } else {
                 if ($isCli == true) {
-                    echo Kernel::translateColorsCode('&cNo migrations found!&o');
-                    echo Kernel::NewLine();
+                    echo Kernel::translateColorsCode('&cNo migrations found!');
                 } else {
                     throw new \Exception('No migrations found!');
                 }
             }
         } catch (\Exception $e) {
             if ($isCli == true) {
-                echo Kernel::translateColorsCode('&cFailed to migrate the database: ' . $e->getMessage() . '&o');
-                echo Kernel::NewLine();
+                echo Kernel::translateColorsCode('&cFailed to migrate the database: ' . $e->getMessage() . '');
             } else {
                 throw new \Exception('Failed to migrate the database: ' . $e->getMessage());
             }

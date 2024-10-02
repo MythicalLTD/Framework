@@ -14,6 +14,7 @@
 
 namespace MythicalSystemsFramework\Plugins;
 
+use MythicalSystemsFramework\Cli\Kernel;
 use MythicalSystemsFramework\Kernel\Logger;
 use MythicalSystemsFramework\Kernel\LoggerTypes;
 use MythicalSystemsFramework\Kernel\LoggerLevels;
@@ -59,9 +60,11 @@ class PluginsManager extends PluginCompilerHelper
                 foreach ($crons as $cron) {
                     $cron = __DIR__ . '/../../storage/addons/' . $plugin . '/crons/' . $cron;
                     if (file_exists($cron)) {
+                        echo Kernel::translateColorsCode('&a[MythicalSystemsFramework] &7Running cron: ' . $cron);
                         require $cron;
                     } else {
                         Logger::log('Cron file not found: ' . $cron, LoggerTypes::PLUGIN, LoggerLevels::ERROR);
+                        echo Kernel::translateColorsCode('&c[MythicalSystemsFramework] &7Cron file not found: ' . $cron);
                     }
                 }
             }

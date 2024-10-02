@@ -12,8 +12,10 @@
  * along with this program. If not, see <https://opensource.org/licenses/MIT>.
  */
 
+use MythicalSystemsFramework\Cache\Cache;
 use MythicalSystemsFramework\Cli\Colors as color;
-use MythicalSystemsFramework\Handlers\CacheHandler as cache;
+use MythicalSystemsFramework\Database\MySQLCache;
 
-cache::process();
-echo color::translateColorsCode('Cache processed by &acrontab&r!&o');
+MySQLCache::saveCache('framework_settings');
+Cache::process();
+echo color::translateColorsCode('Cache processed by &acrontab&r!');

@@ -52,7 +52,7 @@ class Configure extends Command implements CommandBuilder
     public static function dbconfigure(): void
     {
         if (cfg::get('database', 'password') !== null) {
-            echo self::translateColorsCode('&rDatabase configuration already exists. &oWould you like to overwrite it? &8[&aY&8/&cN&8]&r: ');
+            echo self::translateColorsCode('&rDatabase configuration already exists. Would you like to overwrite it? &8[&aY&8/&cN&8]&r: ');
             $overwrite = readline();
             if (strtolower($overwrite) !== 'y') {
                 return;
@@ -73,7 +73,7 @@ class Configure extends Command implements CommandBuilder
         $database = readline();
         // Perform validation
         if (empty($username) || empty($password) || empty($database)) {
-            echo self::translateColorsCode('&cPlease provide all the required information.&o');
+            echo self::translateColorsCode('&cPlease provide all the required information.');
 
             return;
         }
@@ -82,30 +82,30 @@ class Configure extends Command implements CommandBuilder
         $hiddenPassword = str_repeat('*', strlen($password));
 
         // Use the provided information
-        echo self::NewLine();
-        echo self::translateColorsCode("&rHost: &e$host&o");
-        echo self::translateColorsCode("&rPort: &e$port&o");
-        echo self::translateColorsCode("&rUsername: &e$username&o");
-        echo self::translateColorsCode("&rPassword: &e$hiddenPassword&o");
-        echo self::translateColorsCode("&rDatabase: &e$database&o");
+
+        echo self::translateColorsCode("&rHost: &e$host");
+        echo self::translateColorsCode("&rPort: &e$port");
+        echo self::translateColorsCode("&rUsername: &e$username");
+        echo self::translateColorsCode("&rPassword: &e$hiddenPassword");
+        echo self::translateColorsCode("&rDatabase: &e$database");
 
         if ($db->tryConnection($host, $port, $username, $password, $database) == true) {
-            echo self::NewLine();
-            echo self::translateColorsCode('&rConnection to the database was &asuccessful!&o');
-            echo self::NewLine();
-            echo self::translateColorsCode('&rSaving the configuration...&o');
+
+            echo self::translateColorsCode('&rConnection to the database was &asuccessful!');
+
+            echo self::translateColorsCode('&rSaving the configuration...');
             cfg::set('database', 'host', $host);
             cfg::set('database', 'port', $port);
             cfg::set('database', 'username', $username);
             cfg::set('database', 'password', $password);
             cfg::set('database', 'name', $database);
-            echo self::translateColorsCode('&rGenerating an encryption key for database...!&o');
-            echo self::translateColorsCode('&rPlease wait...&o');
-            echo self::translateColorsCode('&rWe generated a key for you: &e' . XChaCha20::generateKey() . '&o');
-            echo self::translateColorsCode('&rKey generated &asuccessfully&r!&o');
-            echo self::translateColorsCode('&rConfiguration saved &asuccessfully&r!&o');
+            echo self::translateColorsCode('&rGenerating an encryption key for database...!');
+            echo self::translateColorsCode('&rPlease wait...');
+            echo self::translateColorsCode('&rWe generated a key for you: &e' . XChaCha20::generateKey() . '');
+            echo self::translateColorsCode('&rKey generated &asuccessfully&r!');
+            echo self::translateColorsCode('&rConfiguration saved &asuccessfully&r!');
         } else {
-            echo self::translateColorsCode('&7Failed to connect to the database. &o&rPlease check the provided information.');
+            echo self::translateColorsCode('&7Failed to connect to the database. &rPlease check the provided information.');
         }
     }
 

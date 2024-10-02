@@ -38,7 +38,7 @@ class Command extends Kernel implements CommandBuilder
      */
     public static function log_success(string $message): void
     {
-        echo self::translateColorsCode("&a$message&r&o");
+        echo self::translateColorsCode("&a$message&r");
     }
 
     /**
@@ -50,7 +50,7 @@ class Command extends Kernel implements CommandBuilder
      */
     public static function log_error(string $message): void
     {
-        echo self::translateColorsCode("&c$message&r&o");
+        echo self::translateColorsCode("&c$message&r");
     }
 
     /**
@@ -62,7 +62,7 @@ class Command extends Kernel implements CommandBuilder
      */
     public static function log_warning(string $message): void
     {
-        echo self::translateColorsCode("&e$message&r&o");
+        echo self::translateColorsCode("&e$message&r");
     }
 
     /**
@@ -74,7 +74,7 @@ class Command extends Kernel implements CommandBuilder
      */
     public static function log_info(string $message): void
     {
-        echo self::translateColorsCode("&7$message&r&o");
+        echo self::translateColorsCode("&7$message&r");
     }
 
     /**

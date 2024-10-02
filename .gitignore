@@ -20,3 +20,4 @@ caches/last_settings_migrate_run
 /storage/logs/*.log
 /storage/frontend/node_modules
 /storage/backups/database/*.sql
+/storage/addons/Backup24

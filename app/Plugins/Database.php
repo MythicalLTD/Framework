@@ -43,11 +43,12 @@ class Database extends MySQL implements Stability
      * @param string|null $support The support link of the plugin
      * @param string|null $funding The funding of the plugin
      * @param string $version The version of the plugin
+     * @param string $icon The icon of the plugin
      * @param bool $isCheck Is this is a check?
      *
      * @return int The plugin id
      */
-    public static function registerNewPlugin(string $name, string $description, ?string $homepage, string|array $require, ?string $license, Stability|string $stability, array|string $authors, ?string $support, ?string $funding, string $version, bool $isCheck): int
+    public static function registerNewPlugin(string $name, string $description, ?string $homepage, string|array $require, ?string $license, Stability|string $stability, array|string $authors, ?string $support, ?string $funding, string $version, string $icon, bool $isCheck): int
     {
         try {
             if ($isCheck == true) {
@@ -60,11 +61,11 @@ class Database extends MySQL implements Stability
 
                 return 0;
             }
-            $stmt = $conn->prepare('INSERT INTO framework_plugins (name,description,homepage,`require`,license,stability,authors,support,funding,version) VALUES (?,?,?,?,?,?,?,?,?,?)');
+            $stmt = $conn->prepare('INSERT INTO framework_plugins (name,description,logo,homepage,`require`,license,stability,authors,support,funding,version) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
             $authorsString = is_array($authors) ? implode(', ', $authors) : $authors;
             $requireString = is_array($require) ? implode(', ', $require) : $require;
 
-            $stmt->bind_param('ssssssssss', $name, $description, $homepage, $requireString, $license, $stability, $authorsString, $support, $funding, $version);
+            $stmt->bind_param('sssssssssss', $name, $description, $icon, $homepage, $requireString, $license, $stability, $authorsString, $support, $funding, $version);
             $stmt->execute();
 
             return $stmt->insert_id;

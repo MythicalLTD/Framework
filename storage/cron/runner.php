@@ -28,7 +28,7 @@ use MythicalSystemsFramework\Plugins\PluginsManager;
 
 $event = new PluginEvent();
 global $event;
-echo color::translateColorsCode('A new cron runner has &astarted&r.&o');
+echo color::translateColorsCode('A new cron runner has &astarted&r.');
 /*
  * MythicalSystems Framework Cron File
  *
@@ -43,13 +43,6 @@ try {
     date_default_timezone_set('UTC');
 }
 
-$jobsDirectory = __DIR__ . '/php';
-$files = scandir($jobsDirectory);
-foreach ($files as $file) {
-    if ($file !== '.' && $file !== '..') {
-        require $jobsDirectory . '/' . $file;
-    }
-}
 PluginsManager::initCron($event);
 
-echo color::translateColorsCode('Cron job has completed &asuccessfully&r!&o');
+echo color::translateColorsCode('Cron job has completed &asuccessfully&r!');

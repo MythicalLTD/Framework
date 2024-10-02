@@ -55,13 +55,13 @@ class Rebuild extends Command implements CommandBuilder
         try {
             $db = new MySQL();
             if ($db->tryConnection(cfg::get('database', 'host'), cfg::get('database', 'port'), cfg::get('database', 'username'), cfg::get('database', 'password'), cfg::get('database', 'name')) == true) {
-                echo self::translateColorsCode('&o&rConnection to the database was &asuccessful!&o');
-                echo self::NewLine();
-                echo self::translateColorsCode('&4&lWARNING: &rThis option will wipe the database. &o');
-                echo self::translateColorsCode('&4&lWARNING: &rOnly use this function if you know what you are doing &o');
-                echo self::translateColorsCode('&4&lWARNING: &rOnce you wipe the database there is no going back! &o');
-                echo self::translateColorsCode("&4&lWARNING: &rPlease be careful and don't play around with commands!  &o");
-                echo self::translateColorsCode('&4&lWARNING: &rThere is no other message then this so keep in mind! &o');
+                echo self::translateColorsCode('&rConnection to the database was &asuccessful!');
+
+                echo self::translateColorsCode('&4&lWARNING: &rThis option will wipe the database. ');
+                echo self::translateColorsCode('&4&lWARNING: &rOnly use this function if you know what you are doing ');
+                echo self::translateColorsCode('&4&lWARNING: &rOnce you wipe the database there is no going back! ');
+                echo self::translateColorsCode("&4&lWARNING: &rPlease be careful and don't play around with commands!  ");
+                echo self::translateColorsCode('&4&lWARNING: &rThere is no other message then this so keep in mind! ');
                 echo self::translateColorsCode('&4&lWARNING: &rDo you really want to wipe the database? (&ey&r/&en&r): ');
 
                 $confirm = readline();
@@ -76,31 +76,27 @@ class Rebuild extends Command implements CommandBuilder
                             $db->exec("DROP TABLE IF EXISTS $table");
                         }
                         $db->exec('SET FOREIGN_KEY_CHECKS = 1');
-                        echo self::NewLine();
-                        echo self::NewLine();
-                        echo self::NewLine();
-                        echo self::NewLine();
-                        echo self::NewLine();
-                        echo self::translateColorsCode('&rDatabase wiped!!&o');
+
+                        echo self::translateColorsCode('&rDatabase wiped!!');
                         MySQL::migrate(true);
                         Settings::migrate(true);
-                        echo self::NewLine();
-                        echo self::translateColorsCode('&rDatabase rebuilt!&o');
-                        echo self::translateColorsCode('&rGenerating an encryption key for database...!&o');
-                        echo self::translateColorsCode('&rPlease wait...&o');
-                        echo self::translateColorsCode('&rWe generated a key for you: &e' . XChaCha20::generateKey() . '&o');
-                        echo self::translateColorsCode('&rKey generated &asuccessfully&r!&o');
-                        echo self::translateColorsCode("&rLet's start by setting up your configuration!&o");
+
+                        echo self::translateColorsCode('&rDatabase rebuilt!');
+                        echo self::translateColorsCode('&rGenerating an encryption key for database...!');
+                        echo self::translateColorsCode('&rPlease wait...');
+                        echo self::translateColorsCode('&rWe generated a key for you: &e' . XChaCha20::generateKey() . '');
+                        echo self::translateColorsCode('&rKey generated &asuccessfully&r!');
+                        echo self::translateColorsCode("&rLet's start by setting up your configuration!");
                         Configure::configure();
                     } catch (\PDOException $e) {
-                        echo self::translateColorsCode('&rFailed to drop tables: &c' . $e->getMessage() . '&o');
-                        echo self::NewLine();
+                        echo self::translateColorsCode('&rFailed to drop tables: &c' . $e->getMessage() . '');
+
                     }
                 } else {
-                    self::exit('&rExiting...&o');
+                    self::exit('&rExiting...');
                 }
             } else {
-                self::exit('&cFailed to connect to the database!&o');
+                self::exit('&cFailed to connect to the database!');
             }
         } catch (\Exception $e) {
             self::exit('&cFailed to rebuild the database: &r' . $e->getMessage() . '');

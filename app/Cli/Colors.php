@@ -124,10 +124,12 @@ class Colors
     public static function translateColorsCode(string $message): string
     {
         $pattern = '/&([0-9a-fklmnor])/i';
-
-        return preg_replace_callback($pattern, function ($matches) {
+        $translatedMessage = preg_replace_callback($pattern, function ($matches) {
             return self::getColorCode($matches[1]);
         }, $message);
+
+        return $translatedMessage . self::NewLine();
+
     }
 
     private static function getColorCode(string $colorCode): string
@@ -175,8 +177,6 @@ class Colors
                 return self::Underline();
             case 'r':
                 return self::Reset();
-            case 'o':
-                return self::NewLine();
             default:
                 return '';
         }
