@@ -54,8 +54,11 @@ $router->add('/admin/users/(.*)/edit', function ($uuid): void {
     $renderer->addFunction(new TwigFunction('other_info', function ($info, $encrypted) use ($userToken) {
         return UserDataHandler::getSpecificUserData($userToken, $info, $encrypted);
     }));
-    $activity = UserActivity::getActivities($uuid);
 
+    $activity = UserActivity::getActivities($uuid);
+    $roles = RolesDataHandler::getAllRoles(true);
+
+    $renderer->addGlobal('roles', $roles);
     $renderer->addGlobal('user_activity', $activity);
     $renderer->addGlobal('page_name', 'Users');
     $renderer->addGlobal('other_user_token', $userToken);

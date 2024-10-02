@@ -35,6 +35,9 @@ class PluginCompilerHelper
 
     /**
      * Check the requirements of a plugin.
+     *
+     * @param string $plugin The name of the plugin
+     * @param array $plugin_info The plugin info
      */
     public static function checkPluginRequirements(string $plugin, array $plugin_info): void
     {
@@ -109,6 +112,8 @@ class PluginCompilerHelper
 
     /**
      * Register a plugin if it is not already registered.
+     *
+     * @param array $plugin_info The plugin info
      */
     public static function registerPluginIfNotRegistered(array $plugin_info): void
     {
@@ -123,6 +128,8 @@ class PluginCompilerHelper
 
     /**
      * Update a plugin if it is outdated.
+     *
+     * @param array $plugin_info The plugin info
      */
     public static function updatePluginIfOutdated(array $plugin_info): void
     {
@@ -152,6 +159,8 @@ class PluginCompilerHelper
 
     /**
      * Is a plugin enabled?
+     *
+     * @param string $plugin_name The name of the plugin
      */
     public static function isPluginEnabled(string $plugin_name): bool
     {
@@ -246,6 +255,8 @@ class PluginCompilerHelper
 
     /**
      * Get all plugins.
+     *
+     * @return array The plugins
      */
     public static function getAllPlugins(): array
     {
@@ -296,6 +307,10 @@ class PluginCompilerHelper
 
     /**
      * Get plugin info.
+     *
+     * @param string $plugin_name The name of the plugin
+     *
+     * @return array The plugin info
      */
     public static function readPluginFile(string $plugin_name): array
     {
@@ -315,6 +330,8 @@ class PluginCompilerHelper
      * Does a plugin exist?
      *
      * @param string $plugin_name The name of the plugin
+     *
+     * @return bool True if yes, false if no!
      */
     public static function doesPluginExist(string $plugin_name): bool
     {
@@ -328,6 +345,8 @@ class PluginCompilerHelper
      * Is the plugin config valid?
      *
      * @param string $plugin_name The name of the plugin
+     *
+     * @return bool True if yes, false if no!
      */
     public static function isPluginConfigValid(string $plugin_name): bool
     {
@@ -351,6 +370,8 @@ class PluginCompilerHelper
     /**
      * Does a plugin have a cron job folder?
      *
+     * @param string $plugin_name The name of the plugin
+     *
      * @return bool
      */
     public static function doesPluginHaveCron(string $plugin_name)
@@ -366,6 +387,8 @@ class PluginCompilerHelper
 
     /**
      * Get all cron files for a plugin.
+     *
+     * @param string $plugin_name The name of the plugin
      *
      * @return array
      */
@@ -524,8 +547,6 @@ class PluginCompilerHelper
 
     /**
      * Get the path to the language file.
-     *
-     * @return string
      */
     public static function getLanguagePaths(): array
     {
@@ -549,7 +570,6 @@ class PluginCompilerHelper
     public static function removeGhostPermissions(): void
     {
         $permissions = Database::getAllRegisteredPermissions();
-        $plugins = self::getAllPlugins();
         foreach ($permissions as $permission) {
             $plugin_owner = $permission['owned_by_id'];
             if (Database::doesPluginExistID($plugin_owner) == false) {
