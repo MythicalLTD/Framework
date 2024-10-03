@@ -77,6 +77,7 @@ Pages:
         List:
           Title: "Plugins"
           Description: "Here you can manage all the plugins from the framework."
+          UploadButton: "Install new plugin"
           Table:
             Head:
               Columns:
@@ -89,6 +90,20 @@ Pages:
               Actions:
                 Disable: "Disable"
                 Enable: "Enable"
+                Delete: "Delete"
+          UploadModal:
+            Title: "Upload Plugin"
+            Description: 
+              First: "Upload a new plugin to the framework."
+              Second: "Please make sure that the plugin is compatible with the framework."
+              Third: "After the upload, you can enable the plugin."
+              Forth: "Please note that the file has to be a .mfa plugin file for our framework."
+            Form:
+              File:
+                Label: "Plugin file"
+                Placeholder: "Select the plugin file..."
+            Submit: "Upload"
+            Cancel: "Cancel"
           Info:
             Stability: "Stability:"
             Authors: "Authors:"

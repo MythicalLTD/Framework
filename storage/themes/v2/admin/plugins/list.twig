@@ -9,6 +9,38 @@
 				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Plugins.List.Title') }}</h3>
 				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Plugins.List.Description') }}</p>
 			</div>
+			<div class="card-header">
+				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadPluginModal">
+					{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadButton') }}
+				</button>
+			</div>
+
+			<div class="modal fade" id="uploadPluginModal" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-body">
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							<div class="text-center mb-4">
+								<h4 class="mb-2">{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Title') }}</h4>
+								<p>{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Description.First') }}</p>
+								<p>{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Description.Secound') }}</p>
+								<p>{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Description.Third') }}</p>
+								<p>{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Description.Forth') }}</p>								
+							</div>
+							<form action="/admin/plugins/upload" method="post" enctype="multipart/form-data">
+								<div class="mb-3">
+									<label for="pluginFile" class="form-label">{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.FileLabel') }}</label>
+									<input type="file" class="form-control" id="pluginFile" name="pluginFile" required>
+								</div>
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Submit') }}</button>
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Cancel') }}</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 			<table class="datatables-basic table">
 				<thead>
 					<tr>
@@ -37,6 +69,7 @@
 									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/disable')" class="btn btn-sm btn-danger">{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Actions.Disable') }}</button>
 								{% else %}
 									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/enable')" class="btn btn-sm btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Actions.Enable') }}</button>
+									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/delete')" class="btn btn-sm btn-danger">{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Actions.Delete') }}</button>
 								{% endif %}
 
 							</td>
