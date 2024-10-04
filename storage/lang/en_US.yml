@@ -499,6 +499,8 @@ Alerts:
           Message: "You have successfully verified two factor authentication."
 
   Error:
+    Plugins:
+      
     Social:
       CannotLikeYourSelf:
         Title: "Cannot Like Yourself"

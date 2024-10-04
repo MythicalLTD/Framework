@@ -30,7 +30,7 @@
 							<form action="/admin/plugins/upload" method="post" enctype="multipart/form-data">
 								<div class="mb-3">
 									<label for="pluginFile" class="form-label">{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.FileLabel') }}</label>
-									<input type="file" class="form-control" id="pluginFile" name="pluginFile" required>
+									<input type="file" class="form-control" id="pluginFile" name="pluginFile" accept=".mfa" required>
 								</div>
 								<div class="text-center">
 									<button type="submit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.Plugins.List.UploadModal.Submit') }}</button>

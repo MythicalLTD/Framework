@@ -20,6 +20,55 @@ use MythicalSystemsFramework\User\Activity\UserActivity;
 
 global $router;
 
+$router->add('/admin/plugins/upload', function (): void {
+    global $router, $event, $renderer;
+    $template = 'admin/plugins/upload.twig';
+    if (isset($_COOKIE['token']) === false) {
+        exit(header('location: /auth/login'));
+    }
+
+    $user = new UserHelper($_COOKIE['token'], $renderer);
+    UserDataHandler::requireAuthorization($renderer, $_COOKIE['token']);
+
+    if (
+        !UserDataHandler::hasPermission($_COOKIE['token'], 'mythicalframework.admin.plugins.install')
+    ) {
+        exit(header('location: /errors/403'));
+    }
+
+    $renderer->addGlobal('page_name', 'Upload Plugin');
+    Engine::registerAlerts($renderer, $template);
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_FILES['pluginFile']) && $_FILES['pluginFile']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['pluginFile']['tmp_name'];
+            $fileName = $_FILES['pluginFile']['name'];
+            $fileSize = $_FILES['pluginFile']['size'];
+            $fileType = $_FILES['pluginFile']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+
+            if ($fileExtension === 'mfa') {
+                // Process the file upload (e.g., move to the desired directory)
+                $uploadFileDir = '/path/to/upload/directory/';
+                $dest_path = $uploadFileDir . $fileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    exit(header('location: /admin/plugins?s=ok'));
+                } else {
+                    exit(header('location: /admin/plugins?s=error'));
+                }
+            } else {
+                $renderer->addGlobal('error', 'Invalid file type. Only .mfa files are allowed.');
+            }
+        } else {
+            $renderer->addGlobal('error', 'There was an error with the file upload.');
+        }
+    }
+
+    exit($renderer->render($template));
+});
+
 $router->add('/admin/plugins', function (): void {
     global $router, $event, $renderer;
     $template = 'admin/plugins/list.twig';
