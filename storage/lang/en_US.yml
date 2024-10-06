@@ -616,3 +616,6 @@ Alerts:
     UnknownError:
       Title: "Unknown Error"
       Message: "An unknown error occurred. Please try again."
+    PluginAlreadyExists:
+      Title: "Plugin Already exists"
+      Message: "The plugin already exists. Please try again."

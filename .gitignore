@@ -16,6 +16,7 @@ caches/last_settings_migrate_run
 /storage/caches/*.json
 /storage/caches/*.txt
 /storage/caches/*.log
+/storage/caches/*.mfa
 /storage/caches/*/
 /storage/logs/*.log
 /storage/frontend/node_modules

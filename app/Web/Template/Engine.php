@@ -268,6 +268,10 @@ class Engine
                     $error_title = self::getError('NoPermission.Title');
                     $error_message = self::getError('NoPermission.Message');
                     break;
+                case 'plugin_already_exists':
+                    $error_title = self::getError('PluginAlreadyExists.Title');
+                    $error_message = self::getError('PluginAlreadyExists.Message');
+                    break;
                 default:
                     $error_title = self::getError('UnknownError.Title');
                     $error_message = self::getError('UnknownError.Message');

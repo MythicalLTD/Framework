@@ -1,0 +1,45 @@
+{% extends 'components/dashboard.twig' %}
+{% block head %}
+	<link href="https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/css/ace.min.css" rel="stylesheet">
+{% endblock %}
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">Legal Agreements</h3>
+				<p class="card-subtitle text-muted">By using our software you agree with those terms and eula in the textbox down here!</p>
+			</div>
+			<div id="editor" style="height: 500px; width: 100%;">{{content}}</div>
+		</div>
+	</div>
+{% endblock %}
+{% block footer %} <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/ace.js" type="text/javascript" charset="utf-8"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.36.2/theme-monokai.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	 <script>
+	  var editor = ace.edit("editor");
+	  
+	  // Set the theme to Monokai
+	  editor.setTheme("ace/theme/monokai");
+	
+	  // Set the mode to Markdown for syntax highlighting
+	  editor.session.setMode("ace/mode/markdown");
+	
+	  // Disable the print margin
+	  editor.setShowPrintMargin(false);
+	
+	  // Enable basic autocompletion, snippets, and live autocompletion
+	  editor.setOptions({
+	    enableBasicAutocompletion: true,
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true,
+	    // Make the editor read-only
+	    readOnly: true,
+	    // Optional: Disable editing commands (for complete read-only experience)
+	    highlightActiveLine: false,
+	    highlightGutterLine: false,
+	  });
+	
+	  // Optional: Make the editor unselectable (for full read-only effect)
+	  editor.renderer.$cursorLayer.element.style.display = "none";
+	</script>
+{% endblock %}

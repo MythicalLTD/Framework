@@ -585,39 +585,19 @@ class PluginCompilerHelper
             }
         }
     }
-
     /**
-     * @deprecated Do not use this method. It is not implemented yet.
+     * Get the buttons for a plugin.
+     * 
+     * @param mixed $plugin_name The name of the plugin
+     * 
+     * @return array The buttons
      */
-    public static function installJavaPlugin(): void
-    {
-    }
-
-    /**
-     * @deprecated Do not use this method. It is not implemented yet.
-     */
-    public static function installPythonPlugin(): void
-    {
-    }
-
-    /**
-     * @deprecated Do not use this method. It is not implemented yet.
-     */
-    public static function installRubyPlugin(): void
-    {
-    }
-
-    /**
-     * @deprecated Do not use this method. It is not implemented yet.
-     */
-    public static function installNodePlugin(): void
-    {
-    }
-
-    /**
-     * @deprecated Do not use this method. It is not implemented yet.
-     */
-    public static function installGoPlugin(): void
-    {
+    public static function getButtons($plugin_name) : array {
+        $plugin_info = self::readPluginFile($plugin_name);
+        $buttons = [];
+        if (isset($plugin_info['buttons'])) {
+            $buttons = $plugin_info['buttons'];
+        }
+        return $buttons;
     }
 }

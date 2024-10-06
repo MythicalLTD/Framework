@@ -37,6 +37,12 @@
 			<li class="menu-header small">
 				<span class="menu-header-text">{{lang("Pages.Components.Sidebar.Admin.Name") }}</span>
 			</li>
+			<li class="menu-item">
+					<a href="/admin/legal" class="menu-link">
+						<i class="menu-icon tf-icons ti ti-gavel"></i>
+						<div>EULA</div>
+					</a>
+				</li>
 			{% if hasPermission("mythicalframework.admin.ticket.view") or hasPermission("mythicalframework.admin.ticket.create") or hasPermission("mythicalframework.admin.ticket.reply") or hasPermission("mythicalframework.admin.ticket.delete") %}
 				<li class="menu-item">
 					<a href="/admin/support" class="menu-link">
