@@ -1,6 +1,7 @@
 {
     "name": "Core",
     "description": "The core plugin for MythicalFramework",
+    "icon": "https://raw.githubusercontent.com/MythicalLTD/FrameworkBackup24/refs/heads/main/icon.png",
     "version": "1.0.1",
     "homepage": "https://mythicalsystems.xyz",
     "require": [
@@ -8,6 +9,13 @@
         "php=8.2.0",
         "php-ext=mysqli",
         "composer=mythicalsystems/core"
+    ],
+    "buttons": [
+        {
+            "text": "Custom Button",
+            "url": "https://discord.mythicalsystems.xyz",
+            "color": "primary"
+        }
     ],
     "license": "MIT",
     "stability": "stable",

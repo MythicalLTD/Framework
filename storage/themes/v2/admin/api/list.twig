@@ -1,0 +1,88 @@
+{% extends 'components/dashboard.twig' %}
+
+{% block head %}{% endblock %}
+
+{% block dashboard %}
+	<div class="card">
+		<div class="card-datatable table-responsive pt-0">
+			<div class="card-header">
+				<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.API.List.Title') }}</h3>
+				<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.API.List.Description') }}</p>
+				<br>
+				<div class="card-options">
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAnnouncementModal">
+						{{ lang('Pages.AdminArea.Pages.API.List.Table.CreateButton') }}
+					</button>
+				</div>
+			</div>
+			<table class="datatables-basic table">
+				<thead>
+					<tr>
+						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.ID')}}</th>
+						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Title') }}</th>
+						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Date')}}</th>
+						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Actions')}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for announcement in API %}
+						<tr>
+							<td>{{ announcement.id }}</td>
+							<td>{{ announcement.title }}</td>
+							<td>{{ announcement.date }}</td>
+							<td>
+								<a href="/admin/API/{{ announcement.id }}/edit" class="btn btn-sm btn-primary">{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.Edit') }}</a>
+								<button onclick="requireConfirmation('/admin/API/{{ announcement.id }}/delete')" class="btn btn-sm btn-danger">{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.Delete')}}</button>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal fade" id="createAnnouncementModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<div class="text-center mb-4">
+						<h4 class="mb-2">{{ lang('Pages.AdminArea.Pages.API.Create.Title') }}</h4>
+						<p>{{ lang('Pages.AdminArea.Pages.API.Create.Description') }}</p>
+					</div>
+					<form action="/admin/api/create" method="POST">
+						<div class="mb-3">
+							<label for="apiName" class="form-label">{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Title.Label') }}</label>
+							<input type="text" class="form-control" id="apiName" name="title" placeholder="{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Title.Placeholder') }}" required>
+						</div>
+						<div class="mb-5 col-12">
+							<label for="apiAccess" class="form-label">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Content.Label")}}</label>
+							<select id="apiAccess" name="apiAccess" class="select2 form-select form-select-lg">
+								<option value="rw">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Content.Items.ReadWrite")}}</option>
+								<option value="r">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Content.Items.ReadOnly")}}</option>
+							</select>
+						</div>
+						<div class="mb-5 col-12">
+							<label for="apiAccess" class="form-label">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Access.Label")}}</label>
+							
+							
+						</div>
+						{% if isTurnStileEnabled == true  %}
+							<center>
+								<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+							</center>
+							<br>
+						{% else %}
+							<br>
+						{% endif %}
+						<div class="text-center">
+							<button type="submit" class="btn btn-primary">{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Submit') }}</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Cancel') }}</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}{% block footer %}
+{% include 'requirements/datatables.twig' %}
+ <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}

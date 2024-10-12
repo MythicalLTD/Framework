@@ -43,6 +43,14 @@
 						<div>EULA</div>
 					</a>
 				</li>
+			{% if hasPermission("mythicalframework.admin.api.view") or hasPermission("mythicalframework.admin.api.create") or hasPermission("mythicalframework.admin.api.delete") %}
+				<li class="menu-item">
+					<a href="/admin/api" class="menu-link">
+						<i class="menu-icon tf-icons ti ti-api"></i>
+						<div>{{lang('Pages.Components.Sidebar.Admin.Items.API.Title')}}</div>
+					</a>
+				</li>
+			{% endif %}
 			{% if hasPermission("mythicalframework.admin.ticket.view") or hasPermission("mythicalframework.admin.ticket.create") or hasPermission("mythicalframework.admin.ticket.reply") or hasPermission("mythicalframework.admin.ticket.delete") %}
 				<li class="menu-item">
 					<a href="/admin/support" class="menu-link">

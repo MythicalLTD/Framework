@@ -1,0 +1,174 @@
+{% extends 'components/dashboard.twig' %}
+{% block head %}{% endblock %}
+{% block dashboard %}
+	<div class="card">
+		<div class="card-header">
+			<h3 class="card-title">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Title') }}
+				-
+				{{ ucFirst(category_name) }}</h3>
+			<p class="card-subtitle text-muted">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Description') }}</p>
+		</div>
+		<div class="card-body">
+			<form method="POST">
+				{% if category_name == "general" %}
+					<div class="row mb-3">
+						<div class="col-12 col-md-2">
+							<label class="form-label" for="appName">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Fields.AppName') }}</label>
+							<input type="text" id="appName" name="appName" class="form-control" placeholder="" value="{{ setting('app', 'name') }}"/>
+						</div>
+						<div class="col-12 col-md-3">
+							<label class="form-label" for="appUrl">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Fields.AppURL') }}</label>
+							<input type="text" id="appUrl" name="appUrl" class="form-control" placeholder="" value="{{ setting('app', 'url') }}"/>
+						</div>
+						<div class="col-12 col-md-2">
+							<label class="form-label" for="appTimezone">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Fields.AppTimezone') }}</label>
+							<select id="appTimezone" name="appTimezone" class="select2 form-control">
+								{% for timezone in timezones %}
+									<option value="{{ timezone }}" {% if setting('app', 'timezone') == timezone %} selected {% endif %}>{{ timezone }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-12 col-md-1">
+							<label class="form-label" for="appLang">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Fields.AppLang') }}</label>
+							<select id="appLang" name="appLang" class="select2 form-control">
+								{% for lang in langs %}
+									<option value="{{ lang }}" {% if setting('app', 'lang') == lang %} selected {% endif %}>{{ lang }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-12 col-md-2">
+							<label class="form-label" for="appTheme">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Fields.AppTheme') }}</label>
+							<select id="appTheme" name="appTheme" class="select2 form-control">
+								{% for theme in themes %}
+									<option value="{{ theme }}" {% if setting('app', 'theme') == theme %} selected {% endif %}>{{ ucFirst(theme) }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-12 col-md-2">
+							<label class="form-label" for="AppMirror">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Fields.AppMirror') }}</label>
+							<select id="AppMirror" name="AppMirror" class="select2 form-control">
+									<option value="dev" selected>Development [DE] (Official)</option>
+							</select>
+						</div>
+					</div>
+				{% endif %}
+                {% elseif category_name == "mail" %}
+
+                {% endif %}
+				<div class="card-footer text-end">
+					<button type="submit" class="btn btn-success">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Actions.Save') }}</button>
+					<a href="/dashboard" class="btn btn-info">{{ lang('Pages.AdminArea.Pages.Settings.Edit.Actions.Cancel') }}</a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}
+{% block footer %}
+
+{% if category_name == "general" %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        appName = document.getElementById('appName').value;
+        appUrl = document.getElementById('appUrl').value;
+        appTimezone = document.getElementById('appTimezone').value;
+        appLang = document.getElementById('appLang').value;
+        appTheme = document.getElementById('appTheme').value;
+        const originalAppName = "{{ setting('app', 'name') }}";
+        const originalAppUrl = "{{ setting('app', 'url') }}";
+        const originalAppTimezone = "{{ setting('app', 'timezone') }}";
+        const originalAppLang = "{{ setting('app', 'lang') }}";
+        const originalAppTheme = "{{ setting('app', 'theme') }}";		
+        let changes = [];	
+        if (appName !== originalAppName) {
+            changes.push({ category: 'app', field: 'name', oldValue: originalAppName, newValue: appName });
+        }
+        if (appUrl !== originalAppUrl) {
+            changes.push({ category: 'app', field: 'url', oldValue: originalAppUrl, newValue: appUrl });
+        }
+        if (appTimezone !== originalAppTimezone) {
+            changes.push({ category: 'app', field: 'timezone', oldValue: originalAppTimezone, newValue: appTimezone });
+        }
+        if (appLang !== originalAppLang) {
+            changes.push({ category: 'app', field: 'lang', oldValue: originalAppLang, newValue: appLang });
+        }
+        if (appTheme !== originalAppTheme) {
+            changes.push({ category: 'app', field: 'theme', oldValue: originalAppTheme, newValue: appTheme });
+        }
+        if (changes.length > 0) {
+            changes.forEach(change => {
+                requestDBUpdate(change.category, change.field, change.newValue);
+            });
+        } else {
+            showErrorAlert("{{ lang('Alerts.Error.NothingChanged.Title') }}","{{ lang('Alerts.Error.NothingChanged.Message') }}");
+        }
+    });
+});
+</script>
+{% elseif category_name == "mail" %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        //appName = document.getElementById('appName').value;
+        //appUrl = document.getElementById('appUrl').value;
+        //appTimezone = document.getElementById('appTimezone').value;
+        //appLang = document.getElementById('appLang').value;
+        //appTheme = document.getElementById('appTheme').value;
+
+        //const originalAppName = "{{ setting('app', 'name') }}";
+        //const originalAppUrl = "{{ setting('app', 'url') }}";
+        //const originalAppTimezone = "{{ setting('app', 'timezone') }}";
+        //const originalAppLang = "{{ setting('app', 'lang') }}";
+        //const originalAppTheme = "{{ setting('app', 'theme') }}";		
+        //let changes = [];	
+        //if (appName !== originalAppName) {
+        //    changes.push({ category: 'app', field: 'name', oldValue: originalAppName, newValue: appName });
+        //}
+        //if (appUrl !== originalAppUrl) {
+        //    changes.push({ category: 'app', field: 'url', oldValue: originalAppUrl, newValue: appUrl });
+        //}
+        //if (appTimezone !== originalAppTimezone) {
+        //    changes.push({ category: 'app', field: 'timezone', oldValue: originalAppTimezone, newValue: appTimezone });
+        //}
+        //if (appLang !== originalAppLang) {
+        //    changes.push({ category: 'app', field: 'lang', oldValue: originalAppLang, newValue: appLang });
+        //}
+        //if (appTheme !== originalAppTheme) {
+        //    changes.push({ category: 'app', field: 'theme', oldValue: originalAppTheme, newValue: appTheme });
+        //}
+        //if (changes.length > 0) {
+        //    changes.forEach(change => {
+        //        requestDBUpdate(change.category, change.field, change.newValue);
+        //    });
+        //} else {
+        //    showErrorAlert("{{ lang('Alerts.Error.NothingChanged.Title') }}","{{ lang('Alerts.Error.NothingChanged.Message') }}");
+        //}
+    });
+});
+</script>
+{% endif %}
+<script>
+function requestDBUpdate(category,name,value) {
+    axios.post('/admin/settings/' + '{{ category_name }}', {
+        category: category,
+        name: name,
+        value: value
+    })
+    .then(function (response) {
+        showSuccessAlert("{{ lang('Alerts.Success.ActionSuccessful.Title') }}","{{ lang('Alerts.Success.ActionSuccessful.Message') }}");
+        setTimeout(function() {
+            location.reload();
+        }, 2000);
+    })
+    .catch(function (error) {
+        showErrorAlert("{{ lang('Alerts.Error.UnknownError.Title') }}","{{ lang('Alerts.Error.UnknownError.Message') }}")
+    });
+}
+</script>
+{% endblock %}

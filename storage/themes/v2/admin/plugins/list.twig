@@ -67,7 +67,7 @@
 								</button>
 								{% if plugin.enabled == "true" %}
 									{% for button in getButtons(plugin.id) %}
-										<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}{{ button.url }}')" class="btn btn-sm btn-{{ button.color }}">{{ button.text }}</button>
+										<button onclick="requireConfirmation('{{ button.url }}')" class="btn btn-sm btn-{{ button.color }}">{{ button.text }}</button>
 									{% endfor %}
 									<button onclick="requireConfirmation('/admin/plugins/{{ plugin.id }}/disable')" class="btn btn-sm btn-danger">{{ lang('Pages.AdminArea.Pages.Plugins.List.Table.Head.Actions.Disable') }}</button>
 								{% else %}

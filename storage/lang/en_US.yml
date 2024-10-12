@@ -38,6 +38,20 @@ Pages:
               Actions: 
                 Edit: "Edit"
                 Delete: "Delete"
+      Settings: 
+        Edit:
+          Title: "Edit Settings"
+          Description: "Here you can edit the settings of the framework."
+          Fields: 
+            AppName: "App Name: "
+            AppURL: "App URL: "
+            AppTimezone: "App Timezone: "
+            AppLang: "App Language: "
+            AppTheme: "App Theme: "
+            AppMirror: "App Mirror: "
+          Actions:
+            Save: "Save changes"
+            Cancel: "Cancel"
       Languages:
         Editor:
           Title: "Language Editor"
@@ -45,7 +59,6 @@ Pages:
           Buttons:  
             Save: "Save changes"
             Cancel: "Cancel"
-
         List:
           Title: "Languages"
           Description: "Here you can see all the framework languages and manage them :)"
@@ -60,7 +73,6 @@ Pages:
                 Actions: "Actions"
               Actions: 
                 Edit: "Edit"
-
       Logs:
         List:
           Title: "Logs"
@@ -120,7 +132,6 @@ Pages:
               Enable: "Enable"
               Disable: "Disable"
               Close: "Close"
-
       Backups:
         List:
           Title: "Backups"
@@ -135,6 +146,39 @@ Pages:
                 Actions: "Actions"
               Actions:
                 Restore: "Restore"
+                Delete: "Delete"
+      API:
+        Create:
+          Title: "Create API Key"
+          Description: "Enter the name and permission of the api key."
+          Forms:
+            Title:
+              Label: "Name"
+              Placeholder: "The name of the Api key..."
+            Content:
+              Label: "Permissions"
+              Placeholder: ""
+              Items:
+                ReadOnly: "Read Only"
+                ReadWrite: "Read & Write"
+            Access: 
+              Label: "Access (% for any ip address)"
+              Placeholder: "%"
+            Submit: "Create Key"
+            Cancel: "Cancel"
+        List:
+          Title: "API Keys"
+          Description: "Here you can manage all the api keys!."
+          Table:
+            CreateButton: "Create new api key!"
+            Head:
+              Columns:
+                ID: "ID"
+                Title: "Title"
+                Date: "Date"
+                Actions: "Actions"
+              Actions:
+                Edit: "Edit"
                 Delete: "Delete"
       Announcements:
         Create:
@@ -180,6 +224,8 @@ Pages:
       Admin:
         Name: "Administration Area"
         Items:
+          API: 
+            Title: "API Keys"
           Support:
             Title: "Support Tickets"
           Announcements:
@@ -619,3 +665,6 @@ Alerts:
     PluginAlreadyExists:
       Title: "Plugin Already exists"
       Message: "The plugin already exists. Please try again."
+    NothingChanged: 
+      Title: "Nothing Changed"
+      Message: "Please modify something in order to apply new values!"
