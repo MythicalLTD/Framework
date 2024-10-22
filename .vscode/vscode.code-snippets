@@ -111,6 +111,14 @@
 		],
 		"description": "Get a specific value from the settings table!"
 	},	
+	"Get setting PHP": {
+		"prefix": "S_GetSetting",
+		"scope": "php",
+		"body": [
+			"Settings::getSetting('$1', '$2')"
+		],
+		"description": "Get a specific value from the settings table!"
+	},	
 	"Get Config": {
 		"prefix": "S_GetConfig",
 		"scope": "twig",

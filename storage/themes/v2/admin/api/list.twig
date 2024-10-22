@@ -20,19 +20,23 @@
 					<tr>
 						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.ID')}}</th>
 						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Title') }}</th>
+						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Permissions')}}</th>
+						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Access')}}</th>
 						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Date')}}</th>
 						<th>{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Columns.Actions')}}</th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for announcement in API %}
+					{% for api in apis %}
 						<tr>
-							<td>{{ announcement.id }}</td>
-							<td>{{ announcement.title }}</td>
-							<td>{{ announcement.date }}</td>
+							<td>{{ api.id }}</td>
+							<td>{{ api.name }}</td>
+							<td>{{ api.type }}</td>
+							<td>{{ api.allowed_ips }}</td>
+							<td>{{ api.date }}</td>
 							<td>
-								<a href="/admin/API/{{ announcement.id }}/edit" class="btn btn-sm btn-primary">{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.Edit') }}</a>
-								<button onclick="requireConfirmation('/admin/API/{{ announcement.id }}/delete')" class="btn btn-sm btn-danger">{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.Delete')}}</button>
+								<button onclick="copyApiKey('{{ api.value }}');" class="btn btn-sm btn-primary">{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.Copy') }}</button>
+								<button onclick="requireConfirmation('/admin/api/{{ api.id }}/delete')" class="btn btn-sm btn-danger">{{lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.Delete')}}</button>
 							</td>
 						</tr>
 					{% endfor %}
@@ -52,7 +56,7 @@
 					<form action="/admin/api/create" method="POST">
 						<div class="mb-3">
 							<label for="apiName" class="form-label">{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Title.Label') }}</label>
-							<input type="text" class="form-control" id="apiName" name="title" placeholder="{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Title.Placeholder') }}" required>
+							<input type="text" class="form-control" id="apiName" name="apiName" placeholder="{{ lang('Pages.AdminArea.Pages.API.Create.Forms.Title.Placeholder') }}" required>
 						</div>
 						<div class="mb-5 col-12">
 							<label for="apiAccess" class="form-label">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Content.Label")}}</label>
@@ -62,13 +66,12 @@
 							</select>
 						</div>
 						<div class="mb-5 col-12">
-							<label for="apiAccess" class="form-label">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Access.Label")}}</label>
-							
-							
+							<label for="TagifyBasic" class="form-label">{{lang("Pages.AdminArea.Pages.API.Create.Forms.Access.Label")}}</label>
+							<input id="TagifyBasic" class="form-control" name="ips" value="%">
 						</div>
 						{% if isTurnStileEnabled == true  %}
 							<center>
-								<div class="cf-turnstile" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
+								<div class="cf-turnstile" value="" data-sitekey="{{setting('cloudflare_turnstile', 'sitekey')}}"></div>
 							</center>
 							<br>
 						{% else %}
@@ -84,5 +87,17 @@
 		</div>
 	</div>
 </div>{% endblock %}{% block footer %}
-{% include 'requirements/datatables.twig' %}
- <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>{% endblock %}
+{% include 'requirements/datatables.twig' %} <script>$(document).ready(function() {$('.datatables-basic').DataTable({responsive: true,pageLength: 10,lengthMenu: [5, 10, 25, 50, 75, 100]});});</script>
+ <script>
+const tagifyBasicEl = document.querySelector('#TagifyBasic');
+const TagifyBasic = new Tagify(tagifyBasicEl);
+function copyApiKey(api_key) {
+	const el = document.createElement('textarea');
+	el.value = api_key;
+	document.body.appendChild(el);
+	el.select();
+	document.execCommand('copy');
+	document.body.removeChild(el);
+	Swal.fire({icon: 'success',title: '{{ lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.CopyHolo.Title') }}',text: '{{ lang('Pages.AdminArea.Pages.API.List.Table.Head.Actions.CopyHolo.Description') }}'});
+}
+</script>{% endblock %}

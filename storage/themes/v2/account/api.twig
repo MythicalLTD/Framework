@@ -114,15 +114,15 @@
 	{% include 'requirements/datatables.twig' %}
 
 	 <script>
-					document.getElementById('formAccountSettingsApiKey').addEventListener('submit', function(event) {		
-						const apiKey = document.getElementById('apiKey').value;
-						const apiAccess = document.getElementById('apiAccess').value;
-				
-						if (apiKey === '' || apiAccess === '') {
-							Swal.fire({icon: 'error',title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}"});
-							event.preventDefault();
-							return;
-						}
-					});
+		document.getElementById('formAccountSettingsApiKey').addEventListener('submit', function(event) {		
+			const apiKey = document.getElementById('apiKey').value;
+			const apiAccess = document.getElementById('apiAccess').value;
+	
+			if (apiKey === '' || apiAccess === '') {
+				Swal.fire({icon: 'error',title: "{{ lang('Alerts.Error.PleaseFillAllFields.Title') }}",text: "{{ lang('Alerts.Error.PleaseFillAllFields.Message') }}"});
+				event.preventDefault();
+				return;
+			}
+		});
 				</script>
 {% endblock %}

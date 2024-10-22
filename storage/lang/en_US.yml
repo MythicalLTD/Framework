@@ -174,12 +174,17 @@ Pages:
             Head:
               Columns:
                 ID: "ID"
-                Title: "Title"
+                Title: "Name"
+                Permissions: "Permissions"
+                Access: "Access"
                 Date: "Date"
                 Actions: "Actions"
               Actions:
-                Edit: "Edit"
+                Copy: "Copy Key"
                 Delete: "Delete"
+                CopyHolo:
+                  Title: "API Key copied!"
+                  Description: "The api key is in your clipboard."
       Announcements:
         Create:
           Title: "Create Announcement"
